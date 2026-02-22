@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "normalized_opportunity_v1.schema.json",
+  "title": "NormalizedOpportunityV1",
+  "type": "object",
+  "required": [
+    "detected_at",
+    "strategy_type",
+    "symbol",
+    "buy_venue",
+    "sell_venue",
+    "gross_edge_bps",
+    "fees_bps",
+    "slippage_bps",
+    "latency_risk_bps",
+    "transfer_delay_min",
+    "size_usd"
+  ],
+  "properties": {
+    "detected_at": { "type": "string", "format": "date-time" },
+    "strategy_type": {
+      "type": "string",
+      "enum": ["cex_cex", "cex_dex", "cross_chain", "funding_basis"]
+    },
+    "symbol": { "type": "string" },
+    "buy_venue": { "type": "string" },
+    "sell_venue": { "type": "string" },
+    "gross_edge_bps": { "type": "number" },
+    "fees_bps": { "type": "number", "minimum": 0 },
+    "slippage_bps": { "type": "number", "minimum": 0 },
+    "latency_risk_bps": { "type": "number", "minimum": 0 },
+    "transfer_delay_min": { "type": "number", "minimum": 0 },
+    "size_usd": { "type": "number", "minimum": 0 },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": true
+}

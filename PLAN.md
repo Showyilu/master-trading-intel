@@ -3,6 +3,12 @@
 ## North Star
 Use structured knowledge + fast iteration to consistently surface high-quality trading and arbitrage setups.
 
+## Current Sprint (2026-02-22)
+1. ✅ Build source inventory + normalization schema (`sources/inventory.yaml`, `schemas/normalized_opportunity_v1.schema.json`).
+2. ✅ Build opportunity scoring template and hard risk gates (`playbooks/opportunity-scoring-template.md`).
+3. ✅ Build first scanner + dashboard output (`scripts/scan_opportunities.py`, `opportunities/dashboard-latest.md`).
+4. ⏭ Next: replace sample input with live pullers (Binance/Bybit + one DEX quote source).
+
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.
 2. Build source map: exchange APIs, on-chain data, socials/news, calendars.

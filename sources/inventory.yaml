@@ -1,0 +1,94 @@
+version: 1
+updated_at: "2026-02-22T03:05:00Z"
+notes: "Source inventory for normalized multi-venue opportunity detection."
+
+sources:
+  - id: cex_binance_spot
+    type: cex
+    venue: binance
+    market: spot
+    priority: high
+    endpoint: "https://api.binance.com/api/v3/ticker/bookTicker"
+    fields:
+      symbol: symbol
+      bid_price: bidPrice
+      ask_price: askPrice
+      timestamp: time
+    refresh_seconds: 5
+
+  - id: cex_bybit_spot
+    type: cex
+    venue: bybit
+    market: spot
+    priority: high
+    endpoint: "https://api.bybit.com/v5/market/tickers?category=spot"
+    fields:
+      symbol: list[].symbol
+      bid_price: list[].bid1Price
+      ask_price: list[].ask1Price
+      timestamp: time
+    refresh_seconds: 5
+
+  - id: dex_uniswap_v3_eth
+    type: dex
+    venue: uniswap-v3
+    market: onchain-spot
+    priority: high
+    endpoint: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
+    fields:
+      pool: id
+      token0: token0.symbol
+      token1: token1.symbol
+      price: token0Price
+      liquidity: liquidity
+      timestamp: timestamp
+    refresh_seconds: 15
+
+  - id: dex_jupiter_quotes
+    type: dex
+    venue: jupiter
+    market: solana-spot
+    priority: medium
+    endpoint: "https://quote-api.jup.ag/v6/quote"
+    fields:
+      input_mint: inputMint
+      output_mint: outputMint
+      in_amount: inAmount
+      out_amount: outAmount
+      route_plan: routePlan
+      timestamp: timeTaken
+    refresh_seconds: 10
+
+  - id: chain_gas_eth
+    type: onchain
+    venue: etherscan
+    market: gas
+    priority: medium
+    endpoint: "https://api.etherscan.io/api?module=gastracker&action=gasoracle"
+    fields:
+      safe_gas: result.SafeGasPrice
+      propose_gas: result.ProposeGasPrice
+      fast_gas: result.FastGasPrice
+      timestamp: result.LastBlock
+    refresh_seconds: 30
+
+  - id: news_cryptopanic
+    type: news
+    venue: cryptopanic
+    market: headlines
+    priority: medium
+    endpoint: "https://cryptopanic.com/api/v1/posts/"
+    fields:
+      title: results[].title
+      source: results[].source.title
+      published_at: results[].published_at
+      kind: results[].kind
+    refresh_seconds: 120
+
+normalization_targets:
+  - normalized_quote_v1
+  - normalized_opportunity_v1
+
+hard_rules:
+  - "No opportunity enters shortlist without fee/slippage/latency fields."
+  - "Delay-sensitive opportunities must include transfer path and fallback route."

@@ -1,0 +1,58 @@
+[
+  {
+    "detected_at": "2026-02-22T03:00:00Z",
+    "strategy_type": "cex_cex",
+    "symbol": "BTC/USDT",
+    "buy_venue": "bybit",
+    "sell_venue": "binance",
+    "gross_edge_bps": 21.3,
+    "fees_bps": 6.0,
+    "slippage_bps": 4.2,
+    "latency_risk_bps": 2.0,
+    "transfer_delay_min": 7,
+    "size_usd": 25000,
+    "notes": "Spread from top-of-book snapshot"
+  },
+  {
+    "detected_at": "2026-02-22T03:00:10Z",
+    "strategy_type": "cex_dex",
+    "symbol": "ETH/USDC",
+    "buy_venue": "uniswap-v3",
+    "sell_venue": "binance",
+    "gross_edge_bps": 34.8,
+    "fees_bps": 11.0,
+    "slippage_bps": 8.0,
+    "latency_risk_bps": 5.5,
+    "transfer_delay_min": 10,
+    "size_usd": 15000,
+    "notes": "Includes estimated gas at 30 gwei"
+  },
+  {
+    "detected_at": "2026-02-22T03:00:20Z",
+    "strategy_type": "cross_chain",
+    "symbol": "SOL/USDC",
+    "buy_venue": "jupiter",
+    "sell_venue": "binance",
+    "gross_edge_bps": 18.1,
+    "fees_bps": 5.0,
+    "slippage_bps": 5.8,
+    "latency_risk_bps": 3.5,
+    "transfer_delay_min": 14,
+    "size_usd": 12000,
+    "notes": "Bridge congestion risk elevated"
+  },
+  {
+    "detected_at": "2026-02-22T03:00:35Z",
+    "strategy_type": "funding_basis",
+    "symbol": "BTC-PERP",
+    "buy_venue": "binance_spot",
+    "sell_venue": "bybit_perp",
+    "gross_edge_bps": 18.9,
+    "fees_bps": 3.8,
+    "slippage_bps": 2.5,
+    "latency_risk_bps": 1.8,
+    "transfer_delay_min": 2,
+    "size_usd": 20000,
+    "notes": "8h funding annualized positive carry"
+  }
+]

@@ -16,3 +16,16 @@ Build a compounding research engine: detect signals fast, validate rigorously, e
 - `opportunities/` — live opportunities and post-mortems
 - `journal/` — timestamped daily research logs
 - `sources/` — trusted data sources and monitoring list
+- `schemas/` — normalization schemas
+- `scripts/` — scanner and scoring utilities
+- `data/` — local sample inputs / fixtures
+
+## Quickstart
+```bash
+python3 scripts/scan_opportunities.py
+```
+
+Outputs:
+- `opportunities/shortlist-latest.json`
+- `opportunities/dashboard-latest.md`
+

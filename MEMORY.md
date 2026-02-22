@@ -3,15 +3,20 @@
 Long-term distilled memory for trading/arbitrage work.
 
 ## What We Know
-- (fill with validated edges only)
+- Net-edge screening must include transfer-delay penalty, not only spread and fees.
+- A high gross spread can still fail quality gate after fees/slippage/latency adjustments.
+- First scanner pass produced 1/4 qualified candidates under strict gates (sample set, not live trading signal).
 
 ## What We Believe (Needs Validation)
-- (hypotheses to test)
+- Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
+- Cross-chain routes are highly sensitive to delay penalty assumptions.
 
 ## Hard Rules
 - Never ignore fees/slippage/latency in arb math.
 - No trade without explicit invalidation condition.
 - Capital preservation > FOMO.
+- No opportunity enters shortlist without `gross edge - fees - slippage - latency/transfer risk` breakdown.
 
 ## Lessons
-- (append durable lessons from wins/losses)
+- Gross edge without execution friction data is noise.
+- Risk gate should be pass/fail before any manual excitement about potential PnL.
