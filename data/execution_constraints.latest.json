@@ -1,0 +1,186 @@
+{
+  "generated_at": "2026-02-22T12:05:53.444799+00:00",
+  "version": "execution_constraints_v1",
+  "defaults": {
+    "max_position_usd": 12000.0,
+    "available_inventory_usd": 0.0,
+    "max_borrow_usd": 0.0,
+    "borrow_rate_bps_per_hour": 1.0
+  },
+  "strategy_hold_hours": {
+    "cex_cex": 0.2,
+    "cex_dex": 0.3,
+    "funding_carry_cex_cex": 8.0,
+    "perp_spot_basis": 8.0
+  },
+  "rules": [
+    {
+      "venue": "binance",
+      "asset": "ADA",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "binance",
+      "asset": "AVAX",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "binance",
+      "asset": "BNB",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "binance",
+      "asset": "BTC",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 0.65
+    },
+    {
+      "venue": "binance",
+      "asset": "DOGE",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "binance",
+      "asset": "ETH",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 0.65
+    },
+    {
+      "venue": "binance",
+      "asset": "LINK",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "binance",
+      "asset": "LTC",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "binance",
+      "asset": "SOL",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 0.65
+    },
+    {
+      "venue": "binance",
+      "asset": "XRP",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "bybit",
+      "asset": "ADA",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "bybit",
+      "asset": "AVAX",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "bybit",
+      "asset": "BNB",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "bybit",
+      "asset": "BTC",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 0.65
+    },
+    {
+      "venue": "bybit",
+      "asset": "DOGE",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "bybit",
+      "asset": "ETH",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 0.65
+    },
+    {
+      "venue": "bybit",
+      "asset": "LINK",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "bybit",
+      "asset": "LTC",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "bybit",
+      "asset": "SOL",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 0.65
+    },
+    {
+      "venue": "bybit",
+      "asset": "XRP",
+      "max_position_usd": 14000.0,
+      "available_inventory_usd": 3500.0,
+      "max_borrow_usd": 7500.0,
+      "borrow_rate_bps_per_hour": 1.15
+    },
+    {
+      "venue": "jupiter",
+      "asset": "SOL",
+      "max_position_usd": 7000.0,
+      "available_inventory_usd": 1750.0,
+      "max_borrow_usd": 3750.0,
+      "borrow_rate_bps_per_hour": 0.65
+    }
+  ]
+}

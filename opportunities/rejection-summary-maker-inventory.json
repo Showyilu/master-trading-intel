@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-02-22T10:05:20.585719+00:00",
+  "generated_at": "2026-02-22T12:05:34.574846+00:00",
   "input": "data/opportunity_candidates.combined.live.json",
+  "constraints": "data/execution_constraints.latest.json",
   "execution_profile": "maker_inventory",
   "rules": {
     "fee_multiplier": 0.42,
@@ -17,6 +18,7 @@
     "rejected": 31
   },
   "rejection_reason_counts": {
+    "borrow_dominated": 20,
     "fee_dominated": 31,
     "latency_transfer_dominated": 17,
     "net_edge_below_threshold": 31,
@@ -29,9 +31,10 @@
     {
       "symbol": "SOL/USDT",
       "path": "jupiter->binance",
-      "net_edge_bps": -8.7004,
-      "risk_score": 0.2832,
+      "net_edge_bps": -8.7589,
+      "risk_score": 0.2539,
       "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0585,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -42,9 +45,10 @@
     {
       "symbol": "ETH/USDT",
       "path": "binance->bybit",
-      "net_edge_bps": -9.3497,
-      "risk_score": 0.2655,
+      "net_edge_bps": -9.4342,
+      "risk_score": 0.2417,
       "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0845,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -55,9 +59,10 @@
     {
       "symbol": "BTC/USDT",
       "path": "binance->bybit",
-      "net_edge_bps": -9.353,
-      "risk_score": 0.2614,
+      "net_edge_bps": -9.4375,
+      "risk_score": 0.2381,
       "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0845,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -68,9 +73,10 @@
     {
       "symbol": "BNB/USDT",
       "path": "binance->bybit",
-      "net_edge_bps": -9.3627,
-      "risk_score": 0.2778,
+      "net_edge_bps": -9.5122,
+      "risk_score": 0.2534,
       "dominant_drag": "fees",
+      "borrow_cost_bps": 0.1495,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -80,9 +86,10 @@
     {
       "symbol": "SOL/USDT",
       "path": "jupiter->bybit",
-      "net_edge_bps": -11.0146,
-      "risk_score": 0.2952,
+      "net_edge_bps": -11.0731,
+      "risk_score": 0.2645,
       "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0585,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -91,63 +98,73 @@
       ]
     },
     {
-      "symbol": "LINK/USDT",
-      "path": "long_binance_perp->short_binance_spot",
-      "net_edge_bps": -12.9391,
-      "risk_score": 0.3305,
-      "dominant_drag": "fees",
-      "rejection_reasons": [
-        "net_edge_below_threshold",
-        "fee_dominated",
-        "slippage_dominated"
-      ]
-    },
-    {
-      "symbol": "ADA/USDT",
-      "path": "long_binance_perp->short_binance_spot",
-      "net_edge_bps": -13.0302,
-      "risk_score": 0.3296,
-      "dominant_drag": "fees",
-      "rejection_reasons": [
-        "net_edge_below_threshold",
-        "fee_dominated",
-        "slippage_dominated"
-      ]
-    },
-    {
-      "symbol": "LTC/USDT",
-      "path": "long_binance_perp->short_binance_spot",
-      "net_edge_bps": -13.0884,
-      "risk_score": 0.33,
-      "dominant_drag": "fees",
-      "rejection_reasons": [
-        "net_edge_below_threshold",
-        "fee_dominated",
-        "slippage_dominated"
-      ]
-    },
-    {
       "symbol": "AVAX/USDT",
-      "path": "long_binance_perp->short_binance_spot",
-      "net_edge_bps": -13.1039,
-      "risk_score": 0.3296,
+      "path": "long_binance_perp->short_bybit_perp",
+      "net_edge_bps": -14.8752,
+      "risk_score": 0.3067,
       "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
-        "slippage_dominated"
+        "slippage_dominated",
+        "latency_transfer_dominated"
+      ]
+    },
+    {
+      "symbol": "BNB/USDT",
+      "path": "long_binance_perp->short_bybit_perp",
+      "net_edge_bps": -15.251,
+      "risk_score": 0.3067,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated"
+      ]
+    },
+    {
+      "symbol": "SOL/USDT",
+      "path": "long_bybit_perp->short_binance_perp",
+      "net_edge_bps": -15.598,
+      "risk_score": 0.3067,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated"
       ]
     },
     {
       "symbol": "DOGE/USDT",
-      "path": "long_binance_perp->short_binance_spot",
-      "net_edge_bps": -13.1733,
-      "risk_score": 0.3298,
+      "path": "long_binance_perp->short_bybit_perp",
+      "net_edge_bps": -15.6547,
+      "risk_score": 0.3067,
       "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
-        "slippage_dominated"
+        "slippage_dominated",
+        "latency_transfer_dominated"
+      ]
+    },
+    {
+      "symbol": "BTC/USDT",
+      "path": "long_bybit_perp->short_binance_perp",
+      "net_edge_bps": -15.7229,
+      "risk_score": 0.3067,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated"
       ]
     }
   ]

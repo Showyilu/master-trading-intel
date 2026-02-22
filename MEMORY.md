@@ -14,6 +14,8 @@ Long-term distilled memory for trading/arbitrage work.
 - Funding carry adapter is live (Binance/Bybit perp): cross-venue funding deltas are now normalized and scored with explicit round-trip fees/slippage/hold-time risk.
 - Perp-spot basis adapter is live (Binance/Bybit same-venue spot+perp): basis + funding components are normalized and scored under conservative capture assumptions.
 - Execution-profile scenario scoring is now built into scanner (`taker_default`, `maker_inventory`, `maker_inventory_vip`) so friction assumptions are explicit and reproducible.
+- Scanner now supports hard execution constraints per venue/asset (position cap, available inventory, borrow cap) and includes borrow carry cost in net-edge math.
+- Constraint template generation is automated from current candidate universe (`scripts/build_execution_constraints_template.py`), so capacity assumptions are versioned and reproducible.
 
 ## What We Believe (Needs Validation)
 - Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
@@ -24,6 +26,7 @@ Long-term distilled memory for trading/arbitrage work.
 - No trade without explicit invalidation condition.
 - Capital preservation > FOMO.
 - No opportunity enters shortlist without `gross edge - fees - slippage - latency/transfer risk` breakdown.
+- When constraints file is enabled, candidates must also pass position/inventory/borrow capacity gates before qualification.
 - Reject cross-venue quotes when DEX mid deviates too far from trusted CEX reference (depeg/wrapped-token hazard).
 - Every scanner run must expose rejection-reason counts so strategy work is guided by the biggest friction bucket, not intuition.
 
@@ -36,3 +39,4 @@ Long-term distilled memory for trading/arbitrage work.
 - Funding-rate differentials can look attractive gross, but round-trip execution costs can fully consume the edge unless fee tier and hold window are tightly controlled.
 - Perp-spot basis gross edges (~2-3 bps in this universe) are far below round-trip friction at taker fee assumptions; without true maker/borrow advantages they remain non-executable.
 - Even under a softer `maker_inventory` scenario, if `fee_dominated` stays the top rejection reason, the next optimization target is fee/borrow structure—not broader symbol coverage.
+- Borrow carry can dominate basis net edge over multi-hour holds; ignoring borrow terms overstates executability.

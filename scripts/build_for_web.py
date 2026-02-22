@@ -38,6 +38,7 @@ def main() -> None:
     )
 
     merged = ROOT / "data/opportunity_candidates.combined.live.json"
+    constraints = ROOT / "data/execution_constraints.latest.json"
     sample = ROOT / "data/opportunity_candidates.sample.json"
 
     try:
@@ -54,9 +55,25 @@ def main() -> None:
     run(
         [
             "python3",
+            "scripts/build_execution_constraints_template.py",
+            "--input",
+            "data/opportunity_candidates.combined.live.json",
+            "--output",
+            "data/execution_constraints.latest.json",
+        ]
+    )
+
+    if constraints.exists():
+        print(f"Execution constraints: {constraints}")
+
+    run(
+        [
+            "python3",
             "scripts/scan_opportunities.py",
             "--input",
             "data/opportunity_candidates.combined.live.json",
+            "--constraints",
+            "data/execution_constraints.latest.json",
             "--execution-profile",
             "taker_default",
             "--output-json",

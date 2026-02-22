@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://master-trading-intel.local/schemas/execution_constraints_v1.schema.json",
+  "title": "Execution Constraints v1",
+  "description": "Venue/asset-level execution constraints for inventory, borrow, and position caps.",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "version",
+    "defaults",
+    "strategy_hold_hours",
+    "rules"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "version": {
+      "const": "execution_constraints_v1"
+    },
+    "defaults": {
+      "type": "object",
+      "required": [
+        "max_position_usd",
+        "available_inventory_usd",
+        "max_borrow_usd",
+        "borrow_rate_bps_per_hour"
+      ],
+      "properties": {
+        "max_position_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "available_inventory_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_borrow_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "borrow_rate_bps_per_hour": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "strategy_hold_hours": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "venue",
+          "asset",
+          "max_position_usd",
+          "available_inventory_usd",
+          "max_borrow_usd",
+          "borrow_rate_bps_per_hour"
+        ],
+        "properties": {
+          "venue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "asset": {
+            "type": "string",
+            "minLength": 1
+          },
+          "max_position_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "available_inventory_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "max_borrow_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "borrow_rate_bps_per_hour": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

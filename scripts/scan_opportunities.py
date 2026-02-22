@@ -2,8 +2,9 @@
 """Opportunity scanner with net-edge math and risk gating.
 
 Formula (bps):
-net_edge = gross_edge - fees - slippage - latency_risk - transfer_risk
+net_edge = gross_edge - fees - slippage - latency_risk - transfer_risk - borrow_cost
 transfer_risk = transfer_delay_min * transfer_penalty_bps_per_min
+borrow_cost = borrow_rate_bps_per_hour * hold_hours * (borrow_used_usd / size_usd)
 
 Supports execution profiles (taker/maker/inventory assumptions) so the same
 candidate set can be stress-tested under different execution realities.
@@ -13,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from collections import Counter
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
@@ -24,10 +26,39 @@ DEFAULT_INPUT_PATH = ROOT / "data" / "opportunity_candidates.sample.json"
 DEFAULT_OUTPUT_JSON = ROOT / "opportunities" / "shortlist-latest.json"
 DEFAULT_OUTPUT_MD = ROOT / "opportunities" / "dashboard-latest.md"
 DEFAULT_OUTPUT_SUMMARY = ROOT / "opportunities" / "rejection-summary-latest.json"
+DEFAULT_CONSTRAINTS_PATH = ROOT / "data" / "execution_constraints.latest.json"
 
 DEFAULT_TRANSFER_PENALTY_BPS_PER_MIN = 0.45
 DEFAULT_MIN_NET_EDGE_BPS = 8.0
 DEFAULT_MAX_RISK_SCORE = 0.60
+UNBOUNDED_USD = 10**18
+
+DEFAULT_STRATEGY_HOLD_HOURS: dict[str, float] = {
+    "cex_cex": 0.20,
+    "cex_dex": 0.30,
+    "funding_carry_cex_cex": 8.0,
+    "perp_spot_basis": 8.0,
+}
+
+INVENTORY_REQUIRED_STRATEGIES = {
+    "cex_cex",
+    "cex_dex",
+    "perp_spot_basis",
+}
+
+VENUE_STOPWORDS = {
+    "long",
+    "short",
+    "spot",
+    "perp",
+    "futures",
+    "future",
+    "swap",
+    "dex",
+    "cex",
+    "buy",
+    "sell",
+}
 
 EXECUTION_PROFILES: dict[str, dict[str, float]] = {
     "taker_default": {
@@ -68,6 +99,7 @@ class ScoredOpportunity:
     buy_venue: str
     sell_venue: str
     execution_profile: str
+    constraints_enabled: bool
     gross_edge_bps: float
     source_fees_bps: float
     source_slippage_bps: float
@@ -78,6 +110,13 @@ class ScoredOpportunity:
     latency_risk_bps: float
     transfer_delay_min: float
     transfer_risk_bps: float
+    hold_hours: float
+    inventory_available_usd: float
+    max_position_usd: float
+    borrow_required_usd: float
+    borrow_capacity_usd: float
+    borrow_rate_bps_per_hour: float
+    borrow_cost_bps: float
     net_edge_bps: float
     risk_score: float
     size_usd: float
@@ -85,6 +124,123 @@ class ScoredOpportunity:
     is_qualified: bool
     rejection_reasons: list[str]
     notes: str = ""
+
+
+class ConstraintBook:
+    def __init__(self, payload: dict[str, Any] | None = None, path: Path | None = None):
+        payload = payload or {}
+        self.path = str(path) if path else ""
+        self.enabled = bool(payload)
+
+        defaults = payload.get("defaults", {}) if isinstance(payload, dict) else {}
+        self.defaults = defaults if isinstance(defaults, dict) else {}
+
+        self.strategy_hold_hours = dict(DEFAULT_STRATEGY_HOLD_HOURS)
+        custom_hold_hours = payload.get("strategy_hold_hours", {}) if isinstance(payload, dict) else {}
+        if isinstance(custom_hold_hours, dict):
+            for k, v in custom_hold_hours.items():
+                try:
+                    self.strategy_hold_hours[str(k)] = max(0.0, float(v))
+                except (TypeError, ValueError):
+                    continue
+
+        self.rules: dict[tuple[str, str], dict[str, Any]] = {}
+        rules = payload.get("rules", []) if isinstance(payload, dict) else []
+        if isinstance(rules, list):
+            for row in rules:
+                if not isinstance(row, dict):
+                    continue
+                venue = str(row.get("venue", "")).strip().lower()
+                asset = str(row.get("asset", "")).strip().upper()
+                if not venue or not asset:
+                    continue
+                self.rules[(venue, asset)] = row
+
+        self.known_venues = {venue for venue, _ in self.rules.keys()}
+
+    @classmethod
+    def from_path(cls, path: Path | None) -> "ConstraintBook":
+        if path is None or not path.exists():
+            return cls(payload=None, path=path)
+        try:
+            payload = json.loads(path.read_text())
+        except Exception:
+            payload = None
+        if not isinstance(payload, dict):
+            payload = None
+        return cls(payload=payload, path=path)
+
+    @staticmethod
+    def _as_non_negative(value: Any, fallback: float) -> float:
+        try:
+            return max(0.0, float(value))
+        except (TypeError, ValueError):
+            return fallback
+
+    def hold_hours(self, strategy_type: str) -> float:
+        return self._as_non_negative(self.strategy_hold_hours.get(strategy_type), 1.0)
+
+    @staticmethod
+    def asset_from_symbol(symbol: str) -> str:
+        raw = str(symbol).strip().upper()
+        if not raw:
+            return "UNKNOWN"
+        if "/" in raw:
+            return raw.split("/")[0].strip() or "UNKNOWN"
+        parts = [p for p in re.split(r"[^A-Z0-9]+", raw) if p]
+        return parts[0] if parts else "UNKNOWN"
+
+    def canonical_venue(self, raw_venue: str) -> str:
+        lowered = str(raw_venue).strip().lower()
+        if not lowered:
+            return "unknown"
+
+        if lowered in self.known_venues:
+            return lowered
+
+        for venue in sorted(self.known_venues, key=len, reverse=True):
+            if venue and venue in lowered:
+                return venue
+
+        tokens = [t for t in re.split(r"[^a-z0-9]+", lowered) if t]
+        for token in tokens:
+            if token not in VENUE_STOPWORDS:
+                return token
+
+        return lowered
+
+    def _read_limit(self, row: dict[str, Any], key: str, default_unbounded: bool = False) -> float:
+        if key in row:
+            return self._as_non_negative(row.get(key), 0.0)
+        if key in self.defaults:
+            return self._as_non_negative(self.defaults.get(key), 0.0)
+        return UNBOUNDED_USD if default_unbounded else 0.0
+
+    def _read_value(self, row: dict[str, Any], key: str, fallback: float = 0.0) -> float:
+        if key in row:
+            return self._as_non_negative(row.get(key), fallback)
+        if key in self.defaults:
+            return self._as_non_negative(self.defaults.get(key), fallback)
+        return fallback
+
+    def constraints_for(self, raw_venue: str, asset: str) -> dict[str, float | str]:
+        venue_key = self.canonical_venue(raw_venue)
+        asset_key = str(asset).strip().upper() or "UNKNOWN"
+        row = self.rules.get((venue_key, asset_key), {})
+
+        max_position = self._read_limit(row, "max_position_usd", default_unbounded=True)
+        inventory = self._read_limit(row, "available_inventory_usd", default_unbounded=False)
+        borrow_cap = self._read_limit(row, "max_borrow_usd", default_unbounded=False)
+        borrow_rate = self._read_value(row, "borrow_rate_bps_per_hour", fallback=0.0)
+
+        return {
+            "venue_key": venue_key,
+            "asset": asset_key,
+            "max_position_usd": max_position,
+            "available_inventory_usd": inventory,
+            "max_borrow_usd": borrow_cap,
+            "borrow_rate_bps_per_hour": borrow_rate,
+        }
 
 
 def _clamp(value: float, lo: float = 0.0, hi: float = 1.0) -> float:
@@ -96,14 +252,16 @@ def _risk_score(item: dict[str, Any], net_edge_bps: float, transfer_risk_bps: fl
     slip_component = _clamp(item["slippage_bps"] / 20)
     latency_component = _clamp(item["latency_risk_bps"] / 12)
     transfer_component = _clamp(transfer_risk_bps / 12)
+    borrow_component = _clamp(item["borrow_cost_bps"] / 12)
     edge_buffer_component = _clamp((10 - max(net_edge_bps, 0)) / 10)
 
     return round(
-        0.20 * fee_component
-        + 0.25 * slip_component
-        + 0.20 * latency_component
-        + 0.20 * transfer_component
-        + 0.15 * edge_buffer_component,
+        0.18 * fee_component
+        + 0.22 * slip_component
+        + 0.16 * latency_component
+        + 0.16 * transfer_component
+        + 0.14 * borrow_component
+        + 0.14 * edge_buffer_component,
         4,
     )
 
@@ -114,6 +272,7 @@ def _dominant_drag(item: dict[str, Any], transfer_risk_bps: float) -> str:
         "slippage": item["slippage_bps"],
         "latency": item["latency_risk_bps"],
         "transfer": transfer_risk_bps,
+        "borrow": item["borrow_cost_bps"],
     }
     return max(components.items(), key=lambda kv: kv[1])[0]
 
@@ -125,6 +284,10 @@ def _rejection_reasons(
     transfer_risk_bps: float,
     min_net_edge_bps: float,
     max_risk_score: float,
+    constraints_enabled: bool,
+    position_limit_exceeded: bool,
+    inventory_unavailable: bool,
+    borrow_limit_exceeded: bool,
 ) -> list[str]:
     reasons: list[str] = []
 
@@ -140,8 +303,24 @@ def _rejection_reasons(
         reasons.append("slippage_dominated")
     if (item["latency_risk_bps"] + transfer_risk_bps) >= gross:
         reasons.append("latency_transfer_dominated")
+    if item["borrow_cost_bps"] > 0 and item["borrow_cost_bps"] >= gross:
+        reasons.append("borrow_dominated")
+
+    if constraints_enabled:
+        if position_limit_exceeded:
+            reasons.append("position_limit_exceeded")
+        if inventory_unavailable:
+            reasons.append("inventory_unavailable")
+        if borrow_limit_exceeded:
+            reasons.append("borrow_limit_exceeded")
 
     return reasons
+
+
+def _render_limit(limit: float) -> float:
+    if limit >= UNBOUNDED_USD / 2:
+        return 0.0
+    return round(limit, 4)
 
 
 def score_item(
@@ -154,11 +333,13 @@ def score_item(
     transfer_penalty_bps_per_min: float,
     min_net_edge_bps: float,
     max_risk_score: float,
+    constraint_book: ConstraintBook,
 ) -> ScoredOpportunity:
     source_fees_bps = float(item["fees_bps"])
     source_slippage_bps = float(item["slippage_bps"])
     source_latency_risk_bps = float(item["latency_risk_bps"])
     source_transfer_delay_min = float(item["transfer_delay_min"])
+    size_usd = float(item["size_usd"])
 
     fees_bps = round(source_fees_bps * fee_multiplier, 6)
     slippage_bps = round(source_slippage_bps * slippage_multiplier, 6)
@@ -166,8 +347,59 @@ def score_item(
     transfer_delay_min = round(source_transfer_delay_min * transfer_delay_multiplier, 6)
 
     transfer_risk_bps = round(transfer_delay_min * transfer_penalty_bps_per_min, 4)
+
+    hold_hours = constraint_book.hold_hours(str(item.get("strategy_type", "")))
+    inventory_available_usd = 0.0
+    max_position_usd = 0.0
+    borrow_required_usd = 0.0
+    borrow_capacity_usd = 0.0
+    borrow_rate_bps_per_hour = 0.0
+    borrow_cost_bps = 0.0
+    position_limit_exceeded = False
+    inventory_unavailable = False
+    borrow_limit_exceeded = False
+
+    if constraint_book.enabled:
+        asset = constraint_book.asset_from_symbol(item.get("symbol", ""))
+        buy_constraints = constraint_book.constraints_for(item.get("buy_venue", ""), asset)
+        sell_constraints = constraint_book.constraints_for(item.get("sell_venue", ""), asset)
+
+        effective_max_position = min(
+            float(buy_constraints["max_position_usd"]),
+            float(sell_constraints["max_position_usd"]),
+        )
+        max_position_usd = _render_limit(effective_max_position)
+        position_limit_exceeded = size_usd > effective_max_position + 1e-9
+
+        inventory_available_usd = float(sell_constraints["available_inventory_usd"])
+        borrow_capacity_usd = float(sell_constraints["max_borrow_usd"])
+        borrow_rate_bps_per_hour = float(sell_constraints["borrow_rate_bps_per_hour"])
+
+        inventory_required_usd = (
+            size_usd if item.get("strategy_type") in INVENTORY_REQUIRED_STRATEGIES else 0.0
+        )
+        borrow_required_usd = max(0.0, inventory_required_usd - inventory_available_usd)
+        inventory_unavailable = (
+            inventory_required_usd > 0
+            and inventory_available_usd <= 0.0
+            and borrow_capacity_usd <= 0.0
+        )
+        borrow_limit_exceeded = borrow_required_usd > borrow_capacity_usd + 1e-9
+
+        borrow_used_usd = min(borrow_required_usd, borrow_capacity_usd)
+        if size_usd > 0 and borrow_used_usd > 0:
+            borrow_cost_bps = round(
+                (borrow_used_usd / size_usd) * borrow_rate_bps_per_hour * hold_hours,
+                6,
+            )
+
     net_edge_bps = round(
-        float(item["gross_edge_bps"]) - fees_bps - slippage_bps - latency_risk_bps - transfer_risk_bps,
+        float(item["gross_edge_bps"])
+        - fees_bps
+        - slippage_bps
+        - latency_risk_bps
+        - transfer_risk_bps
+        - borrow_cost_bps,
         4,
     )
 
@@ -176,10 +408,18 @@ def score_item(
         "fees_bps": fees_bps,
         "slippage_bps": slippage_bps,
         "latency_risk_bps": latency_risk_bps,
+        "borrow_cost_bps": borrow_cost_bps,
     }
 
     risk_score = _risk_score(scoring_view, net_edge_bps, transfer_risk_bps)
-    is_qualified = net_edge_bps >= min_net_edge_bps and risk_score <= max_risk_score
+
+    constraint_blocked = position_limit_exceeded or borrow_limit_exceeded or inventory_unavailable
+    is_qualified = (
+        net_edge_bps >= min_net_edge_bps
+        and risk_score <= max_risk_score
+        and not constraint_blocked
+    )
+
     dominant_drag = _dominant_drag(scoring_view, transfer_risk_bps)
     rejection_reasons = []
     if not is_qualified:
@@ -190,6 +430,10 @@ def score_item(
             transfer_risk_bps=transfer_risk_bps,
             min_net_edge_bps=min_net_edge_bps,
             max_risk_score=max_risk_score,
+            constraints_enabled=constraint_book.enabled,
+            position_limit_exceeded=position_limit_exceeded,
+            inventory_unavailable=inventory_unavailable,
+            borrow_limit_exceeded=borrow_limit_exceeded,
         )
 
     return ScoredOpportunity(
@@ -199,6 +443,7 @@ def score_item(
         buy_venue=item["buy_venue"],
         sell_venue=item["sell_venue"],
         execution_profile=execution_profile,
+        constraints_enabled=constraint_book.enabled,
         gross_edge_bps=float(item["gross_edge_bps"]),
         source_fees_bps=source_fees_bps,
         source_slippage_bps=source_slippage_bps,
@@ -209,9 +454,16 @@ def score_item(
         latency_risk_bps=latency_risk_bps,
         transfer_delay_min=transfer_delay_min,
         transfer_risk_bps=transfer_risk_bps,
+        hold_hours=hold_hours,
+        inventory_available_usd=round(inventory_available_usd, 4),
+        max_position_usd=max_position_usd,
+        borrow_required_usd=round(borrow_required_usd, 4),
+        borrow_capacity_usd=round(borrow_capacity_usd, 4),
+        borrow_rate_bps_per_hour=round(borrow_rate_bps_per_hour, 6),
+        borrow_cost_bps=borrow_cost_bps,
         net_edge_bps=net_edge_bps,
         risk_score=risk_score,
-        size_usd=float(item["size_usd"]),
+        size_usd=size_usd,
         dominant_drag=dominant_drag,
         is_qualified=is_qualified,
         rejection_reasons=rejection_reasons,
@@ -222,6 +474,7 @@ def score_item(
 def _build_summary(
     scored: list[ScoredOpportunity],
     input_path: Path,
+    constraints_path: Path | None,
     execution_profile: str,
     fee_multiplier: float,
     slippage_multiplier: float,
@@ -238,6 +491,7 @@ def _build_summary(
     return {
         "generated_at": datetime.now(tz=timezone.utc).isoformat(),
         "input": str(input_path),
+        "constraints": str(constraints_path) if constraints_path else None,
         "execution_profile": execution_profile,
         "rules": {
             "fee_multiplier": fee_multiplier,
@@ -262,6 +516,7 @@ def _build_summary(
                 "net_edge_bps": s.net_edge_bps,
                 "risk_score": s.risk_score,
                 "dominant_drag": s.dominant_drag,
+                "borrow_cost_bps": s.borrow_cost_bps,
                 "rejection_reasons": s.rejection_reasons,
             }
             for s in sorted(rejected, key=lambda x: x.net_edge_bps, reverse=True)[:10]
@@ -272,6 +527,7 @@ def _build_summary(
 def render_markdown(
     scored: list[ScoredOpportunity],
     input_path: Path,
+    constraints_path: Path | None,
     execution_profile: str,
     fee_multiplier: float,
     slippage_multiplier: float,
@@ -293,11 +549,16 @@ def render_markdown(
         f"Generated at: `{run_at}`",
         f"Input: `{input_path}`",
         f"Execution profile: `{execution_profile}`",
+        (
+            f"Constraints: `{constraints_path}`"
+            if constraints_path
+            else "Constraints: `disabled`"
+        ),
         "",
         "## Rules",
         (
-            "- Net edge (bps) = gross - fees - slippage - latency risk - transfer risk "
-            f"({transfer_penalty_bps_per_min} bps/min)"
+            "- Net edge (bps) = gross - fees - slippage - latency risk - transfer risk - borrow cost "
+            f"({transfer_penalty_bps_per_min} bps/min transfer penalty)"
         ),
         (
             "- Profile multipliers: "
@@ -328,8 +589,8 @@ def render_markdown(
             "",
             "## Ranked Candidates",
             "",
-            "| Rank | Pair | Path | Gross bps | Net bps | Risk | Drag | Qualified | Rejection Reasons |",
-            "|---:|---|---|---:|---:|---:|---|:---:|---|",
+            "| Rank | Pair | Path | Gross bps | Net bps | Borrow bps | Risk | Drag | Qualified | Rejection Reasons |",
+            "|---:|---|---|---:|---:|---:|---:|---|:---:|---|",
         ]
     )
 
@@ -337,7 +598,7 @@ def render_markdown(
     for i, item in enumerate(ranked, start=1):
         reasons = ", ".join(item.rejection_reasons) if item.rejection_reasons else "-"
         lines.append(
-            f"| {i} | {item.symbol} | {item.buy_venue} -> {item.sell_venue} | {item.gross_edge_bps:.2f} | {item.net_edge_bps:.2f} | {item.risk_score:.2f} | {item.dominant_drag} | {'✅' if item.is_qualified else '❌'} | {reasons} |"
+            f"| {i} | {item.symbol} | {item.buy_venue} -> {item.sell_venue} | {item.gross_edge_bps:.2f} | {item.net_edge_bps:.2f} | {item.borrow_cost_bps:.2f} | {item.risk_score:.2f} | {item.dominant_drag} | {'✅' if item.is_qualified else '❌'} | {reasons} |"
         )
 
     lines.extend(["", "## Notes", "- This dashboard is for screening only, not execution advice."])
@@ -356,6 +617,13 @@ def parse_args() -> argparse.Namespace:
         choices=sorted(EXECUTION_PROFILES.keys()),
         default="taker_default",
         help="Execution friction profile for scenario scoring.",
+    )
+
+    p.add_argument(
+        "--constraints",
+        type=Path,
+        default=DEFAULT_CONSTRAINTS_PATH,
+        help="Execution constraints JSON (inventory/borrow/position).",
     )
 
     p.add_argument("--fee-multiplier", type=float, default=None)
@@ -413,6 +681,9 @@ def main() -> None:
         else float(profile.get("max_risk_score", DEFAULT_MAX_RISK_SCORE))
     )
 
+    constraint_book = ConstraintBook.from_path(args.constraints)
+    constraints_path = args.constraints if constraint_book.enabled else None
+
     scored = [
         score_item(
             item,
@@ -424,6 +695,7 @@ def main() -> None:
             transfer_penalty_bps_per_min=transfer_penalty_bps_per_min,
             min_net_edge_bps=min_net_edge_bps,
             max_risk_score=max_risk_score,
+            constraint_book=constraint_book,
         )
         for item in data
     ]
@@ -432,6 +704,7 @@ def main() -> None:
     summary = _build_summary(
         scored_sorted,
         input_path=args.input,
+        constraints_path=constraints_path,
         execution_profile=args.execution_profile,
         fee_multiplier=fee_multiplier,
         slippage_multiplier=slippage_multiplier,
@@ -451,6 +724,7 @@ def main() -> None:
         render_markdown(
             scored_sorted,
             input_path=args.input,
+            constraints_path=constraints_path,
             execution_profile=args.execution_profile,
             fee_multiplier=fee_multiplier,
             slippage_multiplier=slippage_multiplier,
@@ -466,6 +740,9 @@ def main() -> None:
     print(f"Scored {len(scored)} candidates.")
     print(f"Qualified: {sum(1 for item in scored if item.is_qualified)}")
     print(f"Execution profile: {args.execution_profile}")
+    print(f"Constraints enabled: {constraint_book.enabled}")
+    if constraint_book.enabled:
+        print(f"Constraints path: {args.constraints}")
     print(f"Wrote: {args.output_json}")
     print(f"Wrote: {args.output_md}")
     print(f"Wrote: {args.output_summary}")

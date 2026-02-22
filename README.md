@@ -53,8 +53,12 @@ python3 scripts/merge_candidate_files.py \
     data/opportunity_candidates.funding.live.json \
     data/opportunity_candidates.basis.live.json \
   --output data/opportunity_candidates.combined.live.json
+python3 scripts/build_execution_constraints_template.py \
+  --input data/opportunity_candidates.combined.live.json \
+  --output data/execution_constraints.latest.json
 python3 scripts/scan_opportunities.py \
   --input data/opportunity_candidates.combined.live.json \
+  --constraints data/execution_constraints.latest.json \
   --execution-profile taker_default \
   --output-json opportunities/shortlist-latest.json \
   --output-md opportunities/dashboard-latest.md
@@ -71,6 +75,7 @@ Outputs:
 - `data/opportunity_candidates.funding.live.json`
 - `data/opportunity_candidates.basis.live.json`
 - `data/opportunity_candidates.combined.live.json`
+- `data/execution_constraints.latest.json` (venue/asset inventory, borrow and position-cap template)
 - `opportunities/shortlist-latest.json`
 - `opportunities/dashboard-latest.md`
 - `opportunities/rejection-summary-latest.json` (rejection reason / friction-drag aggregation)
@@ -79,6 +84,11 @@ Execution profile scenarios (scanner):
 - `taker_default` (strict baseline)
 - `maker_inventory` (pre-positioned inventory + partial maker execution)
 - `maker_inventory_vip` (best-case low-fee profile)
+
+Scanner now also enforces hard execution constraints when `--constraints` is provided:
+- venue/asset `max_position_usd`
+- sell-side `available_inventory_usd`
+- `max_borrow_usd` + borrow carry cost (`borrow_rate_bps_per_hour × hold_hours`)
 
 ## GitHub Pages Dashboard
 
