@@ -10,6 +10,7 @@ Long-term distilled memory for trading/arbitrage work.
 - Jupiter DEX integration works for live quotes, but wrapped-token routes can produce massive false edges without reference-price sanity checks.
 - After adding DEX reference-deviation guard and crossed-quote guard, false BTC route signals were filtered out and shortlist returned to 0 qualified (expected under strict friction model).
 - Rejection-reason aggregation is now part of baseline output: every rejected candidate tags explicit causes (fee/slippage/latency/threshold) plus dominant friction drag.
+- CEX scanner now uses orderbook depth-derived slippage curves (1k/5k/10k USD tiers) instead of spread-only heuristic when depth data is available.
 
 ## What We Believe (Needs Validation)
 - Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
@@ -28,3 +29,4 @@ Long-term distilled memory for trading/arbitrage work.
 - Risk gate should be pass/fail before any manual excitement about potential PnL.
 - Cross-exchange top-of-book CEX spread is usually too thin to survive taker+taker fees; either improve fee tier, pre-position inventory, or move to other strategy buckets.
 - DEX adapter output must include quote-quality gates (reference deviation / crossed book) before scoring, otherwise scanner will overfit to broken routes.
+- Even with depth-aware slippage, dominant drag can still be fees; venue fee tier and inventory location are first-order levers before chasing more symbols.

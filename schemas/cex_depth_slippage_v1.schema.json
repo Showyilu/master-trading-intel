@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://showyilu.github.io/master-trading-intel/schemas/cex_depth_slippage_v1.schema.json",
+  "title": "CEX Depth Slippage Snapshot v1",
+  "type": "object",
+  "required": ["generated_at", "size_tiers_usd", "symbols"],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "size_tiers_usd": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      },
+      "minItems": 1
+    },
+    "symbols": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "required": ["mid_price", "book_levels", "slippage_bps_by_tier"],
+          "properties": {
+            "mid_price": { "type": "number", "exclusiveMinimum": 0 },
+            "book_levels": {
+              "type": "object",
+              "required": ["bids", "asks"],
+              "properties": {
+                "bids": { "type": "integer", "minimum": 0 },
+                "asks": { "type": "integer", "minimum": 0 }
+              }
+            },
+            "slippage_bps_by_tier": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["size_usd", "buy_slippage_bps", "sell_slippage_bps"],
+                "properties": {
+                  "size_usd": { "type": "number", "exclusiveMinimum": 0 },
+                  "buy_slippage_bps": { "type": ["number", "null"], "minimum": 0 },
+                  "sell_slippage_bps": { "type": ["number", "null"], "minimum": 0 }
+                }
+              }
+            },
+            "slippage_lookup": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "buy_slippage_bps": { "type": ["number", "null"], "minimum": 0 },
+                  "sell_slippage_bps": { "type": ["number", "null"], "minimum": 0 }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

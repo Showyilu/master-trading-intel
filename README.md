@@ -29,12 +29,16 @@ python3 scripts/scan_opportunities.py
 
 ### 2) Live CEX snapshot pipeline (Binance + Bybit)
 ```bash
-python3 scripts/build_live_cex_candidates.py
+python3 scripts/build_live_cex_candidates.py \
+  --size-usd 10000 \
+  --size-tiers-usd 1000 5000 10000
 python3 scripts/scan_opportunities.py \
   --input data/opportunity_candidates.live.json \
   --output-json opportunities/shortlist-latest.json \
   --output-md opportunities/dashboard-latest.md
 ```
+
+`build_live_cex_candidates.py` now includes orderbook depth modeling and writes per-symbol slippage curves by notional tier.
 
 ### 3) Live CEX + DEX pipeline (Binance/Bybit + Jupiter)
 ```bash
@@ -53,6 +57,7 @@ Outputs:
 - `data/normalized_quotes_cex_latest.json`
 - `data/normalized_quotes_dex_latest.json`
 - `data/opportunity_candidates.live.json`
+- `data/cex_depth_slippage_latest.json`
 - `data/opportunity_candidates.cex_dex.live.json`
 - `data/opportunity_candidates.combined.live.json`
 - `opportunities/shortlist-latest.json`

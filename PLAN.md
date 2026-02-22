@@ -11,7 +11,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 5. ✅ Added live DEX adapter (Jupiter) + CEX-DEX candidate builder + merged dashboard flow (`scripts/build_live_cex_dex_candidates.py`, `scripts/merge_candidate_files.py`).
 6. ✅ Added sanity guards to block false edges (reference deviation + crossed-book checks for DEX quotes).
 7. ✅ Added rejection-reason aggregation + dominant-friction breakdown in scanner outputs (`opportunities/rejection-summary-latest.json`).
-8. ⏭ Next: add size-aware orderbook/depth slippage model (1k/5k/10k USD tiers).
+8. ✅ Added size-aware orderbook/depth slippage model (1k/5k/10k USD tiers) for Binance/Bybit (`data/cex_depth_slippage_latest.json`).
+9. ⏭ Next: add funding/basis live adapter + carry candidate template.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.
