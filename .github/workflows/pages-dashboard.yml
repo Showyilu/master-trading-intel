@@ -82,11 +82,18 @@ jobs:
             --input data/opportunity_candidates.combined.live.json \
             --output data/execution_constraints.latest.json
 
+      - name: Build execution fee table template
+        run: |
+          python scripts/build_execution_fee_table_template.py \
+            --input data/opportunity_candidates.combined.live.json \
+            --output data/execution_fee_table.latest.json
+
       - name: Score and produce dashboard
         run: |
           python scripts/scan_opportunities.py \
             --input data/opportunity_candidates.combined.live.json \
             --constraints data/execution_constraints.latest.json \
+            --fee-table data/execution_fee_table.latest.json \
             --output-json opportunities/shortlist-latest.json \
             --output-md opportunities/dashboard-latest.md
 

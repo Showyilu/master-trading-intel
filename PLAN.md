@@ -16,7 +16,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 10. ✅ Added perp-spot basis live adapter (Binance/Bybit) + candidate builder (`scripts/build_live_basis_candidates.py`).
 11. ✅ Added execution profile scenarios in scanner (`taker_default` / `maker_inventory` / `maker_inventory_vip`) and profile playbook (`playbooks/execution-profiles.md`).
 12. ✅ Added execution-constraint layer (`data/execution_constraints.latest.json`) + template builder (`scripts/build_execution_constraints_template.py`) and wired scanner hard gates for position cap / inventory / borrow capacity with borrow carry cost in net-edge math.
-13. ⏭ Next: replace template constraints with real venue inputs (account balances, margin limits, borrow books, fee tiers) via authenticated adapters so hard gates use live capacity, not heuristics.
+13. ✅ Added venue/instrument fee-table layer (`data/execution_fee_table.latest.json`) + template builder (`scripts/build_execution_fee_table_template.py`) and wired scanner to consume explicit taker/maker/vip bps instead of only embedded candidate fees.
+14. ⏭ Next: replace template constraints + fee table with authenticated venue inputs (account balances, margin limits, borrow books, real fee tiers/rebates) so hard gates and fee math use live capacity, not heuristics.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

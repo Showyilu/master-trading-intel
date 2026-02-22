@@ -56,9 +56,13 @@ python3 scripts/merge_candidate_files.py \
 python3 scripts/build_execution_constraints_template.py \
   --input data/opportunity_candidates.combined.live.json \
   --output data/execution_constraints.latest.json
+python3 scripts/build_execution_fee_table_template.py \
+  --input data/opportunity_candidates.combined.live.json \
+  --output data/execution_fee_table.latest.json
 python3 scripts/scan_opportunities.py \
   --input data/opportunity_candidates.combined.live.json \
   --constraints data/execution_constraints.latest.json \
+  --fee-table data/execution_fee_table.latest.json \
   --execution-profile taker_default \
   --output-json opportunities/shortlist-latest.json \
   --output-md opportunities/dashboard-latest.md
@@ -76,6 +80,7 @@ Outputs:
 - `data/opportunity_candidates.basis.live.json`
 - `data/opportunity_candidates.combined.live.json`
 - `data/execution_constraints.latest.json` (venue/asset inventory, borrow and position-cap template)
+- `data/execution_fee_table.latest.json` (venue/instrument taker-maker-vip fee template)
 - `opportunities/shortlist-latest.json`
 - `opportunities/dashboard-latest.md`
 - `opportunities/rejection-summary-latest.json` (rejection reason / friction-drag aggregation)
@@ -89,6 +94,11 @@ Scanner now also enforces hard execution constraints when `--constraints` is pro
 - venue/asset `max_position_usd`
 - sell-side `available_inventory_usd`
 - `max_borrow_usd` + borrow carry cost (`borrow_rate_bps_per_hour × hold_hours`)
+
+Scanner can load explicit fee assumptions with `--fee-table`:
+- per-venue + per-instrument `taker_bps` / `maker_bps` / `maker_vip_bps`
+- profile-to-fee-mode mapping (`taker_default` / `maker_inventory` / `maker_inventory_vip`)
+- strategy round-trip side multipliers (e.g. funding/basis open+close cost)
 
 ## GitHub Pages Dashboard
 

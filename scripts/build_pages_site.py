@@ -81,7 +81,7 @@ def build_html(rows: list[dict], generated_at: str) -> str:
     <span class=\"pill\">Candidates: <b>{len(rows)}</b></span>
     <span class=\"pill\">Qualified: <b>{len(qualified)}</b></span>
     <span class=\"pill\">Pass rate: <b>{(len(qualified)/len(rows)*100 if rows else 0):.1f}%</b></span>
-    <p class=\"muted\">Net edge formula: gross - fees - slippage - latency risk - transfer risk</p>
+    <p class=\"muted\">Net edge formula: gross - fees - slippage - latency risk - transfer risk - borrow cost</p>
     <p><a href=\"shortlist-latest.json\">shortlist-latest.json</a> · <a href=\"dashboard-latest.md\">dashboard-latest.md</a></p>
   </div>
 

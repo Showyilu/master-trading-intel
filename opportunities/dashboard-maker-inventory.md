@@ -1,65 +1,66 @@
 # Opportunity Dashboard (Latest)
 
-Generated at: `2026-02-22T12:05:34.577107+00:00`
+Generated at: `2026-02-22T14:07:42.385086+00:00`
 Input: `data/opportunity_candidates.combined.live.json`
 Execution profile: `maker_inventory`
 Constraints: `data/execution_constraints.latest.json`
+Fee table: `data/execution_fee_table.latest.json`
 
 ## Rules
 - Net edge (bps) = gross - fees - slippage - latency risk - transfer risk - borrow cost (0.24 bps/min transfer penalty)
-- Profile multipliers: fees×0.42, slippage×0.72, latency×0.95, transfer_delay×0.3
+- Profile multipliers: fees×1.0, slippage×0.72, latency×0.95, transfer_delay×0.3
 - Qualified if `net_edge_bps >= 4.5` and `risk_score <= 0.62`
 
 ## Summary
-- Candidates: **31**
+- Candidates: **30**
 - Qualified: **0**
-- Rejected: **31**
+- Rejected: **30**
+- Fee-model applied: **30**
 
 ## Rejection Breakdown
 - By reason:
-  - `net_edge_below_threshold`: **31**
-  - `fee_dominated`: **31**
-  - `slippage_dominated`: **31**
-  - `borrow_dominated`: **20**
-  - `latency_transfer_dominated`: **17**
+  - `net_edge_below_threshold`: **30**
+  - `fee_dominated`: **30**
+  - `slippage_dominated`: **30**
+  - `borrow_dominated`: **19**
+  - `latency_transfer_dominated`: **16**
 - Dominant drag:
-  - `fees`: **31**
+  - `fees`: **30**
 
 ## Ranked Candidates
 
 | Rank | Pair | Path | Gross bps | Net bps | Borrow bps | Risk | Drag | Qualified | Rejection Reasons |
 |---:|---|---|---:|---:|---:|---:|---|:---:|---|
-| 1 | SOL/USDT | jupiter -> binance | 1.67 | -8.76 | 0.06 | 0.25 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 2 | ETH/USDT | binance -> bybit | 0.76 | -9.43 | 0.08 | 0.24 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 3 | BTC/USDT | binance -> bybit | 0.42 | -9.44 | 0.08 | 0.24 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 4 | BNB/USDT | binance -> bybit | 1.76 | -9.51 | 0.15 | 0.25 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated |
-| 5 | SOL/USDT | jupiter -> bybit | 0.49 | -11.07 | 0.06 | 0.26 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 6 | AVAX/USDT | long_binance_perp -> short_bybit_perp | 1.30 | -14.88 | 0.00 | 0.31 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 7 | BNB/USDT | long_binance_perp -> short_bybit_perp | 0.93 | -15.25 | 0.00 | 0.31 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 8 | SOL/USDT | long_bybit_perp -> short_binance_perp | 0.58 | -15.60 | 0.00 | 0.31 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 9 | DOGE/USDT | long_binance_perp -> short_bybit_perp | 0.52 | -15.65 | 0.00 | 0.31 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 10 | BTC/USDT | long_bybit_perp -> short_binance_perp | 0.46 | -15.72 | 0.00 | 0.31 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 11 | LINK/USDT | long_bybit_perp -> short_binance_perp | 0.45 | -15.73 | 0.00 | 0.31 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
-| 12 | SOL/USDT | long_binance_perp -> short_binance_spot | 2.37 | -16.87 | 3.38 | 0.34 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 13 | ETH/USDT | long_binance_perp -> short_binance_spot | 0.64 | -18.56 | 3.38 | 0.34 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
-| 14 | BTC/USDT | long_binance_perp -> short_binance_spot | 0.59 | -18.60 | 3.38 | 0.34 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
-| 15 | LINK/USDT | long_binance_perp -> short_binance_spot | 2.95 | -18.92 | 5.98 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 16 | ADA/USDT | long_binance_perp -> short_binance_spot | 2.81 | -19.01 | 5.98 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 17 | LTC/USDT | long_binance_perp -> short_binance_spot | 2.77 | -19.07 | 5.98 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 18 | AVAX/USDT | long_binance_perp -> short_binance_spot | 2.74 | -19.08 | 5.98 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 19 | DOGE/USDT | long_binance_perp -> short_binance_spot | 2.68 | -19.15 | 5.98 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 20 | XRP/USDT | long_binance_perp -> short_binance_spot | 2.10 | -19.72 | 5.98 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 21 | SOL/USDT | long_bybit_perp -> short_bybit_spot | 2.98 | -19.78 | 3.38 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 22 | BNB/USDT | long_binance_spot -> short_binance_perp | 0.93 | -20.88 | 5.98 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
-| 23 | BTC/USDT | long_bybit_perp -> short_bybit_spot | 1.23 | -21.50 | 3.38 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
-| 24 | ETH/USDT | long_bybit_perp -> short_bybit_spot | 1.14 | -21.59 | 3.38 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
-| 25 | LINK/USDT | long_bybit_perp -> short_bybit_spot | 3.15 | -22.23 | 5.98 | 0.40 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 26 | LTC/USDT | long_bybit_perp -> short_bybit_spot | 2.53 | -22.83 | 5.98 | 0.40 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 27 | XRP/USDT | long_bybit_perp -> short_bybit_spot | 2.47 | -22.91 | 5.98 | 0.40 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 28 | ADA/USDT | long_bybit_perp -> short_bybit_spot | 2.42 | -22.92 | 5.98 | 0.40 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 29 | DOGE/USDT | long_bybit_perp -> short_bybit_spot | 2.25 | -23.11 | 5.98 | 0.40 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
-| 30 | AVAX/USDT | long_bybit_perp -> short_bybit_spot | 1.68 | -23.69 | 5.98 | 0.40 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
-| 31 | BNB/USDT | long_bybit_perp -> short_bybit_spot | 0.66 | -24.71 | 5.98 | 0.40 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
+| 1 | BNB/USDT | long_binance_perp -> short_bybit_perp | 0.81 | -13.21 | 0.00 | 0.28 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 2 | LTC/USDT | long_binance_perp -> short_bybit_perp | 0.78 | -13.24 | 0.00 | 0.28 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 3 | DOGE/USDT | long_binance_perp -> short_bybit_perp | 0.62 | -13.39 | 0.00 | 0.28 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 4 | AVAX/USDT | long_binance_perp -> short_bybit_perp | 0.59 | -13.42 | 0.00 | 0.28 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 5 | ADA/USDT | long_binance_perp -> short_bybit_perp | 0.57 | -13.44 | 0.00 | 0.28 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 6 | XRP/USDT | long_binance_perp -> short_bybit_perp | 0.49 | -13.53 | 0.00 | 0.28 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 7 | BTC/USDT | long_bybit_perp -> short_binance_perp | 0.41 | -13.61 | 0.00 | 0.28 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 8 | SOL/USDT | jupiter -> binance | 1.22 | -18.29 | 0.06 | 0.34 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 9 | BTC/USDT | bybit -> binance | 1.45 | -19.49 | 0.08 | 0.34 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 10 | BNB/USDT | binance -> bybit | 0.65 | -20.73 | 0.15 | 0.35 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated |
+| 11 | DOGE/USDT | binance -> bybit | 2.09 | -21.10 | 0.15 | 0.37 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated |
+| 12 | SOL/USDT | long_binance_perp -> short_binance_spot | 1.87 | -26.07 | 3.38 | 0.41 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 13 | ETH/USDT | long_binance_perp -> short_binance_spot | 1.35 | -26.60 | 3.38 | 0.41 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 14 | ADA/USDT | long_binance_perp -> short_binance_spot | 3.46 | -27.15 | 5.98 | 0.44 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 15 | BTC/USDT | long_binance_perp -> short_binance_spot | 0.68 | -27.26 | 3.38 | 0.41 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
+| 16 | SOL/USDT | long_bybit_perp -> short_bybit_spot | 1.62 | -27.32 | 3.38 | 0.42 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 17 | ETH/USDT | long_bybit_perp -> short_bybit_spot | 1.64 | -27.33 | 3.38 | 0.42 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 18 | BTC/USDT | long_bybit_perp -> short_bybit_spot | 1.05 | -27.89 | 3.38 | 0.42 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
+| 19 | XRP/USDT | long_binance_perp -> short_binance_spot | 2.65 | -27.91 | 5.98 | 0.44 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 20 | DOGE/USDT | long_binance_perp -> short_binance_spot | 2.47 | -28.11 | 5.98 | 0.44 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 21 | LINK/USDT | long_binance_perp -> short_binance_spot | 2.34 | -28.23 | 5.98 | 0.44 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 22 | LTC/USDT | long_binance_perp -> short_binance_spot | 1.71 | -28.83 | 5.98 | 0.44 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 23 | XRP/USDT | long_bybit_perp -> short_bybit_spot | 2.08 | -29.49 | 5.98 | 0.45 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 24 | ADA/USDT | long_bybit_perp -> short_bybit_spot | 2.07 | -29.49 | 5.98 | 0.45 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 25 | DOGE/USDT | long_bybit_perp -> short_bybit_spot | 1.84 | -29.74 | 5.98 | 0.45 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 26 | AVAX/USDT | long_binance_perp -> short_binance_spot | 0.64 | -29.86 | 5.98 | 0.44 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
+| 27 | LINK/USDT | long_bybit_perp -> short_bybit_spot | 1.66 | -29.89 | 5.98 | 0.45 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, borrow_dominated |
+| 28 | BNB/USDT | long_binance_spot -> short_binance_perp | 0.46 | -30.04 | 5.98 | 0.44 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
+| 29 | BNB/USDT | long_bybit_perp -> short_bybit_spot | 1.15 | -30.47 | 5.98 | 0.45 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
+| 30 | LTC/USDT | long_bybit_perp -> short_bybit_spot | 0.52 | -31.01 | 5.98 | 0.45 | fees | ❌ | net_edge_below_threshold, fee_dominated, slippage_dominated, latency_transfer_dominated, borrow_dominated |
 
 ## Notes
 - This dashboard is for screening only, not execution advice.

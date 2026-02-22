@@ -39,6 +39,7 @@ def main() -> None:
 
     merged = ROOT / "data/opportunity_candidates.combined.live.json"
     constraints = ROOT / "data/execution_constraints.latest.json"
+    fee_table = ROOT / "data/execution_fee_table.latest.json"
     sample = ROOT / "data/opportunity_candidates.sample.json"
 
     try:
@@ -62,9 +63,21 @@ def main() -> None:
             "data/execution_constraints.latest.json",
         ]
     )
+    run(
+        [
+            "python3",
+            "scripts/build_execution_fee_table_template.py",
+            "--input",
+            "data/opportunity_candidates.combined.live.json",
+            "--output",
+            "data/execution_fee_table.latest.json",
+        ]
+    )
 
     if constraints.exists():
         print(f"Execution constraints: {constraints}")
+    if fee_table.exists():
+        print(f"Execution fee table: {fee_table}")
 
     run(
         [
@@ -74,6 +87,8 @@ def main() -> None:
             "data/opportunity_candidates.combined.live.json",
             "--constraints",
             "data/execution_constraints.latest.json",
+            "--fee-table",
+            "data/execution_fee_table.latest.json",
             "--execution-profile",
             "taker_default",
             "--output-json",

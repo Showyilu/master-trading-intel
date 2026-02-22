@@ -27,6 +27,7 @@ DEFAULT_OUTPUT_JSON = ROOT / "opportunities" / "shortlist-latest.json"
 DEFAULT_OUTPUT_MD = ROOT / "opportunities" / "dashboard-latest.md"
 DEFAULT_OUTPUT_SUMMARY = ROOT / "opportunities" / "rejection-summary-latest.json"
 DEFAULT_CONSTRAINTS_PATH = ROOT / "data" / "execution_constraints.latest.json"
+DEFAULT_FEE_TABLE_PATH = ROOT / "data" / "execution_fee_table.latest.json"
 
 DEFAULT_TRANSFER_PENALTY_BPS_PER_MIN = 0.45
 DEFAULT_MIN_NET_EDGE_BPS = 8.0
@@ -102,6 +103,9 @@ class ScoredOpportunity:
     constraints_enabled: bool
     gross_edge_bps: float
     source_fees_bps: float
+    fee_model_base_fees_bps: float
+    fee_mode: str
+    fee_model_used: bool
     source_slippage_bps: float
     source_latency_risk_bps: float
     source_transfer_delay_min: float
@@ -243,6 +247,170 @@ class ConstraintBook:
         }
 
 
+class FeeTable:
+    DEFAULT_PROFILE_FEE_MODE = {
+        "taker_default": "taker",
+        "maker_inventory": "maker",
+        "maker_inventory_vip": "maker_vip",
+    }
+
+    DEFAULT_STRATEGY_ROUNDTRIP_SIDE_MULTIPLIER = {
+        "cex_cex": 1.0,
+        "cex_dex": 1.0,
+        "funding_carry_cex_cex": 2.0,
+        "perp_spot_basis": 2.0,
+    }
+
+    INSTRUMENT_KEYWORDS = {
+        "perp": {"perp", "future", "futures", "swap"},
+        "dex": {"dex", "jupiter", "uniswap", "raydium", "0x", "orca"},
+        "spot": {"spot"},
+    }
+
+    def __init__(self, payload: dict[str, Any] | None = None, path: Path | None = None):
+        payload = payload or {}
+        self.path = str(path) if path else ""
+        self.enabled = bool(payload)
+
+        defaults = payload.get("defaults", {}) if isinstance(payload, dict) else {}
+        defaults = defaults if isinstance(defaults, dict) else {}
+
+        self.default_fees: dict[str, dict[str, float]] = {}
+        for instrument in ["spot", "perp", "dex", "unknown"]:
+            bucket = defaults.get(instrument, {}) if isinstance(defaults.get(instrument), dict) else {}
+            self.default_fees[instrument] = {
+                "taker_bps": self._as_non_negative(bucket.get("taker_bps"), 10.0),
+                "maker_bps": self._as_non_negative(bucket.get("maker_bps"), 8.0),
+                "maker_vip_bps": self._as_non_negative(bucket.get("maker_vip_bps"), 4.0),
+            }
+
+        self.profile_fee_mode = dict(self.DEFAULT_PROFILE_FEE_MODE)
+        payload_profile_mode = payload.get("profile_fee_mode", {}) if isinstance(payload, dict) else {}
+        if isinstance(payload_profile_mode, dict):
+            for profile, mode in payload_profile_mode.items():
+                mode_key = str(mode).strip().lower()
+                if mode_key in {"taker", "maker", "maker_vip"}:
+                    self.profile_fee_mode[str(profile)] = mode_key
+
+        self.strategy_roundtrip_side_multiplier = dict(self.DEFAULT_STRATEGY_ROUNDTRIP_SIDE_MULTIPLIER)
+        strategy_map = defaults.get("strategy_roundtrip_side_multiplier", {}) if isinstance(defaults, dict) else {}
+        if isinstance(strategy_map, dict):
+            for strategy, mult in strategy_map.items():
+                try:
+                    self.strategy_roundtrip_side_multiplier[str(strategy)] = max(0.0, float(mult))
+                except (TypeError, ValueError):
+                    continue
+
+        self.rules: dict[tuple[str, str], dict[str, float | str]] = {}
+        rules = payload.get("rules", []) if isinstance(payload, dict) else []
+        if isinstance(rules, list):
+            for row in rules:
+                if not isinstance(row, dict):
+                    continue
+                venue = str(row.get("venue", "")).strip().lower()
+                instrument = str(row.get("instrument", "")).strip().lower() or "unknown"
+                if not venue:
+                    continue
+                self.rules[(venue, instrument)] = {
+                    "taker_bps": self._as_non_negative(row.get("taker_bps"), self.default_fees["unknown"]["taker_bps"]),
+                    "maker_bps": self._as_non_negative(row.get("maker_bps"), self.default_fees["unknown"]["maker_bps"]),
+                    "maker_vip_bps": self._as_non_negative(row.get("maker_vip_bps"), self.default_fees["unknown"]["maker_vip_bps"]),
+                }
+
+        self.known_venues = {venue for venue, _ in self.rules.keys()}
+
+    @classmethod
+    def from_path(cls, path: Path | None) -> "FeeTable":
+        if path is None or not path.exists():
+            return cls(payload=None, path=path)
+        try:
+            payload = json.loads(path.read_text())
+        except Exception:
+            payload = None
+        if not isinstance(payload, dict):
+            payload = None
+        return cls(payload=payload, path=path)
+
+    @staticmethod
+    def _as_non_negative(value: Any, fallback: float) -> float:
+        try:
+            return max(0.0, float(value))
+        except (TypeError, ValueError):
+            return fallback
+
+    def canonical_venue(self, raw_venue: str) -> str:
+        lowered = str(raw_venue).strip().lower()
+        if not lowered:
+            return "unknown"
+
+        if lowered in self.known_venues:
+            return lowered
+
+        for venue in sorted(self.known_venues, key=len, reverse=True):
+            if venue and venue in lowered:
+                return venue
+
+        tokens = [t for t in re.split(r"[^a-z0-9]+", lowered) if t]
+        for token in tokens:
+            if token not in VENUE_STOPWORDS:
+                return token
+
+        return lowered
+
+    def instrument_from_venue(self, raw_venue: str) -> str:
+        lowered = str(raw_venue).strip().lower()
+        if not lowered:
+            return "unknown"
+
+        tokens = [t for t in re.split(r"[^a-z0-9]+", lowered) if t]
+        token_set = set(tokens)
+
+        if token_set & self.INSTRUMENT_KEYWORDS["perp"]:
+            return "perp"
+        if token_set & self.INSTRUMENT_KEYWORDS["dex"]:
+            return "dex"
+        if token_set & self.INSTRUMENT_KEYWORDS["spot"]:
+            return "spot"
+
+        if "jupiter" in lowered or "uniswap" in lowered:
+            return "dex"
+        return "spot"
+
+    def _default_bucket(self, instrument: str) -> dict[str, float]:
+        if instrument in self.default_fees:
+            return self.default_fees[instrument]
+        return self.default_fees["unknown"]
+
+    def side_fee_bps(self, raw_venue: str, fee_mode: str) -> float:
+        venue_key = self.canonical_venue(raw_venue)
+        instrument = self.instrument_from_venue(raw_venue)
+
+        row = self.rules.get((venue_key, instrument)) or self.rules.get((venue_key, "unknown"))
+        if not isinstance(row, dict):
+            row = self._default_bucket(instrument)
+
+        key = f"{fee_mode}_bps"
+        fallback = self._default_bucket(instrument).get(key, self.default_fees["unknown"].get(key, 10.0))
+        return self._as_non_negative(row.get(key), float(fallback))
+
+    def estimate_total_fee_bps(self, item: dict[str, Any], execution_profile: str) -> tuple[float, str] | None:
+        if not self.enabled:
+            return None
+
+        fee_mode = self.profile_fee_mode.get(execution_profile, "taker")
+        if fee_mode not in {"taker", "maker", "maker_vip"}:
+            fee_mode = "taker"
+
+        buy_fee = self.side_fee_bps(item.get("buy_venue", ""), fee_mode)
+        sell_fee = self.side_fee_bps(item.get("sell_venue", ""), fee_mode)
+
+        strategy_type = str(item.get("strategy_type", "")).strip()
+        side_multiplier = self.strategy_roundtrip_side_multiplier.get(strategy_type, 1.0)
+
+        total = (buy_fee + sell_fee) * max(0.0, float(side_multiplier))
+        return round(total, 6), fee_mode
+
+
 def _clamp(value: float, lo: float = 0.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, value))
 
@@ -334,6 +502,7 @@ def score_item(
     min_net_edge_bps: float,
     max_risk_score: float,
     constraint_book: ConstraintBook,
+    fee_table: FeeTable,
 ) -> ScoredOpportunity:
     source_fees_bps = float(item["fees_bps"])
     source_slippage_bps = float(item["slippage_bps"])
@@ -341,7 +510,15 @@ def score_item(
     source_transfer_delay_min = float(item["transfer_delay_min"])
     size_usd = float(item["size_usd"])
 
-    fees_bps = round(source_fees_bps * fee_multiplier, 6)
+    fee_model_base_fees_bps = source_fees_bps
+    fee_mode = "candidate_source"
+    fee_model_used = False
+    fee_estimate = fee_table.estimate_total_fee_bps(item, execution_profile=execution_profile)
+    if fee_estimate is not None:
+        fee_model_base_fees_bps, fee_mode = fee_estimate
+        fee_model_used = True
+
+    fees_bps = round(fee_model_base_fees_bps * fee_multiplier, 6)
     slippage_bps = round(source_slippage_bps * slippage_multiplier, 6)
     latency_risk_bps = round(source_latency_risk_bps * latency_multiplier, 6)
     transfer_delay_min = round(source_transfer_delay_min * transfer_delay_multiplier, 6)
@@ -446,6 +623,9 @@ def score_item(
         constraints_enabled=constraint_book.enabled,
         gross_edge_bps=float(item["gross_edge_bps"]),
         source_fees_bps=source_fees_bps,
+        fee_model_base_fees_bps=fee_model_base_fees_bps,
+        fee_mode=fee_mode,
+        fee_model_used=fee_model_used,
         source_slippage_bps=source_slippage_bps,
         source_latency_risk_bps=source_latency_risk_bps,
         source_transfer_delay_min=source_transfer_delay_min,
@@ -475,6 +655,7 @@ def _build_summary(
     scored: list[ScoredOpportunity],
     input_path: Path,
     constraints_path: Path | None,
+    fee_table_path: Path | None,
     execution_profile: str,
     fee_multiplier: float,
     slippage_multiplier: float,
@@ -492,6 +673,7 @@ def _build_summary(
         "generated_at": datetime.now(tz=timezone.utc).isoformat(),
         "input": str(input_path),
         "constraints": str(constraints_path) if constraints_path else None,
+        "fee_table": str(fee_table_path) if fee_table_path else None,
         "execution_profile": execution_profile,
         "rules": {
             "fee_multiplier": fee_multiplier,
@@ -506,6 +688,7 @@ def _build_summary(
             "candidates": len(scored),
             "qualified": len(scored) - len(rejected),
             "rejected": len(rejected),
+            "fee_model_applied": sum(1 for s in scored if s.fee_model_used),
         },
         "rejection_reason_counts": dict(sorted(reason_counter.items())),
         "dominant_drag_counts": dict(sorted(drag_counter.items())),
@@ -528,6 +711,7 @@ def render_markdown(
     scored: list[ScoredOpportunity],
     input_path: Path,
     constraints_path: Path | None,
+    fee_table_path: Path | None,
     execution_profile: str,
     fee_multiplier: float,
     slippage_multiplier: float,
@@ -554,6 +738,11 @@ def render_markdown(
             if constraints_path
             else "Constraints: `disabled`"
         ),
+        (
+            f"Fee table: `{fee_table_path}`"
+            if fee_table_path
+            else "Fee table: `candidate embedded fees`"
+        ),
         "",
         "## Rules",
         (
@@ -567,7 +756,11 @@ def render_markdown(
         ),
         f"- Qualified if `net_edge_bps >= {min_net_edge_bps}` and `risk_score <= {max_risk_score}`",
         "",
-        f"## Summary\n- Candidates: **{len(scored)}**\n- Qualified: **{len(qualified)}**\n- Rejected: **{len(rejected)}**",
+        (
+            f"## Summary\n- Candidates: **{len(scored)}**\n- Qualified: **{len(qualified)}**\n"
+            f"- Rejected: **{len(rejected)}**\n"
+            f"- Fee-model applied: **{sum(1 for s in scored if s.fee_model_used)}**"
+        ),
         "",
         "## Rejection Breakdown",
     ]
@@ -625,6 +818,12 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_CONSTRAINTS_PATH,
         help="Execution constraints JSON (inventory/borrow/position).",
     )
+    p.add_argument(
+        "--fee-table",
+        type=Path,
+        default=DEFAULT_FEE_TABLE_PATH,
+        help="Execution fee table JSON (venue/instrument taker-maker-vip bps).",
+    )
 
     p.add_argument("--fee-multiplier", type=float, default=None)
     p.add_argument("--slippage-multiplier", type=float, default=None)
@@ -643,11 +842,12 @@ def main() -> None:
     data = json.loads(args.input.read_text())
 
     profile = EXECUTION_PROFILES[args.execution_profile]
+    fee_table = FeeTable.from_path(args.fee_table)
 
     fee_multiplier = (
         float(args.fee_multiplier)
         if args.fee_multiplier is not None
-        else float(profile["fee_multiplier"])
+        else (1.0 if fee_table.enabled else float(profile["fee_multiplier"]))
     )
     slippage_multiplier = (
         float(args.slippage_multiplier)
@@ -683,6 +883,7 @@ def main() -> None:
 
     constraint_book = ConstraintBook.from_path(args.constraints)
     constraints_path = args.constraints if constraint_book.enabled else None
+    fee_table_path = args.fee_table if fee_table.enabled else None
 
     scored = [
         score_item(
@@ -696,6 +897,7 @@ def main() -> None:
             min_net_edge_bps=min_net_edge_bps,
             max_risk_score=max_risk_score,
             constraint_book=constraint_book,
+            fee_table=fee_table,
         )
         for item in data
     ]
@@ -705,6 +907,7 @@ def main() -> None:
         scored_sorted,
         input_path=args.input,
         constraints_path=constraints_path,
+        fee_table_path=fee_table_path,
         execution_profile=args.execution_profile,
         fee_multiplier=fee_multiplier,
         slippage_multiplier=slippage_multiplier,
@@ -725,6 +928,7 @@ def main() -> None:
             scored_sorted,
             input_path=args.input,
             constraints_path=constraints_path,
+            fee_table_path=fee_table_path,
             execution_profile=args.execution_profile,
             fee_multiplier=fee_multiplier,
             slippage_multiplier=slippage_multiplier,
@@ -743,6 +947,9 @@ def main() -> None:
     print(f"Constraints enabled: {constraint_book.enabled}")
     if constraint_book.enabled:
         print(f"Constraints path: {args.constraints}")
+    print(f"Fee table enabled: {fee_table.enabled}")
+    if fee_table.enabled:
+        print(f"Fee table path: {args.fee_table}")
     print(f"Wrote: {args.output_json}")
     print(f"Wrote: {args.output_md}")
     print(f"Wrote: {args.output_summary}")

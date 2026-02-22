@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://master-trading-intel.local/schemas/execution_fee_table_v1.schema.json",
+  "title": "Execution Fee Table v1",
+  "description": "Venue/instrument-level fee assumptions used by scanner to compute executable net edge under taker/maker/vip profiles.",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "version",
+    "defaults",
+    "profile_fee_mode",
+    "rules"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "version": {
+      "const": "execution_fee_table_v1"
+    },
+    "defaults": {
+      "type": "object",
+      "required": [
+        "spot",
+        "perp",
+        "dex",
+        "unknown",
+        "strategy_roundtrip_side_multiplier"
+      ],
+      "properties": {
+        "spot": { "$ref": "#/$defs/feeBucket" },
+        "perp": { "$ref": "#/$defs/feeBucket" },
+        "dex": { "$ref": "#/$defs/feeBucket" },
+        "unknown": { "$ref": "#/$defs/feeBucket" },
+        "strategy_roundtrip_side_multiplier": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "profile_fee_mode": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["taker", "maker", "maker_vip"]
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "venue",
+          "instrument",
+          "taker_bps",
+          "maker_bps",
+          "maker_vip_bps"
+        ],
+        "properties": {
+          "venue": {
+            "type": "string",
+            "minLength": 1
+          },
+          "instrument": {
+            "type": "string",
+            "enum": ["spot", "perp", "dex", "unknown"]
+          },
+          "taker_bps": {
+            "type": "number",
+            "minimum": 0
+          },
+          "maker_bps": {
+            "type": "number",
+            "minimum": 0
+          },
+          "maker_vip_bps": {
+            "type": "number",
+            "minimum": 0
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "feeBucket": {
+      "type": "object",
+      "required": ["taker_bps", "maker_bps", "maker_vip_bps"],
+      "properties": {
+        "taker_bps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maker_bps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maker_vip_bps": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

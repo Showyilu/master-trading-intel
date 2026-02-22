@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-02-22T14:07:21.163274+00:00",
+  "version": "execution_fee_table_v1",
+  "defaults": {
+    "spot": {
+      "taker_bps": 10.0,
+      "maker_bps": 8.0,
+      "maker_vip_bps": 3.5
+    },
+    "perp": {
+      "taker_bps": 5.5,
+      "maker_bps": 2.0,
+      "maker_vip_bps": 0.9
+    },
+    "dex": {
+      "taker_bps": 6.0,
+      "maker_bps": 6.0,
+      "maker_vip_bps": 5.0
+    },
+    "unknown": {
+      "taker_bps": 10.0,
+      "maker_bps": 8.0,
+      "maker_vip_bps": 4.0
+    },
+    "strategy_roundtrip_side_multiplier": {
+      "cex_cex": 1.0,
+      "cex_dex": 1.0,
+      "funding_carry_cex_cex": 2.0,
+      "perp_spot_basis": 2.0
+    }
+  },
+  "profile_fee_mode": {
+    "taker_default": "taker",
+    "maker_inventory": "maker",
+    "maker_inventory_vip": "maker_vip"
+  },
+  "rules": [
+    {
+      "venue": "binance",
+      "instrument": "perp",
+      "taker_bps": 5.0,
+      "maker_bps": 2.0,
+      "maker_vip_bps": 0.8,
+      "source": "template_baseline"
+    },
+    {
+      "venue": "binance",
+      "instrument": "spot",
+      "taker_bps": 10.0,
+      "maker_bps": 8.0,
+      "maker_vip_bps": 2.8,
+      "source": "template_baseline"
+    },
+    {
+      "venue": "bybit",
+      "instrument": "perp",
+      "taker_bps": 5.5,
+      "maker_bps": 2.0,
+      "maker_vip_bps": 1.0,
+      "source": "template_baseline"
+    },
+    {
+      "venue": "bybit",
+      "instrument": "spot",
+      "taker_bps": 10.0,
+      "maker_bps": 8.0,
+      "maker_vip_bps": 3.2,
+      "source": "template_baseline"
+    },
+    {
+      "venue": "jupiter",
+      "instrument": "dex",
+      "taker_bps": 6.0,
+      "maker_bps": 6.0,
+      "maker_vip_bps": 5.0,
+      "source": "template_baseline"
+    }
+  ]
+}
