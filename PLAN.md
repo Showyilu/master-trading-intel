@@ -8,7 +8,9 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 2. ✅ Build opportunity scoring template and hard risk gates (`playbooks/opportunity-scoring-template.md`).
 3. ✅ Build first scanner + dashboard output (`scripts/scan_opportunities.py`, `opportunities/dashboard-latest.md`).
 4. ✅ Replaced sample-first flow with live CEX pullers (Binance/Bybit) -> normalized quotes -> live candidate file.
-5. ⏭ Next: add DEX quote source + size-aware orderbook/depth slippage model (avoid top-of-book illusion).
+5. ✅ Added live DEX adapter (Jupiter) + CEX-DEX candidate builder + merged dashboard flow (`scripts/build_live_cex_dex_candidates.py`, `scripts/merge_candidate_files.py`).
+6. ✅ Added sanity guards to block false edges (reference deviation + crossed-book checks for DEX quotes).
+7. ⏭ Next: add size-aware orderbook/depth slippage model + rejection-reason aggregation dashboard.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

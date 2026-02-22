@@ -1,0 +1,99 @@
+name: Deploy Opportunity Dashboard (GitHub Pages)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "5 */2 * * *"
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/**"
+      - "schemas/**"
+      - "playbooks/**"
+      - "sources/**"
+      - "opportunities/**"
+      - ".github/workflows/pages-dashboard.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-dashboard"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build live CEX candidates
+        run: |
+          python scripts/build_live_cex_candidates.py || echo "WARN: CEX build failed, will fallback to last committed/sample data"
+
+      - name: Build live CEX-DEX candidates
+        run: |
+          python scripts/build_live_cex_dex_candidates.py || echo "WARN: CEX-DEX build failed, continuing"
+
+      - name: Merge candidate pools
+        run: |
+          python scripts/merge_candidate_files.py \
+            --inputs data/opportunity_candidates.live.json data/opportunity_candidates.cex_dex.live.json \
+            --output data/opportunity_candidates.combined.live.json
+
+      - name: Fallback to sample if merged pool empty
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('.')
+          merged = root / 'data/opportunity_candidates.combined.live.json'
+          sample = root / 'data/opportunity_candidates.sample.json'
+          try:
+            payload = json.loads(merged.read_text()) if merged.exists() else []
+          except Exception:
+            payload = []
+          if not isinstance(payload, list) or len(payload) == 0:
+            merged.write_text(sample.read_text())
+            print('Fallback applied: using sample candidates')
+          else:
+            print(f'Merged candidates: {len(payload)}')
+          PY
+
+      - name: Score and produce dashboard
+        run: |
+          python scripts/scan_opportunities.py \
+            --input data/opportunity_candidates.combined.live.json \
+            --output-json opportunities/shortlist-latest.json \
+            --output-md opportunities/dashboard-latest.md
+
+      - name: Build static site
+        run: |
+          python scripts/build_pages_site.py \
+            --shortlist opportunities/shortlist-latest.json \
+            --dashboard opportunities/dashboard-latest.md \
+            --out-dir site
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
