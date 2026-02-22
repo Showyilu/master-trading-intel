@@ -1,6 +1,6 @@
 [
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "ADA/USDT",
@@ -12,7 +12,7 @@
     "spread_bps": 3.707136
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "AVAX/USDT",
@@ -24,115 +24,115 @@
     "spread_bps": 11.344299
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "BNB/USDT",
     "base": "BNB",
     "quote": "USDT",
-    "bid_price": 610.9,
-    "ask_price": 610.91,
-    "mid_price": 610.905,
-    "spread_bps": 0.163692
+    "bid_price": 612.28,
+    "ask_price": 612.29,
+    "mid_price": 612.285,
+    "spread_bps": 0.163323
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "BTC/USDT",
     "base": "BTC",
     "quote": "USDT",
-    "bid_price": 67377.96,
-    "ask_price": 67377.97,
-    "mid_price": 67377.965,
-    "spread_bps": 0.001484
+    "bid_price": 67434.5,
+    "ask_price": 67434.51,
+    "mid_price": 67434.505,
+    "spread_bps": 0.001483
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "DOGE/USDT",
     "base": "DOGE",
     "quote": "USDT",
-    "bid_price": 0.0949,
-    "ask_price": 0.09491,
-    "mid_price": 0.094905,
-    "spread_bps": 1.053685
+    "bid_price": 0.09506,
+    "ask_price": 0.09507,
+    "mid_price": 0.095065,
+    "spread_bps": 1.051912
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "ETH/USDT",
     "base": "ETH",
     "quote": "USDT",
-    "bid_price": 1940.58,
-    "ask_price": 1940.59,
-    "mid_price": 1940.585,
-    "spread_bps": 0.051531
+    "bid_price": 1944.62,
+    "ask_price": 1944.63,
+    "mid_price": 1944.625,
+    "spread_bps": 0.051424
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "LINK/USDT",
     "base": "LINK",
     "quote": "USDT",
-    "bid_price": 8.62,
-    "ask_price": 8.63,
-    "mid_price": 8.625,
-    "spread_bps": 11.594203
+    "bid_price": 8.63,
+    "ask_price": 8.64,
+    "mid_price": 8.635,
+    "spread_bps": 11.580776
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "LTC/USDT",
     "base": "LTC",
     "quote": "USDT",
-    "bid_price": 53.25,
-    "ask_price": 53.26,
-    "mid_price": 53.255,
-    "spread_bps": 1.877758
+    "bid_price": 53.2,
+    "ask_price": 53.21,
+    "mid_price": 53.205,
+    "spread_bps": 1.879523
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "SOL/USDT",
     "base": "SOL",
     "quote": "USDT",
-    "bid_price": 83.06,
-    "ask_price": 83.07,
-    "mid_price": 83.065,
-    "spread_bps": 1.203876
+    "bid_price": 83.3,
+    "ask_price": 83.31,
+    "mid_price": 83.305,
+    "spread_bps": 1.200408
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "binance",
     "market": "spot",
     "symbol": "XRP/USDT",
     "base": "XRP",
     "quote": "USDT",
-    "bid_price": 1.3879,
-    "ask_price": 1.388,
-    "mid_price": 1.38795,
-    "spread_bps": 0.720487
+    "bid_price": 1.3864,
+    "ask_price": 1.3865,
+    "mid_price": 1.38645,
+    "spread_bps": 0.721267
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "ADA/USDT",
     "base": "ADA",
     "quote": "USDT",
-    "bid_price": 0.2697,
-    "ask_price": 0.2698,
-    "mid_price": 0.26975,
-    "spread_bps": 3.707136
+    "bid_price": 0.2696,
+    "ask_price": 0.2697,
+    "mid_price": 0.26965,
+    "spread_bps": 3.708511
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "AVAX/USDT",
@@ -144,99 +144,99 @@
     "spread_bps": 11.357183
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "BNB/USDT",
     "base": "BNB",
     "quote": "USDT",
-    "bid_price": 610.8,
-    "ask_price": 610.9,
-    "mid_price": 610.85,
-    "spread_bps": 1.637063
+    "bid_price": 612.3,
+    "ask_price": 612.4,
+    "mid_price": 612.35,
+    "spread_bps": 1.633053
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "BTC/USDT",
     "base": "BTC",
     "quote": "USDT",
-    "bid_price": 67379.8,
-    "ask_price": 67379.9,
-    "mid_price": 67379.85,
-    "spread_bps": 0.014841
+    "bid_price": 67429.2,
+    "ask_price": 67429.3,
+    "mid_price": 67429.25,
+    "spread_bps": 0.01483
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "DOGE/USDT",
     "base": "DOGE",
     "quote": "USDT",
-    "bid_price": 0.09492,
-    "ask_price": 0.09493,
-    "mid_price": 0.094925,
-    "spread_bps": 1.053463
+    "bid_price": 0.09506,
+    "ask_price": 0.09507,
+    "mid_price": 0.095065,
+    "spread_bps": 1.051912
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "ETH/USDT",
     "base": "ETH",
     "quote": "USDT",
-    "bid_price": 1940.68,
-    "ask_price": 1940.69,
-    "mid_price": 1940.685,
-    "spread_bps": 0.051528
+    "bid_price": 1944.72,
+    "ask_price": 1944.73,
+    "mid_price": 1944.725,
+    "spread_bps": 0.051421
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "LINK/USDT",
     "base": "LINK",
     "quote": "USDT",
-    "bid_price": 8.62,
-    "ask_price": 8.63,
-    "mid_price": 8.625,
-    "spread_bps": 11.594203
+    "bid_price": 8.63,
+    "ask_price": 8.64,
+    "mid_price": 8.635,
+    "spread_bps": 11.580776
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "LTC/USDT",
     "base": "LTC",
     "quote": "USDT",
-    "bid_price": 53.25,
-    "ask_price": 53.26,
-    "mid_price": 53.255,
-    "spread_bps": 1.877758
+    "bid_price": 53.2,
+    "ask_price": 53.21,
+    "mid_price": 53.205,
+    "spread_bps": 1.879523
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "SOL/USDT",
     "base": "SOL",
     "quote": "USDT",
-    "bid_price": 83.04,
-    "ask_price": 83.05,
-    "mid_price": 83.045,
-    "spread_bps": 1.204166
+    "bid_price": 83.29,
+    "ask_price": 83.3,
+    "mid_price": 83.295,
+    "spread_bps": 1.200552
   },
   {
-    "detected_at": "2026-02-22T18:03:03.242429+00:00",
+    "detected_at": "2026-02-22T20:02:49.206207+00:00",
     "venue": "bybit",
     "market": "spot",
     "symbol": "XRP/USDT",
     "base": "XRP",
     "quote": "USDT",
-    "bid_price": 1.388,
-    "ask_price": 1.3881,
-    "mid_price": 1.38805,
-    "spread_bps": 0.720435
+    "bid_price": 1.3865,
+    "ask_price": 1.3866,
+    "mid_price": 1.38655,
+    "spread_bps": 0.721215
   }
 ]

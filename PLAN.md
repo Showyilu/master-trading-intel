@@ -19,7 +19,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 13. ✅ Added venue/instrument fee-table layer (`data/execution_fee_table.latest.json`) + template builder (`scripts/build_execution_fee_table_template.py`) and wired scanner to consume explicit taker/maker/vip bps instead of only embedded candidate fees.
 14. ✅ Added live network-friction model (`scripts/build_network_friction.py`) and wired CEX-DEX builder to apply `router_fee_bps + network_fee_bps` from `data/network_friction.latest.json` (instead of static DEX fee only).
 15. ✅ Added authenticated fee-table overlay adapter (`scripts/build_authenticated_fee_table.py`) for Binance/Bybit signed endpoints with fail-soft fallback to template baselines when auth is unavailable.
-16. ⏭ Next: replace template constraints with authenticated venue capacity inputs (account balances, margin limits, borrow books) so hard gates use live capacity, not heuristics.
+16. ✅ Added authenticated inventory-constraint overlay (`scripts/build_authenticated_constraints.py`) to replace template `available_inventory_usd` with Binance/Bybit account balances (USD-valued) and conservatively clip `max_position_usd` by inventory+borrow headroom.
+17. ⏭ Next: extend authenticated constraints beyond inventory into margin borrow books / leverage tiers so `max_borrow_usd` and borrow-rate assumptions are also account-realized.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

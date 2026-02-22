@@ -57,6 +57,9 @@ python3 scripts/merge_candidate_files.py \
 python3 scripts/build_execution_constraints_template.py \
   --input data/opportunity_candidates.combined.live.json \
   --output data/execution_constraints.latest.json
+python3 scripts/build_authenticated_constraints.py \
+  --constraints data/execution_constraints.latest.json \
+  --quotes data/normalized_quotes_cex_latest.json
 python3 scripts/build_execution_fee_table_template.py \
   --input data/opportunity_candidates.combined.live.json \
   --output data/execution_fee_table.latest.json
@@ -104,6 +107,13 @@ Scanner can load explicit fee assumptions with `--fee-table`:
 - per-venue + per-instrument `taker_bps` / `maker_bps` / `maker_vip_bps`
 - profile-to-fee-mode mapping (`taker_default` / `maker_inventory` / `maker_inventory_vip`)
 - strategy round-trip side multipliers (e.g. funding/basis open+close cost)
+
+`build_authenticated_constraints.py` can overlay template inventory with authenticated balances (Binance/Bybit):
+- `available_inventory_usd` becomes account-realized inventory value (USD)
+- `max_position_usd` is clipped conservatively to `min(existing_cap, inventory + max_borrow)`
+- same credentials: `BINANCE_API_KEY` / `BINANCE_API_SECRET` / `BYBIT_API_KEY` / `BYBIT_API_SECRET`
+
+If auth is unavailable, it fails soft and keeps template constraints.
 
 `build_authenticated_fee_table.py` can overlay account-realized fees for Binance/Bybit when credentials are present:
 - `BINANCE_API_KEY` / `BINANCE_API_SECRET`

@@ -86,6 +86,17 @@ jobs:
             --input data/opportunity_candidates.combined.live.json \
             --output data/execution_constraints.latest.json
 
+      - name: Overlay authenticated inventory constraints (if secrets available)
+        env:
+          BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
+          BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
+          BYBIT_API_KEY: ${{ secrets.BYBIT_API_KEY }}
+          BYBIT_API_SECRET: ${{ secrets.BYBIT_API_SECRET }}
+        run: |
+          python scripts/build_authenticated_constraints.py \
+            --constraints data/execution_constraints.latest.json \
+            --quotes data/normalized_quotes_cex_latest.json || echo "WARN: authenticated constraints overlay failed, using template constraints"
+
       - name: Build execution fee table template
         run: |
           python scripts/build_execution_fee_table_template.py \

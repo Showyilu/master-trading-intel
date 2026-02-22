@@ -67,6 +67,17 @@ def main() -> None:
     run(
         [
             "python3",
+            "scripts/build_authenticated_constraints.py",
+            "--constraints",
+            "data/execution_constraints.latest.json",
+            "--quotes",
+            "data/normalized_quotes_cex_latest.json",
+        ],
+        allow_fail=True,
+    )
+    run(
+        [
+            "python3",
             "scripts/build_execution_fee_table_template.py",
             "--input",
             "data/opportunity_candidates.combined.live.json",

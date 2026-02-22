@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-22T18:03:09.906892+00:00",
+  "generated_at": "2026-02-22T20:02:54.716188+00:00",
   "version": "network_friction_v1",
   "size_usd": 5000.0,
   "assumptions": {
@@ -8,15 +8,15 @@
     "evm_gas_units_per_leg": 180000
   },
   "market_refs": {
-    "SOLUSDT": 83.065,
-    "ETHUSDT": 1940.625,
+    "SOLUSDT": 83.305,
+    "ETHUSDT": 1944.625,
     "MATICUSDT": 0.9
   },
   "dex_fee_overrides": {
     "jupiter": {
       "router_fee_bps": 4.0,
-      "network_fee_bps": 0.0016613,
-      "total_fee_bps": 4.0016613,
+      "network_fee_bps": 0.0016661,
+      "total_fee_bps": 4.0016661,
       "network_model": "solana"
     }
   },
@@ -28,30 +28,30 @@
       "priority_micro_lamports_per_cu_p75": 0.0,
       "compute_units_per_leg": 250000,
       "dex_roundtrip_tx_legs": 2,
-      "sol_usd": 83.065,
-      "estimated_cost_usd_roundtrip": 0.00083065,
-      "estimated_cost_bps_roundtrip": 0.0016613,
+      "sol_usd": 83.305,
+      "estimated_cost_usd_roundtrip": 0.00083305,
+      "estimated_cost_bps_roundtrip": 0.0016661,
       "warnings": []
     },
     "polygon": {
       "source": "live",
-      "max_fee_gwei": 177.09036894,
+      "max_fee_gwei": 105.37196801,
       "gas_units_per_leg": 180000,
       "dex_roundtrip_tx_legs": 2,
       "matic_usd": 0.9,
-      "estimated_cost_usd_roundtrip": 0.05737728,
-      "estimated_cost_bps_roundtrip": 0.11475456,
+      "estimated_cost_usd_roundtrip": 0.03414052,
+      "estimated_cost_bps_roundtrip": 0.06828104,
       "warnings": []
     },
     "ethereum": {
       "source": "live",
-      "standard_gas_wei": 42522305.0,
-      "standard_gas_gwei": 0.04252231,
+      "standard_gas_wei": 43645227.0,
+      "standard_gas_gwei": 0.04364523,
       "gas_units_per_leg": 180000,
       "dex_roundtrip_tx_legs": 2,
-      "eth_usd": 1940.625,
-      "estimated_cost_usd_roundtrip": 0.02970715,
-      "estimated_cost_bps_roundtrip": 0.05941429,
+      "eth_usd": 1944.625,
+      "estimated_cost_usd_roundtrip": 0.0305545,
+      "estimated_cost_bps_roundtrip": 0.06110899,
       "warnings": []
     }
   },
