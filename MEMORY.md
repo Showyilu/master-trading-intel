@@ -20,6 +20,7 @@ Long-term distilled memory for trading/arbitrage work.
 - CEX-DEX candidate builder now consumes a live network-friction model (`data/network_friction.latest.json`) and applies `router_fee_bps + network_fee_bps` for Jupiter legs, reducing static-fee blind spots.
 - Fee table pipeline now supports authenticated overlay (`scripts/build_authenticated_fee_table.py`): Binance/Bybit signed endpoints can replace template fee assumptions with account-realized rates while preserving deterministic fallback when auth is missing.
 - Constraint pipeline now supports authenticated inventory overlay (`scripts/build_authenticated_constraints.py`): template `available_inventory_usd` can be replaced by account-realized balances (USD-valued via live quote map) and `max_position_usd` is clipped conservatively to inventory+borrow headroom.
+- Binance margin borrow overlay is now wired into constraints: signed endpoints can replace template `max_borrow_usd` and `borrow_rate_bps_per_hour` with account-realized borrow capacity + next-hour interest assumptions (still fail-soft when auth/endpoint unavailable).
 
 ## What We Believe (Needs Validation)
 - Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
@@ -48,3 +49,4 @@ Long-term distilled memory for trading/arbitrage work.
 - DEX fee modeling also needs a chain-cost input (network congestion + base fee); even when cost is tiny (e.g., Solana), explicit modeling improves reproducibility and avoids silent drift.
 - Authenticated adapters should be fail-soft and schema-compatible: if keys are absent, keep template assumptions and continue scoring instead of breaking the pipeline.
 - Inventory constraints are first-order risk controls: using template inventory can materially overstate executable size; prefer authenticated balances even before borrow-book integration is complete.
+- Borrow assumptions should be treated like fees: if borrow cap/rate stays template-only, basis/funding executability is easily overstated; authenticated borrow overlays must be first-class and fail-soft.

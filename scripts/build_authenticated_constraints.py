@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Overlay execution constraints with authenticated inventory snapshots.
+"""Overlay execution constraints with authenticated account snapshots.
 
 Goal:
 - Keep `data/execution_constraints.latest.json` as the single reproducible constraints file.
 - Replace template `available_inventory_usd` with account-realized balances
   (Binance + Bybit) when credentials are available.
+- Extend Binance overlay into borrow/rate terms:
+  - `max_borrow_usd` from `/sapi/v1/margin/maxBorrowable`
+  - `borrow_rate_bps_per_hour` from `/sapi/v1/margin/next-hourly-interest-rate`
 - Update `max_position_usd` conservatively as:
     min(existing_max_position_usd, available_inventory_usd + max_borrow_usd)
 - Fail soft: if auth is missing or an API call fails, keep template constraints.
@@ -97,6 +100,19 @@ def _bybit_signed_get(
     return _http_get_json(url, headers=headers, timeout_sec=timeout_sec)
 
 
+def _to_float(raw: Any, fallback: float = 0.0) -> float:
+    try:
+        return float(raw)
+    except (TypeError, ValueError):
+        return fallback
+
+
+def _chunk(items: list[str], size: int) -> list[list[str]]:
+    if size <= 0:
+        return [items]
+    return [items[i : i + size] for i in range(0, len(items), size)]
+
+
 def build_price_map(quotes: list[dict[str, Any]]) -> dict[str, float]:
     buckets: dict[str, list[float]] = defaultdict(list)
     for row in quotes:
@@ -104,10 +120,7 @@ def build_price_map(quotes: list[dict[str, Any]]) -> dict[str, float]:
             continue
         base = str(row.get("base", "")).strip().upper()
         quote = str(row.get("quote", "")).strip().upper()
-        try:
-            mid = float(row.get("mid_price", 0) or 0)
-        except (TypeError, ValueError):
-            mid = 0.0
+        mid = _to_float(row.get("mid_price", 0), 0.0)
         if not base or not quote or mid <= 0:
             continue
         if quote in {"USDT", "USDC", "USD"}:
@@ -151,10 +164,7 @@ def fetch_binance_inventory_usd(
         asset = str(row.get("asset", "")).strip().upper()
         if not asset:
             continue
-        try:
-            qty = float(row.get("free", 0) or 0) + float(row.get("locked", 0) or 0)
-        except (TypeError, ValueError):
-            continue
+        qty = _to_float(row.get("free", 0), 0.0) + _to_float(row.get("locked", 0), 0.0)
         if qty <= 0:
             continue
         px = price_map.get(asset)
@@ -198,10 +208,7 @@ def fetch_bybit_inventory_usd(
             asset = str(coin.get("coin", "")).strip().upper()
             if not asset:
                 continue
-            try:
-                qty = float(coin.get("walletBalance", 0) or 0)
-            except (TypeError, ValueError):
-                continue
+            qty = _to_float(coin.get("walletBalance", 0), 0.0)
             if qty <= 0:
                 continue
             px = price_map.get(asset)
@@ -212,6 +219,107 @@ def fetch_bybit_inventory_usd(
                 continue
             out[asset] = round(max(0.0, usd), 6)
     return out
+
+
+def fetch_binance_borrow_overlay(
+    api_key: str,
+    api_secret: str,
+    assets: list[str],
+    price_map: dict[str, float],
+    timeout_sec: float,
+) -> tuple[dict[str, float], dict[str, float], list[str]]:
+    """Fetch Binance borrow capacity + next-hour borrow rate for given assets.
+
+    Returns:
+      - max_borrow_usd_by_asset
+      - borrow_rate_bps_per_hour_by_asset
+      - failures list
+    """
+
+    target_assets = sorted({a.strip().upper() for a in assets if a and a.strip()})
+    failures: list[str] = []
+    max_borrow_usd: dict[str, float] = {}
+    borrow_rate_bps_per_hour: dict[str, float] = {}
+
+    if not target_assets:
+        return max_borrow_usd, borrow_rate_bps_per_hour, failures
+
+    for asset in target_assets:
+        try:
+            payload = _binance_signed_get(
+                "/sapi/v1/margin/maxBorrowable",
+                {"asset": asset},
+                api_key=api_key,
+                api_secret=api_secret,
+                timeout_sec=timeout_sec,
+            )
+        except Exception:
+            failures.append(f"binance_max_borrow_error:{asset}")
+            continue
+
+        if not isinstance(payload, dict):
+            failures.append(f"binance_max_borrow_bad_payload:{asset}")
+            continue
+
+        amount = _to_float(payload.get("amount"), -1.0)
+        borrow_limit = _to_float(payload.get("borrowLimit"), -1.0)
+        asset_units = amount if amount >= 0 else borrow_limit
+        if asset_units < 0:
+            failures.append(f"binance_max_borrow_missing_amount:{asset}")
+            continue
+
+        px = price_map.get(asset)
+        if px is None:
+            failures.append(f"binance_price_missing:{asset}")
+            continue
+
+        max_borrow_usd[asset] = round(max(0.0, asset_units * px), 6)
+
+    for group in _chunk(target_assets, 20):
+        params = {"assets": ",".join(group), "isIsolated": "FALSE"}
+        payload: Any = None
+
+        try:
+            payload = _binance_signed_get(
+                "/sapi/v1/margin/next-hourly-interest-rate",
+                params,
+                api_key=api_key,
+                api_secret=api_secret,
+                timeout_sec=timeout_sec,
+            )
+        except Exception:
+            # Endpoint compatibility fallback.
+            try:
+                payload = _binance_signed_get(
+                    "/sapi/v1/margin/next-hourly-interest-rate",
+                    {"assets": ",".join(group)},
+                    api_key=api_key,
+                    api_secret=api_secret,
+                    timeout_sec=timeout_sec,
+                )
+            except Exception:
+                failures.append(f"binance_interest_rate_error:{','.join(group)}")
+                continue
+
+        rows = payload if isinstance(payload, list) else []
+        if isinstance(payload, dict):
+            maybe_rows = payload.get("data")
+            if isinstance(maybe_rows, list):
+                rows = maybe_rows
+
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            asset = str(row.get("asset", "")).strip().upper()
+            if not asset:
+                continue
+            rate_fraction_per_hour = _to_float(row.get("nextHourlyInterestRate"), -1.0)
+            if rate_fraction_per_hour < 0:
+                continue
+            # Fraction -> bps per hour.
+            borrow_rate_bps_per_hour[asset] = round(max(0.0, rate_fraction_per_hour * 10000.0), 6)
+
+    return max_borrow_usd, borrow_rate_bps_per_hour, failures
 
 
 def main() -> None:
@@ -236,6 +344,8 @@ def main() -> None:
     bybit_secret = os.getenv("BYBIT_API_SECRET", "").strip()
 
     inventory_by_venue: dict[str, dict[str, float]] = {"binance": {}, "bybit": {}}
+    binance_max_borrow_usd: dict[str, float] = {}
+    binance_borrow_rate_bps: dict[str, float] = {}
     failures: list[str] = []
 
     if binance_key and binance_secret:
@@ -249,6 +359,29 @@ def main() -> None:
             )
         except Exception:
             failures.append("binance_inventory_error")
+
+        binance_assets = sorted(
+            {
+                str(r.get("asset", "")).strip().upper()
+                for r in rules
+                if isinstance(r, dict) and str(r.get("venue", "")).strip().lower() == "binance"
+            }
+        )
+        try:
+            (
+                binance_max_borrow_usd,
+                binance_borrow_rate_bps,
+                borrow_failures,
+            ) = fetch_binance_borrow_overlay(
+                api_key=binance_key,
+                api_secret=binance_secret,
+                assets=binance_assets,
+                price_map=price_map,
+                timeout_sec=args.timeout_sec,
+            )
+            failures.extend(borrow_failures)
+        except Exception:
+            failures.append("binance_borrow_overlay_error")
     else:
         failures.append("binance_auth_missing")
 
@@ -267,28 +400,52 @@ def main() -> None:
         failures.append("bybit_auth_missing")
 
     updated_rules = 0
+    inventory_updates = 0
+    borrow_cap_updates = 0
+    borrow_rate_updates = 0
     venues_touched: dict[str, int] = defaultdict(int)
 
     for row in rules:
         if not isinstance(row, dict):
             continue
+
         venue = str(row.get("venue", "")).strip().lower()
         asset = str(row.get("asset", "")).strip().upper()
         if venue not in {"binance", "bybit"} or not asset:
             continue
 
+        row_updated = False
+
         venue_inventory = inventory_by_venue.get(venue, {})
-        if not venue_inventory:
+        if venue_inventory:
+            inv_usd = _to_float(venue_inventory.get(asset, 0.0), 0.0)
+            row["available_inventory_usd"] = round(max(0.0, inv_usd), 6)
+            row_updated = True
+            inventory_updates += 1
+
+        if venue == "binance":
+            if asset in binance_max_borrow_usd:
+                row["max_borrow_usd"] = round(max(0.0, _to_float(binance_max_borrow_usd[asset], 0.0)), 6)
+                row_updated = True
+                borrow_cap_updates += 1
+
+            if asset in binance_borrow_rate_bps:
+                row["borrow_rate_bps_per_hour"] = round(
+                    max(0.0, _to_float(binance_borrow_rate_bps[asset], 0.0)),
+                    6,
+                )
+                row_updated = True
+                borrow_rate_updates += 1
+
+        if not row_updated:
             continue
 
-        inv_usd = float(venue_inventory.get(asset, 0.0) or 0.0)
-        max_borrow_usd = max(0.0, float(row.get("max_borrow_usd", 0.0) or 0.0))
-        existing_cap = max(0.0, float(row.get("max_position_usd", 0.0) or 0.0))
+        existing_cap = max(0.0, _to_float(row.get("max_position_usd", 0.0), 0.0))
+        inv_usd_for_cap = max(0.0, _to_float(row.get("available_inventory_usd", 0.0), 0.0))
+        max_borrow_usd = max(0.0, _to_float(row.get("max_borrow_usd", 0.0), 0.0))
 
-        conservative_cap = inv_usd + max_borrow_usd
+        conservative_cap = inv_usd_for_cap + max_borrow_usd
         new_cap = min(existing_cap, conservative_cap) if existing_cap > 0 else conservative_cap
-
-        row["available_inventory_usd"] = round(inv_usd, 6)
         row["max_position_usd"] = round(max(0.0, new_cap), 6)
 
         updated_rules += 1
@@ -308,6 +465,9 @@ def main() -> None:
     print(f"Price map assets: {len(price_map)}")
     print(f"Constraint rules total: {len(constraints['rules'])}")
     print(f"Authenticated rules updated: {updated_rules}")
+    print(f"Inventory updates: {inventory_updates}")
+    print(f"Borrow-cap updates: {borrow_cap_updates}")
+    print(f"Borrow-rate updates: {borrow_rate_updates}")
     if venues_touched:
         print(
             "Updated by venue:",

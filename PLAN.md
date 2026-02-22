@@ -20,7 +20,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 14. ✅ Added live network-friction model (`scripts/build_network_friction.py`) and wired CEX-DEX builder to apply `router_fee_bps + network_fee_bps` from `data/network_friction.latest.json` (instead of static DEX fee only).
 15. ✅ Added authenticated fee-table overlay adapter (`scripts/build_authenticated_fee_table.py`) for Binance/Bybit signed endpoints with fail-soft fallback to template baselines when auth is unavailable.
 16. ✅ Added authenticated inventory-constraint overlay (`scripts/build_authenticated_constraints.py`) to replace template `available_inventory_usd` with Binance/Bybit account balances (USD-valued) and conservatively clip `max_position_usd` by inventory+borrow headroom.
-17. ⏭ Next: extend authenticated constraints beyond inventory into margin borrow books / leverage tiers so `max_borrow_usd` and borrow-rate assumptions are also account-realized.
+17. ✅ Extended authenticated constraints beyond inventory for Binance margin: overlay now updates `max_borrow_usd` + `borrow_rate_bps_per_hour` from signed borrow/interest endpoints (`scripts/build_authenticated_constraints.py`).
+18. ⏭ Next: extend borrow/leverage authenticated overlays for Bybit and add leverage-tier caps into constraint hard gates.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.
