@@ -1,5 +1,5 @@
 version: 1
-updated_at: "2026-02-22T10:00:00Z"
+updated_at: "2026-02-22T16:00:00Z"
 notes: "Source inventory for normalized multi-venue opportunity detection."
 
 sources:
@@ -114,17 +114,42 @@ sources:
       timestamp: contextSlot
     refresh_seconds: 10
 
-  - id: chain_gas_eth
+  - id: chain_solana_priority_fee
     type: onchain
-    venue: etherscan
+    venue: solana-rpc
+    market: priority-fee
+    priority: high
+    endpoint: "https://api.mainnet-beta.solana.com (getRecentPrioritizationFees)"
+    fields:
+      priority_fee_micro_lamports_per_cu: result[].prioritizationFee
+      slot: result[].slot
+    refresh_seconds: 15
+
+  - id: chain_gas_polygon
+    type: onchain
+    venue: polygon-gas-station
     market: gas
     priority: medium
-    endpoint: "https://api.etherscan.io/api?module=gastracker&action=gasoracle"
+    endpoint: "https://gasstation.polygon.technology/v2"
     fields:
-      safe_gas: result.SafeGasPrice
-      propose_gas: result.ProposeGasPrice
-      fast_gas: result.FastGasPrice
-      timestamp: result.LastBlock
+      standard_max_fee_gwei: standard.maxFee
+      fast_max_fee_gwei: fast.maxFee
+      base_fee_gwei: estimatedBaseFee
+      timestamp: blockNumber
+    refresh_seconds: 30
+
+  - id: chain_gas_eth
+    type: onchain
+    venue: beaconcha
+    market: gas
+    priority: medium
+    endpoint: "https://beaconcha.in/api/v1/execution/gasnow"
+    fields:
+      rapid_wei: data.rapid
+      fast_wei: data.fast
+      standard_wei: data.standard
+      slow_wei: data.slow
+      timestamp: data.timestamp
     refresh_seconds: 30
 
   - id: news_cryptopanic
@@ -145,6 +170,7 @@ normalization_targets:
   - normalized_funding_v1
   - normalized_basis_v1
   - normalized_opportunity_v1
+  - network_friction_v1
 
 hard_rules:
   - "No opportunity enters shortlist without fee/slippage/latency fields."

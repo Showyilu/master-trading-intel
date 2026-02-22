@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://master-trading-intel.local/schemas/network_friction_v1.schema.json",
+  "title": "Network Friction v1",
+  "description": "Live network execution-cost model used to estimate DEX chain fees in bps.",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "version",
+    "size_usd",
+    "assumptions",
+    "market_refs",
+    "dex_fee_overrides",
+    "networks"
+  ],
+  "properties": {
+    "generated_at": { "type": "string", "format": "date-time" },
+    "version": { "const": "network_friction_v1" },
+    "size_usd": { "type": "number", "exclusiveMinimum": 0 },
+    "assumptions": {
+      "type": "object",
+      "required": [
+        "dex_roundtrip_tx_legs",
+        "solana_compute_units_per_leg",
+        "evm_gas_units_per_leg"
+      ],
+      "properties": {
+        "dex_roundtrip_tx_legs": { "type": "integer", "minimum": 1 },
+        "solana_compute_units_per_leg": { "type": "integer", "minimum": 1 },
+        "evm_gas_units_per_leg": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "market_refs": {
+      "type": "object",
+      "required": ["SOLUSDT", "ETHUSDT", "MATICUSDT"],
+      "properties": {
+        "SOLUSDT": { "type": "number", "exclusiveMinimum": 0 },
+        "ETHUSDT": { "type": "number", "exclusiveMinimum": 0 },
+        "MATICUSDT": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "dex_fee_overrides": {
+      "type": "object",
+      "required": ["jupiter"],
+      "properties": {
+        "jupiter": {
+          "type": "object",
+          "required": ["router_fee_bps", "network_fee_bps", "total_fee_bps", "network_model"],
+          "properties": {
+            "router_fee_bps": { "type": "number", "minimum": 0 },
+            "network_fee_bps": { "type": "number", "minimum": 0 },
+            "total_fee_bps": { "type": "number", "minimum": 0 },
+            "network_model": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "networks": {
+      "type": "object",
+      "required": ["solana", "polygon", "ethereum"],
+      "properties": {
+        "solana": { "$ref": "#/$defs/networkModel" },
+        "polygon": { "$ref": "#/$defs/networkModel" },
+        "ethereum": { "$ref": "#/$defs/networkModel" }
+      },
+      "additionalProperties": true
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "networkModel": {
+      "type": "object",
+      "required": ["source", "estimated_cost_usd_roundtrip", "estimated_cost_bps_roundtrip"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "estimated_cost_usd_roundtrip": { "type": "number", "minimum": 0 },
+        "estimated_cost_bps_roundtrip": { "type": "number", "minimum": 0 },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

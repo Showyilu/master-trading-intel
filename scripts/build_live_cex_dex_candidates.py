@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DEX_QUOTES_OUT = ROOT / "data" / "normalized_quotes_dex_latest.json"
 DEFAULT_CANDIDATES_OUT = ROOT / "data" / "opportunity_candidates.cex_dex.live.json"
+DEFAULT_NETWORK_FRICTION_PATH = ROOT / "data" / "network_friction.latest.json"
 
 BINANCE_URL = "https://api.binance.com/api/v3/ticker/bookTicker"
 BYBIT_URL = "https://api.bybit.com/v5/market/tickers?category=spot"
@@ -30,7 +31,7 @@ TAKER_FEE_BPS = {
     "binance": 7.5,
     "bybit": 10.0,
 }
-DEX_ROUTER_FEE_BPS = 4.0
+DEFAULT_DEX_ROUTER_FEE_BPS = 4.0
 
 TOKENS = [
     {
@@ -72,6 +73,34 @@ def _impact_bps(raw: str | float | int | None) -> float:
     if pct_as_fraction <= 0:
         return 0.0
     return pct_as_fraction * 10_000
+
+
+def load_jupiter_fee_model(network_friction_path: Path, fallback_router_fee_bps: float) -> tuple[float, float, str]:
+    router_fee_bps = max(0.0, float(fallback_router_fee_bps))
+    network_fee_bps = 0.0
+    source = "static_router_fee"
+
+    if not network_friction_path.exists():
+        return router_fee_bps, network_fee_bps, source
+
+    try:
+        payload = json.loads(network_friction_path.read_text())
+    except Exception:
+        return router_fee_bps, network_fee_bps, source
+
+    if not isinstance(payload, dict):
+        return router_fee_bps, network_fee_bps, source
+
+    override = payload.get("dex_fee_overrides", {}).get("jupiter", {})
+    if not isinstance(override, dict):
+        return router_fee_bps, network_fee_bps, source
+
+    router_fee_bps = max(0.0, _safe_float(override.get("router_fee_bps")) or router_fee_bps)
+    network_fee_bps = max(0.0, _safe_float(override.get("network_fee_bps")) or 0.0)
+
+    version = str(payload.get("version", "unknown")).strip() or "unknown"
+    source = f"network_friction:{version}"
+    return router_fee_bps, network_fee_bps, source
 
 
 def fetch_cex_quotes(symbols: set[str]) -> dict[str, dict[str, dict[str, float]]]:
@@ -195,8 +224,12 @@ def build_candidates(
     transfer_delay_min: float,
     min_gross_edge_bps: float,
     max_ref_deviation_bps: float,
+    dex_router_fee_bps: float,
+    dex_network_fee_bps: float,
+    dex_fee_source: str,
 ) -> list[dict]:
     candidates: list[dict] = []
+    dex_total_fee_bps = max(0.0, dex_router_fee_bps) + max(0.0, dex_network_fee_bps)
 
     for token in TOKENS:
         symbol = token["symbol"]
@@ -237,14 +270,15 @@ def build_candidates(
                         "buy_venue": "jupiter",
                         "sell_venue": venue,
                         "gross_edge_bps": round(gross_1, 6),
-                        "fees_bps": round(DEX_ROUTER_FEE_BPS + TAKER_FEE_BPS[venue], 6),
+                        "fees_bps": round(dex_total_fee_bps + TAKER_FEE_BPS[venue], 6),
                         "slippage_bps": round(slippage_1, 6),
                         "latency_risk_bps": round(latency_1, 6),
                         "transfer_delay_min": round(transfer_delay_min, 4),
                         "size_usd": round(size_usd, 2),
                         "notes": (
                             f"buy_dex_sell_cex dex_ask={dex_ask:.8f} cex_bid={cex_bid:.8f} "
-                            f"dex_spread={dex_spread:.2f}bps dex_impact={dex_impact:.2f}bps"
+                            f"dex_spread={dex_spread:.2f}bps dex_impact={dex_impact:.2f}bps "
+                            f"dex_router_fee={dex_router_fee_bps:.4f}bps dex_network_fee={dex_network_fee_bps:.6f}bps source={dex_fee_source}"
                         ),
                     }
                 )
@@ -262,14 +296,15 @@ def build_candidates(
                         "buy_venue": venue,
                         "sell_venue": "jupiter",
                         "gross_edge_bps": round(gross_2, 6),
-                        "fees_bps": round(DEX_ROUTER_FEE_BPS + TAKER_FEE_BPS[venue], 6),
+                        "fees_bps": round(dex_total_fee_bps + TAKER_FEE_BPS[venue], 6),
                         "slippage_bps": round(slippage_2, 6),
                         "latency_risk_bps": round(latency_2, 6),
                         "transfer_delay_min": round(transfer_delay_min, 4),
                         "size_usd": round(size_usd, 2),
                         "notes": (
                             f"buy_cex_sell_dex cex_ask={cex_ask:.8f} dex_bid={dex_bid:.8f} "
-                            f"dex_spread={dex_spread:.2f}bps dex_impact={dex_impact:.2f}bps"
+                            f"dex_spread={dex_spread:.2f}bps dex_impact={dex_impact:.2f}bps "
+                            f"dex_router_fee={dex_router_fee_bps:.4f}bps dex_network_fee={dex_network_fee_bps:.6f}bps source={dex_fee_source}"
                         ),
                     }
                 )
@@ -289,6 +324,18 @@ def parse_args() -> argparse.Namespace:
         default=400.0,
         help="Reject DEX quotes that drift too far from CEX reference mid",
     )
+    p.add_argument(
+        "--network-friction",
+        type=Path,
+        default=DEFAULT_NETWORK_FRICTION_PATH,
+        help="Network friction model JSON to load dynamic DEX fee adjustments",
+    )
+    p.add_argument(
+        "--dex-router-fee-bps",
+        type=float,
+        default=DEFAULT_DEX_ROUTER_FEE_BPS,
+        help="Fallback Jupiter router fee bps when no network model exists",
+    )
     p.add_argument("--dex-quotes-out", type=Path, default=DEFAULT_DEX_QUOTES_OUT)
     p.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES_OUT)
     return p.parse_args()
@@ -300,6 +347,11 @@ def main() -> None:
 
     symbols = {token["symbol"] for token in TOKENS}
     cex_quotes = fetch_cex_quotes(symbols)
+
+    dex_router_fee_bps, dex_network_fee_bps, dex_fee_source = load_jupiter_fee_model(
+        args.network_friction,
+        fallback_router_fee_bps=args.dex_router_fee_bps,
+    )
 
     dex_quotes: list[dict] = []
     dex_quotes_by_symbol: dict[str, dict] = {}
@@ -334,6 +386,9 @@ def main() -> None:
         transfer_delay_min=args.transfer_delay_min,
         min_gross_edge_bps=args.min_gross_edge_bps,
         max_ref_deviation_bps=args.max_ref_deviation_bps,
+        dex_router_fee_bps=dex_router_fee_bps,
+        dex_network_fee_bps=dex_network_fee_bps,
+        dex_fee_source=dex_fee_source,
     )
 
     args.dex_quotes_out.parent.mkdir(parents=True, exist_ok=True)
@@ -347,6 +402,14 @@ def main() -> None:
     print(f"DEX quotes normalized: {len(dex_quotes)}")
     print(f"DEX quotes rejected by reference guard: {rejected_by_reference}")
     print(f"DEX quotes rejected by crossed-book guard: {rejected_by_cross}")
+    print(
+        "Jupiter fee model: router={:.4f}bps, network={:.6f}bps, total={:.6f}bps ({})".format(
+            dex_router_fee_bps,
+            dex_network_fee_bps,
+            dex_router_fee_bps + dex_network_fee_bps,
+            dex_fee_source,
+        )
+    )
     print(f"CEX-DEX candidates built: {len(candidates)}")
     print(f"Wrote: {args.dex_quotes_out}")
     print(f"Wrote: {args.candidates_out}")

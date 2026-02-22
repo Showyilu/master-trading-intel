@@ -39,6 +39,10 @@ jobs:
         run: |
           python scripts/build_live_cex_candidates.py || echo "WARN: CEX build failed, will fallback to last committed/sample data"
 
+      - name: Build network friction model
+        run: |
+          python scripts/build_network_friction.py || echo "WARN: network friction build failed, using static DEX fee fallback"
+
       - name: Build live CEX-DEX candidates
         run: |
           python scripts/build_live_cex_dex_candidates.py || echo "WARN: CEX-DEX build failed, continuing"

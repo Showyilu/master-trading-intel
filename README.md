@@ -43,6 +43,7 @@ python3 scripts/scan_opportunities.py \
 ### 3) Live CEX + DEX + funding + perp-spot basis pipeline (Binance/Bybit + Jupiter)
 ```bash
 python3 scripts/build_live_cex_candidates.py
+python3 scripts/build_network_friction.py
 python3 scripts/build_live_cex_dex_candidates.py
 python3 scripts/build_live_funding_candidates.py
 python3 scripts/build_live_basis_candidates.py
@@ -75,6 +76,7 @@ Outputs:
 - `data/normalized_basis_latest.json`
 - `data/opportunity_candidates.live.json`
 - `data/cex_depth_slippage_latest.json`
+- `data/network_friction.latest.json`
 - `data/opportunity_candidates.cex_dex.live.json`
 - `data/opportunity_candidates.funding.live.json`
 - `data/opportunity_candidates.basis.live.json`
@@ -99,6 +101,11 @@ Scanner can load explicit fee assumptions with `--fee-table`:
 - per-venue + per-instrument `taker_bps` / `maker_bps` / `maker_vip_bps`
 - profile-to-fee-mode mapping (`taker_default` / `maker_inventory` / `maker_inventory_vip`)
 - strategy round-trip side multipliers (e.g. funding/basis open+close cost)
+
+DEX fee model now supports a live network-friction input (`scripts/build_network_friction.py`):
+- pulls Solana recent priority-fee data + base tx fee to estimate Jupiter network fee bps at current notional
+- writes `data/network_friction.latest.json`
+- `build_live_cex_dex_candidates.py` auto-loads this file and adds `router_fee_bps + network_fee_bps` into candidate fee math
 
 ## GitHub Pages Dashboard
 
