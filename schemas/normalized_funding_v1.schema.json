@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "normalized_funding_v1.schema.json",
+  "title": "NormalizedFundingV1",
+  "type": "object",
+  "required": [
+    "detected_at",
+    "venue",
+    "market",
+    "symbol",
+    "base",
+    "quote",
+    "mark_price",
+    "funding_rate",
+    "funding_rate_bps",
+    "next_funding_time",
+    "minutes_to_funding"
+  ],
+  "properties": {
+    "detected_at": { "type": "string", "format": "date-time" },
+    "venue": { "type": "string" },
+    "market": { "type": "string" },
+    "symbol": { "type": "string" },
+    "base": { "type": "string" },
+    "quote": { "type": "string" },
+    "mark_price": { "type": "number", "exclusiveMinimum": 0 },
+    "funding_rate": { "type": "number" },
+    "funding_rate_bps": { "type": "number" },
+    "next_funding_time": { "type": "string", "format": "date-time" },
+    "minutes_to_funding": { "type": "number", "minimum": 0 }
+  },
+  "additionalProperties": true
+}

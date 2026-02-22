@@ -20,6 +20,7 @@ def run(cmd: list[str], allow_fail: bool = False) -> None:
 def main() -> None:
     run(["python3", "scripts/build_live_cex_candidates.py"], allow_fail=True)
     run(["python3", "scripts/build_live_cex_dex_candidates.py"], allow_fail=True)
+    run(["python3", "scripts/build_live_funding_candidates.py"], allow_fail=True)
 
     run(
         [
@@ -28,6 +29,7 @@ def main() -> None:
             "--inputs",
             "data/opportunity_candidates.live.json",
             "data/opportunity_candidates.cex_dex.live.json",
+            "data/opportunity_candidates.funding.live.json",
             "--output",
             "data/opportunity_candidates.combined.live.json",
         ]

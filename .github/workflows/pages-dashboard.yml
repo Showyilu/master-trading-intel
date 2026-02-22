@@ -43,10 +43,14 @@ jobs:
         run: |
           python scripts/build_live_cex_dex_candidates.py || echo "WARN: CEX-DEX build failed, continuing"
 
+      - name: Build live funding candidates
+        run: |
+          python scripts/build_live_funding_candidates.py || echo "WARN: funding build failed, continuing"
+
       - name: Merge candidate pools
         run: |
           python scripts/merge_candidate_files.py \
-            --inputs data/opportunity_candidates.live.json data/opportunity_candidates.cex_dex.live.json \
+            --inputs data/opportunity_candidates.live.json data/opportunity_candidates.cex_dex.live.json data/opportunity_candidates.funding.live.json \
             --output data/opportunity_candidates.combined.live.json
 
       - name: Fallback to sample if merged pool empty

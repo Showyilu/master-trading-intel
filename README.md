@@ -40,12 +40,16 @@ python3 scripts/scan_opportunities.py \
 
 `build_live_cex_candidates.py` now includes orderbook depth modeling and writes per-symbol slippage curves by notional tier.
 
-### 3) Live CEX + DEX pipeline (Binance/Bybit + Jupiter)
+### 3) Live CEX + DEX + funding pipeline (Binance/Bybit + Jupiter)
 ```bash
 python3 scripts/build_live_cex_candidates.py
 python3 scripts/build_live_cex_dex_candidates.py
+python3 scripts/build_live_funding_candidates.py
 python3 scripts/merge_candidate_files.py \
-  --inputs data/opportunity_candidates.live.json data/opportunity_candidates.cex_dex.live.json \
+  --inputs \
+    data/opportunity_candidates.live.json \
+    data/opportunity_candidates.cex_dex.live.json \
+    data/opportunity_candidates.funding.live.json \
   --output data/opportunity_candidates.combined.live.json
 python3 scripts/scan_opportunities.py \
   --input data/opportunity_candidates.combined.live.json \
@@ -56,9 +60,11 @@ python3 scripts/scan_opportunities.py \
 Outputs:
 - `data/normalized_quotes_cex_latest.json`
 - `data/normalized_quotes_dex_latest.json`
+- `data/normalized_funding_latest.json`
 - `data/opportunity_candidates.live.json`
 - `data/cex_depth_slippage_latest.json`
 - `data/opportunity_candidates.cex_dex.live.json`
+- `data/opportunity_candidates.funding.live.json`
 - `data/opportunity_candidates.combined.live.json`
 - `opportunities/shortlist-latest.json`
 - `opportunities/dashboard-latest.md`

@@ -1,5 +1,5 @@
 version: 1
-updated_at: "2026-02-22T03:12:00Z"
+updated_at: "2026-02-22T08:00:00Z"
 notes: "Source inventory for normalized multi-venue opportunity detection."
 
 sources:
@@ -28,6 +28,32 @@ sources:
       ask_price: list[].ask1Price
       timestamp: time
     refresh_seconds: 5
+
+  - id: cex_binance_perp_funding
+    type: cex
+    venue: binance
+    market: perp-funding
+    priority: high
+    endpoint: "https://fapi.binance.com/fapi/v1/premiumIndex"
+    fields:
+      symbol: symbol
+      funding_rate: lastFundingRate
+      mark_price: markPrice
+      next_funding_time: nextFundingTime
+    refresh_seconds: 20
+
+  - id: cex_bybit_perp_funding
+    type: cex
+    venue: bybit
+    market: perp-funding
+    priority: high
+    endpoint: "https://api.bybit.com/v5/market/tickers?category=linear"
+    fields:
+      symbol: list[].symbol
+      funding_rate: list[].fundingRate
+      mark_price: list[].markPrice
+      next_funding_time: list[].nextFundingTime
+    refresh_seconds: 20
 
   - id: dex_uniswap_v3_eth
     type: dex
@@ -88,6 +114,7 @@ sources:
 
 normalization_targets:
   - normalized_quote_v1
+  - normalized_funding_v1
   - normalized_opportunity_v1
 
 hard_rules:

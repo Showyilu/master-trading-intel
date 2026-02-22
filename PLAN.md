@@ -12,7 +12,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 6. ✅ Added sanity guards to block false edges (reference deviation + crossed-book checks for DEX quotes).
 7. ✅ Added rejection-reason aggregation + dominant-friction breakdown in scanner outputs (`opportunities/rejection-summary-latest.json`).
 8. ✅ Added size-aware orderbook/depth slippage model (1k/5k/10k USD tiers) for Binance/Bybit (`data/cex_depth_slippage_latest.json`).
-9. ⏭ Next: add funding/basis live adapter + carry candidate template.
+9. ✅ Added funding live adapter (Binance/Bybit perp) + carry candidate builder (`scripts/build_live_funding_candidates.py`).
+10. ⏭ Next: add perp-spot basis spread adapter + execution inventory constraints (pre-positioned capital / borrow availability).
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.
