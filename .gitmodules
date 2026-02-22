@@ -1,0 +1,3 @@
+[submodule "research/uniswap-ai-upstream"]
+	path = research/uniswap-ai-upstream
+	url = https://github.com/Uniswap/uniswap-ai.git
