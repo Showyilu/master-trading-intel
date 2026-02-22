@@ -1,58 +1,30 @@
 [
   {
-    "detected_at": "2026-02-22T03:17:40.504849+00:00",
+    "detected_at": "2026-02-22T04:01:36.373669+00:00",
     "strategy_type": "cex_cex",
     "symbol": "SOL/USDT",
     "buy_venue": "bybit",
     "sell_venue": "binance",
-    "gross_edge_bps": 1.176332,
+    "gross_edge_bps": 2.3499,
     "fees_bps": 17.5,
-    "slippage_bps": 2.493889,
-    "latency_risk_bps": 1.482367,
+    "slippage_bps": 2.492293,
+    "latency_risk_bps": 1.36501,
     "transfer_delay_min": 5.0,
     "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=85.01000000, sell_bid=85.02000000, buy_spread=1.176bps, sell_spread=1.176bps"
+    "notes": "live_top_of_book buy_ask=85.11000000, sell_bid=85.13000000, buy_spread=1.175bps, sell_spread=1.175bps"
   },
   {
-    "detected_at": "2026-02-22T03:17:40.504849+00:00",
-    "strategy_type": "cex_cex",
-    "symbol": "DOGE/USDT",
-    "buy_venue": "binance",
-    "sell_venue": "bybit",
-    "gross_edge_bps": 1.02976,
-    "fees_bps": 17.5,
-    "slippage_bps": 2.332678,
-    "latency_risk_bps": 1.497024,
-    "transfer_delay_min": 5.0,
-    "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=0.09711000, sell_bid=0.09712000, buy_spread=1.030bps, sell_spread=1.030bps"
-  },
-  {
-    "detected_at": "2026-02-22T03:17:40.504849+00:00",
-    "strategy_type": "cex_cex",
-    "symbol": "BTC/USDT",
-    "buy_venue": "bybit",
-    "sell_venue": "binance",
-    "gross_edge_bps": 0.74601,
-    "fees_bps": 17.5,
-    "slippage_bps": 1.208902,
-    "latency_risk_bps": 1.525399,
-    "transfer_delay_min": 5.0,
-    "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=67961.60000000, sell_bid=67966.67000000, buy_spread=0.015bps, sell_spread=0.001bps"
-  },
-  {
-    "detected_at": "2026-02-22T03:17:40.504849+00:00",
+    "detected_at": "2026-02-22T04:01:36.373669+00:00",
     "strategy_type": "cex_cex",
     "symbol": "BNB/USDT",
     "buy_venue": "binance",
     "sell_venue": "bybit",
-    "gross_edge_bps": 0.48141,
+    "gross_edge_bps": 0.965344,
     "fees_bps": 17.5,
-    "slippage_bps": 2.17073,
-    "latency_risk_bps": 1.551859,
+    "slippage_bps": 2.173233,
+    "latency_risk_bps": 1.503466,
     "transfer_delay_min": 5.0,
     "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=623.17000000, sell_bid=623.20000000, buy_spread=0.160bps, sell_spread=1.604bps"
+    "notes": "live_top_of_book buy_ask=621.54000000, sell_bid=621.60000000, buy_spread=0.161bps, sell_spread=1.609bps"
   }
 ]

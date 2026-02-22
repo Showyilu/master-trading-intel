@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-02-22T04:01:38.435035+00:00",
+  "input": "data/opportunity_candidates.combined.live.json",
+  "rules": {
+    "transfer_penalty_bps_per_min": 0.45,
+    "min_net_edge_bps": 8.0,
+    "max_risk_score": 0.6
+  },
+  "counts": {
+    "candidates": 3,
+    "qualified": 0,
+    "rejected": 3
+  },
+  "rejection_reason_counts": {
+    "fee_dominated": 3,
+    "latency_transfer_dominated": 3,
+    "net_edge_below_threshold": 3,
+    "slippage_dominated": 2
+  },
+  "dominant_drag_counts": {
+    "fees": 3
+  },
+  "top_rejected": [
+    {
+      "symbol": "SOL/USDT",
+      "path": "jupiter->binance",
+      "net_edge_bps": -18.2074,
+      "risk_score": 0.423,
+      "dominant_drag": "fees",
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "latency_transfer_dominated"
+      ]
+    },
+    {
+      "symbol": "SOL/USDT",
+      "path": "bybit->binance",
+      "net_edge_bps": -21.2574,
+      "risk_score": 0.4164,
+      "dominant_drag": "fees",
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated"
+      ]
+    },
+    {
+      "symbol": "BNB/USDT",
+      "path": "binance->bybit",
+      "net_edge_bps": -22.4614,
+      "risk_score": 0.4147,
+      "dominant_drag": "fees",
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated"
+      ]
+    }
+  ]
+}

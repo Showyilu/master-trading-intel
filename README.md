@@ -57,6 +57,7 @@ Outputs:
 - `data/opportunity_candidates.combined.live.json`
 - `opportunities/shortlist-latest.json`
 - `opportunities/dashboard-latest.md`
+- `opportunities/rejection-summary-latest.json` (rejection reason / friction-drag aggregation)
 
 ## GitHub Pages Dashboard
 

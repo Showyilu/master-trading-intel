@@ -10,7 +10,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 4. ✅ Replaced sample-first flow with live CEX pullers (Binance/Bybit) -> normalized quotes -> live candidate file.
 5. ✅ Added live DEX adapter (Jupiter) + CEX-DEX candidate builder + merged dashboard flow (`scripts/build_live_cex_dex_candidates.py`, `scripts/merge_candidate_files.py`).
 6. ✅ Added sanity guards to block false edges (reference deviation + crossed-book checks for DEX quotes).
-7. ⏭ Next: add size-aware orderbook/depth slippage model + rejection-reason aggregation dashboard.
+7. ✅ Added rejection-reason aggregation + dominant-friction breakdown in scanner outputs (`opportunities/rejection-summary-latest.json`).
+8. ⏭ Next: add size-aware orderbook/depth slippage model (1k/5k/10k USD tiers).
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

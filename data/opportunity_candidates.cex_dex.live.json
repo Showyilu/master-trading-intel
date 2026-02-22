@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "detected_at": "2026-02-22T04:01:36.956095+00:00",
+    "strategy_type": "cex_dex",
+    "symbol": "SOL/USDT",
+    "buy_venue": "jupiter",
+    "sell_venue": "binance",
+    "gross_edge_bps": 3.148885,
+    "fees_bps": 11.5,
+    "slippage_bps": 1.508201,
+    "latency_risk_bps": 2.948089,
+    "transfer_delay_min": 12.0,
+    "size_usd": 5000.0,
+    "notes": "buy_dex_sell_cex dex_ask=85.10320198 cex_bid=85.13000000 dex_spread=0.00bps dex_impact=0.12bps"
+  }
+]

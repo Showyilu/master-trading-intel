@@ -9,6 +9,7 @@ Long-term distilled memory for trading/arbitrage work.
 - First live Binance/Bybit top-of-book scan produced 0/3 qualified after full friction math; raw spread alone is not enough.
 - Jupiter DEX integration works for live quotes, but wrapped-token routes can produce massive false edges without reference-price sanity checks.
 - After adding DEX reference-deviation guard and crossed-quote guard, false BTC route signals were filtered out and shortlist returned to 0 qualified (expected under strict friction model).
+- Rejection-reason aggregation is now part of baseline output: every rejected candidate tags explicit causes (fee/slippage/latency/threshold) plus dominant friction drag.
 
 ## What We Believe (Needs Validation)
 - Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
@@ -20,6 +21,7 @@ Long-term distilled memory for trading/arbitrage work.
 - Capital preservation > FOMO.
 - No opportunity enters shortlist without `gross edge - fees - slippage - latency/transfer risk` breakdown.
 - Reject cross-venue quotes when DEX mid deviates too far from trusted CEX reference (depeg/wrapped-token hazard).
+- Every scanner run must expose rejection-reason counts so strategy work is guided by the biggest friction bucket, not intuition.
 
 ## Lessons
 - Gross edge without execution friction data is noise.
