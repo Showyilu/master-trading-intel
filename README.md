@@ -67,3 +67,15 @@ A live static dashboard is deployed by GitHub Actions every 2 hours:
 
 If market APIs fail temporarily, the workflow falls back to the latest committed/sample candidates so the page remains available.
 
+## Vercel Deployment
+
+This repo is also ready for Vercel:
+
+- Config: `vercel.json`
+- Build entrypoint: `python3 scripts/build_for_web.py`
+- Static output: `site/`
+
+One-click import:
+
+- `https://vercel.com/new/clone?repository-url=https://github.com/Showyilu/master-trading-intel`
+
