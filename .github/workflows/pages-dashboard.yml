@@ -92,6 +92,17 @@ jobs:
             --input data/opportunity_candidates.combined.live.json \
             --output data/execution_fee_table.latest.json
 
+      - name: Overlay authenticated venue fees (if secrets available)
+        env:
+          BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
+          BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
+          BYBIT_API_KEY: ${{ secrets.BYBIT_API_KEY }}
+          BYBIT_API_SECRET: ${{ secrets.BYBIT_API_SECRET }}
+        run: |
+          python scripts/build_authenticated_fee_table.py \
+            --input-candidates data/opportunity_candidates.combined.live.json \
+            --fee-table data/execution_fee_table.latest.json || echo "WARN: authenticated fee overlay failed, using template fee table"
+
       - name: Score and produce dashboard
         run: |
           python scripts/scan_opportunities.py \

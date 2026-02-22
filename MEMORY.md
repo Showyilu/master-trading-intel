@@ -18,6 +18,7 @@ Long-term distilled memory for trading/arbitrage work.
 - Constraint template generation is automated from current candidate universe (`scripts/build_execution_constraints_template.py`), so capacity assumptions are versioned and reproducible.
 - Scanner now supports an explicit venue/instrument fee table (`data/execution_fee_table.latest.json`) with profile-aware fee modes (taker/maker/maker_vip) and strategy round-trip multipliers, so fee assumptions are versioned instead of hidden inside candidate builders.
 - CEX-DEX candidate builder now consumes a live network-friction model (`data/network_friction.latest.json`) and applies `router_fee_bps + network_fee_bps` for Jupiter legs, reducing static-fee blind spots.
+- Fee table pipeline now supports authenticated overlay (`scripts/build_authenticated_fee_table.py`): Binance/Bybit signed endpoints can replace template fee assumptions with account-realized rates while preserving deterministic fallback when auth is missing.
 
 ## What We Believe (Needs Validation)
 - Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
@@ -44,3 +45,4 @@ Long-term distilled memory for trading/arbitrage work.
 - Borrow carry can dominate basis net edge over multi-hour holds; ignoring borrow terms overstates executability.
 - Fee assumptions should live in a dedicated fee table with venue/instrument granularity; burying fees inside each adapter makes profile testing opaque and non-reproducible.
 - DEX fee modeling also needs a chain-cost input (network congestion + base fee); even when cost is tiny (e.g., Solana), explicit modeling improves reproducibility and avoids silent drift.
+- Authenticated adapters should be fail-soft and schema-compatible: if keys are absent, keep template assumptions and continue scoring instead of breaking the pipeline.

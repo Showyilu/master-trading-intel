@@ -60,6 +60,9 @@ python3 scripts/build_execution_constraints_template.py \
 python3 scripts/build_execution_fee_table_template.py \
   --input data/opportunity_candidates.combined.live.json \
   --output data/execution_fee_table.latest.json
+python3 scripts/build_authenticated_fee_table.py \
+  --input-candidates data/opportunity_candidates.combined.live.json \
+  --fee-table data/execution_fee_table.latest.json
 python3 scripts/scan_opportunities.py \
   --input data/opportunity_candidates.combined.live.json \
   --constraints data/execution_constraints.latest.json \
@@ -82,7 +85,7 @@ Outputs:
 - `data/opportunity_candidates.basis.live.json`
 - `data/opportunity_candidates.combined.live.json`
 - `data/execution_constraints.latest.json` (venue/asset inventory, borrow and position-cap template)
-- `data/execution_fee_table.latest.json` (venue/instrument taker-maker-vip fee template)
+- `data/execution_fee_table.latest.json` (venue/instrument taker-maker-vip fee table; template first, then authenticated overlay when API keys exist)
 - `opportunities/shortlist-latest.json`
 - `opportunities/dashboard-latest.md`
 - `opportunities/rejection-summary-latest.json` (rejection reason / friction-drag aggregation)
@@ -101,6 +104,12 @@ Scanner can load explicit fee assumptions with `--fee-table`:
 - per-venue + per-instrument `taker_bps` / `maker_bps` / `maker_vip_bps`
 - profile-to-fee-mode mapping (`taker_default` / `maker_inventory` / `maker_inventory_vip`)
 - strategy round-trip side multipliers (e.g. funding/basis open+close cost)
+
+`build_authenticated_fee_table.py` can overlay account-realized fees for Binance/Bybit when credentials are present:
+- `BINANCE_API_KEY` / `BINANCE_API_SECRET`
+- `BYBIT_API_KEY` / `BYBIT_API_SECRET`
+
+If auth is unavailable, it fails soft and keeps template fees (still reproducible).
 
 DEX fee model now supports a live network-friction input (`scripts/build_network_friction.py`):
 - pulls Solana recent priority-fee data + base tx fee to estimate Jupiter network fee bps at current notional

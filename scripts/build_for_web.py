@@ -74,6 +74,17 @@ def main() -> None:
             "data/execution_fee_table.latest.json",
         ]
     )
+    run(
+        [
+            "python3",
+            "scripts/build_authenticated_fee_table.py",
+            "--input-candidates",
+            "data/opportunity_candidates.combined.live.json",
+            "--fee-table",
+            "data/execution_fee_table.latest.json",
+        ],
+        allow_fail=True,
+    )
 
     if constraints.exists():
         print(f"Execution constraints: {constraints}")
