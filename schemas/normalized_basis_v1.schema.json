@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "normalized_basis_v1.schema.json",
+  "title": "NormalizedBasisV1",
+  "type": "object",
+  "required": [
+    "detected_at",
+    "venue",
+    "symbol",
+    "spot_mid_price",
+    "perp_mark_price",
+    "funding_rate_bps",
+    "basis_mark_to_spot_bps"
+  ],
+  "properties": {
+    "detected_at": { "type": "string", "format": "date-time" },
+    "venue": { "type": "string" },
+    "symbol": { "type": "string" },
+    "base": { "type": "string" },
+    "quote": { "type": "string" },
+    "spot_bid_price": { "type": "number", "minimum": 0 },
+    "spot_ask_price": { "type": "number", "minimum": 0 },
+    "spot_mid_price": { "type": "number", "minimum": 0 },
+    "perp_bid_price": { "type": "number", "minimum": 0 },
+    "perp_ask_price": { "type": "number", "minimum": 0 },
+    "perp_mark_price": { "type": "number", "minimum": 0 },
+    "perp_index_price": { "type": "number", "minimum": 0 },
+    "funding_rate": { "type": "number" },
+    "funding_rate_bps": { "type": "number" },
+    "basis_mark_to_spot_bps": { "type": "number" },
+    "basis_index_to_spot_bps": { "type": "number" },
+    "next_funding_time": { "type": "string", "format": "date-time" },
+    "minutes_to_funding": { "type": "number", "minimum": 0 }
+  },
+  "additionalProperties": true
+}

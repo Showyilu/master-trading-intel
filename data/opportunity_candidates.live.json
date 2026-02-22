@@ -1,58 +1,44 @@
 [
   {
-    "detected_at": "2026-02-22T08:03:42.847400+00:00",
-    "strategy_type": "cex_cex",
-    "symbol": "DOGE/USDT",
-    "buy_venue": "binance",
-    "sell_venue": "bybit",
-    "gross_edge_bps": 2.056344,
-    "fees_bps": 17.5,
-    "slippage_bps": 5.214864,
-    "latency_risk_bps": 1.394366,
-    "transfer_delay_min": 5.0,
-    "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=0.09726000, sell_bid=0.09728000, buy_spread=1.028bps, sell_spread=1.028bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=1.913bps sell_depth=2.502bps"
-  },
-  {
-    "detected_at": "2026-02-22T08:03:42.847400+00:00",
-    "strategy_type": "cex_cex",
-    "symbol": "ETH/USDT",
-    "buy_venue": "binance",
-    "sell_venue": "bybit",
-    "gross_edge_bps": 0.910876,
-    "fees_bps": 17.5,
-    "slippage_bps": 1.119329,
-    "latency_risk_bps": 1.508912,
-    "transfer_delay_min": 5.0,
-    "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=1976.12000000, sell_bid=1976.30000000, buy_spread=0.051bps, sell_spread=0.051bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.294bps sell_depth=0.025bps"
-  },
-  {
-    "detected_at": "2026-02-22T08:03:42.847400+00:00",
+    "detected_at": "2026-02-22T10:05:09.630534+00:00",
     "strategy_type": "cex_cex",
     "symbol": "BNB/USDT",
     "buy_venue": "binance",
     "sell_venue": "bybit",
-    "gross_edge_bps": 0.803148,
+    "gross_edge_bps": 1.762002,
     "fees_bps": 17.5,
-    "slippage_bps": 1.921207,
-    "latency_risk_bps": 1.519685,
+    "slippage_bps": 2.864078,
+    "latency_risk_bps": 1.4238,
     "transfer_delay_min": 5.0,
     "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=622.55000000, sell_bid=622.60000000, buy_spread=0.161bps, sell_spread=1.606bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.318bps sell_depth=0.803bps"
+    "notes": "live_top_of_book buy_ask=624.29000000, sell_bid=624.40000000, buy_spread=0.160bps, sell_spread=1.601bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.788bps sell_depth=1.276bps"
   },
   {
-    "detected_at": "2026-02-22T08:03:42.847400+00:00",
+    "detected_at": "2026-02-22T10:05:09.630534+00:00",
+    "strategy_type": "cex_cex",
+    "symbol": "ETH/USDT",
+    "buy_venue": "binance",
+    "sell_venue": "bybit",
+    "gross_edge_bps": 0.758979,
+    "fees_bps": 17.5,
+    "slippage_bps": 1.320495,
+    "latency_risk_bps": 1.524102,
+    "transfer_delay_min": 5.0,
+    "size_usd": 10000,
+    "notes": "live_top_of_book buy_ask=1976.34000000, sell_bid=1976.49000000, buy_spread=0.051bps, sell_spread=0.051bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.495bps sell_depth=0.025bps"
+  },
+  {
+    "detected_at": "2026-02-22T10:05:09.630534+00:00",
     "strategy_type": "cex_cex",
     "symbol": "BTC/USDT",
     "buy_venue": "binance",
     "sell_venue": "bybit",
-    "gross_edge_bps": 0.470588,
+    "gross_edge_bps": 0.418972,
     "fees_bps": 17.5,
-    "slippage_bps": 0.808088,
-    "latency_risk_bps": 1.552941,
+    "slippage_bps": 0.808085,
+    "latency_risk_bps": 1.558103,
     "transfer_delay_min": 5.0,
     "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=68000.00000000, sell_bid=68003.20000000, buy_spread=0.001bps, sell_spread=0.015bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.001bps sell_depth=0.007bps"
+    "notes": "live_top_of_book buy_ask=68023.65000000, sell_bid=68026.50000000, buy_spread=0.001bps, sell_spread=0.015bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.001bps sell_depth=0.007bps"
   }
 ]

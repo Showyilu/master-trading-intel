@@ -4,6 +4,9 @@
 Formula (bps):
 net_edge = gross_edge - fees - slippage - latency_risk - transfer_risk
 transfer_risk = transfer_delay_min * transfer_penalty_bps_per_min
+
+Supports execution profiles (taker/maker/inventory assumptions) so the same
+candidate set can be stress-tested under different execution realities.
 """
 
 from __future__ import annotations
@@ -26,6 +29,36 @@ DEFAULT_TRANSFER_PENALTY_BPS_PER_MIN = 0.45
 DEFAULT_MIN_NET_EDGE_BPS = 8.0
 DEFAULT_MAX_RISK_SCORE = 0.60
 
+EXECUTION_PROFILES: dict[str, dict[str, float]] = {
+    "taker_default": {
+        "fee_multiplier": 1.0,
+        "slippage_multiplier": 1.0,
+        "latency_multiplier": 1.0,
+        "transfer_delay_multiplier": 1.0,
+        "transfer_penalty_bps_per_min": 0.45,
+        "min_net_edge_bps": 8.0,
+        "max_risk_score": 0.60,
+    },
+    "maker_inventory": {
+        "fee_multiplier": 0.42,
+        "slippage_multiplier": 0.72,
+        "latency_multiplier": 0.95,
+        "transfer_delay_multiplier": 0.30,
+        "transfer_penalty_bps_per_min": 0.24,
+        "min_net_edge_bps": 4.5,
+        "max_risk_score": 0.62,
+    },
+    "maker_inventory_vip": {
+        "fee_multiplier": 0.25,
+        "slippage_multiplier": 0.60,
+        "latency_multiplier": 0.90,
+        "transfer_delay_multiplier": 0.20,
+        "transfer_penalty_bps_per_min": 0.18,
+        "min_net_edge_bps": 3.0,
+        "max_risk_score": 0.65,
+    },
+}
+
 
 @dataclass
 class ScoredOpportunity:
@@ -34,7 +67,12 @@ class ScoredOpportunity:
     symbol: str
     buy_venue: str
     sell_venue: str
+    execution_profile: str
     gross_edge_bps: float
+    source_fees_bps: float
+    source_slippage_bps: float
+    source_latency_risk_bps: float
+    source_transfer_delay_min: float
     fees_bps: float
     slippage_bps: float
     latency_risk_bps: float
@@ -108,26 +146,45 @@ def _rejection_reasons(
 
 def score_item(
     item: dict[str, Any],
+    execution_profile: str,
+    fee_multiplier: float,
+    slippage_multiplier: float,
+    latency_multiplier: float,
+    transfer_delay_multiplier: float,
     transfer_penalty_bps_per_min: float,
     min_net_edge_bps: float,
     max_risk_score: float,
 ) -> ScoredOpportunity:
-    transfer_risk_bps = round(item["transfer_delay_min"] * transfer_penalty_bps_per_min, 4)
+    source_fees_bps = float(item["fees_bps"])
+    source_slippage_bps = float(item["slippage_bps"])
+    source_latency_risk_bps = float(item["latency_risk_bps"])
+    source_transfer_delay_min = float(item["transfer_delay_min"])
+
+    fees_bps = round(source_fees_bps * fee_multiplier, 6)
+    slippage_bps = round(source_slippage_bps * slippage_multiplier, 6)
+    latency_risk_bps = round(source_latency_risk_bps * latency_multiplier, 6)
+    transfer_delay_min = round(source_transfer_delay_min * transfer_delay_multiplier, 6)
+
+    transfer_risk_bps = round(transfer_delay_min * transfer_penalty_bps_per_min, 4)
     net_edge_bps = round(
-        item["gross_edge_bps"]
-        - item["fees_bps"]
-        - item["slippage_bps"]
-        - item["latency_risk_bps"]
-        - transfer_risk_bps,
+        float(item["gross_edge_bps"]) - fees_bps - slippage_bps - latency_risk_bps - transfer_risk_bps,
         4,
     )
-    risk_score = _risk_score(item, net_edge_bps, transfer_risk_bps)
+
+    scoring_view = {
+        "gross_edge_bps": float(item["gross_edge_bps"]),
+        "fees_bps": fees_bps,
+        "slippage_bps": slippage_bps,
+        "latency_risk_bps": latency_risk_bps,
+    }
+
+    risk_score = _risk_score(scoring_view, net_edge_bps, transfer_risk_bps)
     is_qualified = net_edge_bps >= min_net_edge_bps and risk_score <= max_risk_score
-    dominant_drag = _dominant_drag(item, transfer_risk_bps)
+    dominant_drag = _dominant_drag(scoring_view, transfer_risk_bps)
     rejection_reasons = []
     if not is_qualified:
         rejection_reasons = _rejection_reasons(
-            item,
+            scoring_view,
             net_edge_bps=net_edge_bps,
             risk_score=risk_score,
             transfer_risk_bps=transfer_risk_bps,
@@ -141,15 +198,20 @@ def score_item(
         symbol=item["symbol"],
         buy_venue=item["buy_venue"],
         sell_venue=item["sell_venue"],
-        gross_edge_bps=item["gross_edge_bps"],
-        fees_bps=item["fees_bps"],
-        slippage_bps=item["slippage_bps"],
-        latency_risk_bps=item["latency_risk_bps"],
-        transfer_delay_min=item["transfer_delay_min"],
+        execution_profile=execution_profile,
+        gross_edge_bps=float(item["gross_edge_bps"]),
+        source_fees_bps=source_fees_bps,
+        source_slippage_bps=source_slippage_bps,
+        source_latency_risk_bps=source_latency_risk_bps,
+        source_transfer_delay_min=source_transfer_delay_min,
+        fees_bps=fees_bps,
+        slippage_bps=slippage_bps,
+        latency_risk_bps=latency_risk_bps,
+        transfer_delay_min=transfer_delay_min,
         transfer_risk_bps=transfer_risk_bps,
         net_edge_bps=net_edge_bps,
         risk_score=risk_score,
-        size_usd=item["size_usd"],
+        size_usd=float(item["size_usd"]),
         dominant_drag=dominant_drag,
         is_qualified=is_qualified,
         rejection_reasons=rejection_reasons,
@@ -160,6 +222,11 @@ def score_item(
 def _build_summary(
     scored: list[ScoredOpportunity],
     input_path: Path,
+    execution_profile: str,
+    fee_multiplier: float,
+    slippage_multiplier: float,
+    latency_multiplier: float,
+    transfer_delay_multiplier: float,
     transfer_penalty_bps_per_min: float,
     min_net_edge_bps: float,
     max_risk_score: float,
@@ -171,7 +238,12 @@ def _build_summary(
     return {
         "generated_at": datetime.now(tz=timezone.utc).isoformat(),
         "input": str(input_path),
+        "execution_profile": execution_profile,
         "rules": {
+            "fee_multiplier": fee_multiplier,
+            "slippage_multiplier": slippage_multiplier,
+            "latency_multiplier": latency_multiplier,
+            "transfer_delay_multiplier": transfer_delay_multiplier,
             "transfer_penalty_bps_per_min": transfer_penalty_bps_per_min,
             "min_net_edge_bps": min_net_edge_bps,
             "max_risk_score": max_risk_score,
@@ -200,6 +272,11 @@ def _build_summary(
 def render_markdown(
     scored: list[ScoredOpportunity],
     input_path: Path,
+    execution_profile: str,
+    fee_multiplier: float,
+    slippage_multiplier: float,
+    latency_multiplier: float,
+    transfer_delay_multiplier: float,
     transfer_penalty_bps_per_min: float,
     min_net_edge_bps: float,
     max_risk_score: float,
@@ -215,11 +292,17 @@ def render_markdown(
         "",
         f"Generated at: `{run_at}`",
         f"Input: `{input_path}`",
+        f"Execution profile: `{execution_profile}`",
         "",
         "## Rules",
         (
             "- Net edge (bps) = gross - fees - slippage - latency risk - transfer risk "
             f"({transfer_penalty_bps_per_min} bps/min)"
+        ),
+        (
+            "- Profile multipliers: "
+            f"fees×{fee_multiplier}, slippage×{slippage_multiplier}, "
+            f"latency×{latency_multiplier}, transfer_delay×{transfer_delay_multiplier}"
         ),
         f"- Qualified if `net_edge_bps >= {min_net_edge_bps}` and `risk_score <= {max_risk_score}`",
         "",
@@ -267,13 +350,23 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--output-json", type=Path, default=DEFAULT_OUTPUT_JSON, help="Output scored JSON")
     p.add_argument("--output-md", type=Path, default=DEFAULT_OUTPUT_MD, help="Output dashboard markdown")
     p.add_argument("--output-summary", type=Path, default=DEFAULT_OUTPUT_SUMMARY, help="Output rejection summary JSON")
+
     p.add_argument(
-        "--transfer-penalty-bps-per-min",
-        type=float,
-        default=DEFAULT_TRANSFER_PENALTY_BPS_PER_MIN,
+        "--execution-profile",
+        choices=sorted(EXECUTION_PROFILES.keys()),
+        default="taker_default",
+        help="Execution friction profile for scenario scoring.",
     )
-    p.add_argument("--min-net-edge-bps", type=float, default=DEFAULT_MIN_NET_EDGE_BPS)
-    p.add_argument("--max-risk-score", type=float, default=DEFAULT_MAX_RISK_SCORE)
+
+    p.add_argument("--fee-multiplier", type=float, default=None)
+    p.add_argument("--slippage-multiplier", type=float, default=None)
+    p.add_argument("--latency-multiplier", type=float, default=None)
+    p.add_argument("--transfer-delay-multiplier", type=float, default=None)
+
+    p.add_argument("--transfer-penalty-bps-per-min", type=float, default=None)
+    p.add_argument("--min-net-edge-bps", type=float, default=None)
+    p.add_argument("--max-risk-score", type=float, default=None)
+
     return p.parse_args()
 
 
@@ -281,12 +374,56 @@ def main() -> None:
     args = parse_args()
     data = json.loads(args.input.read_text())
 
+    profile = EXECUTION_PROFILES[args.execution_profile]
+
+    fee_multiplier = (
+        float(args.fee_multiplier)
+        if args.fee_multiplier is not None
+        else float(profile["fee_multiplier"])
+    )
+    slippage_multiplier = (
+        float(args.slippage_multiplier)
+        if args.slippage_multiplier is not None
+        else float(profile["slippage_multiplier"])
+    )
+    latency_multiplier = (
+        float(args.latency_multiplier)
+        if args.latency_multiplier is not None
+        else float(profile["latency_multiplier"])
+    )
+    transfer_delay_multiplier = (
+        float(args.transfer_delay_multiplier)
+        if args.transfer_delay_multiplier is not None
+        else float(profile["transfer_delay_multiplier"])
+    )
+
+    transfer_penalty_bps_per_min = (
+        float(args.transfer_penalty_bps_per_min)
+        if args.transfer_penalty_bps_per_min is not None
+        else float(profile.get("transfer_penalty_bps_per_min", DEFAULT_TRANSFER_PENALTY_BPS_PER_MIN))
+    )
+    min_net_edge_bps = (
+        float(args.min_net_edge_bps)
+        if args.min_net_edge_bps is not None
+        else float(profile.get("min_net_edge_bps", DEFAULT_MIN_NET_EDGE_BPS))
+    )
+    max_risk_score = (
+        float(args.max_risk_score)
+        if args.max_risk_score is not None
+        else float(profile.get("max_risk_score", DEFAULT_MAX_RISK_SCORE))
+    )
+
     scored = [
         score_item(
             item,
-            transfer_penalty_bps_per_min=args.transfer_penalty_bps_per_min,
-            min_net_edge_bps=args.min_net_edge_bps,
-            max_risk_score=args.max_risk_score,
+            execution_profile=args.execution_profile,
+            fee_multiplier=fee_multiplier,
+            slippage_multiplier=slippage_multiplier,
+            latency_multiplier=latency_multiplier,
+            transfer_delay_multiplier=transfer_delay_multiplier,
+            transfer_penalty_bps_per_min=transfer_penalty_bps_per_min,
+            min_net_edge_bps=min_net_edge_bps,
+            max_risk_score=max_risk_score,
         )
         for item in data
     ]
@@ -295,9 +432,14 @@ def main() -> None:
     summary = _build_summary(
         scored_sorted,
         input_path=args.input,
-        transfer_penalty_bps_per_min=args.transfer_penalty_bps_per_min,
-        min_net_edge_bps=args.min_net_edge_bps,
-        max_risk_score=args.max_risk_score,
+        execution_profile=args.execution_profile,
+        fee_multiplier=fee_multiplier,
+        slippage_multiplier=slippage_multiplier,
+        latency_multiplier=latency_multiplier,
+        transfer_delay_multiplier=transfer_delay_multiplier,
+        transfer_penalty_bps_per_min=transfer_penalty_bps_per_min,
+        min_net_edge_bps=min_net_edge_bps,
+        max_risk_score=max_risk_score,
     )
 
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
@@ -309,15 +451,21 @@ def main() -> None:
         render_markdown(
             scored_sorted,
             input_path=args.input,
-            transfer_penalty_bps_per_min=args.transfer_penalty_bps_per_min,
-            min_net_edge_bps=args.min_net_edge_bps,
-            max_risk_score=args.max_risk_score,
+            execution_profile=args.execution_profile,
+            fee_multiplier=fee_multiplier,
+            slippage_multiplier=slippage_multiplier,
+            latency_multiplier=latency_multiplier,
+            transfer_delay_multiplier=transfer_delay_multiplier,
+            transfer_penalty_bps_per_min=transfer_penalty_bps_per_min,
+            min_net_edge_bps=min_net_edge_bps,
+            max_risk_score=max_risk_score,
         )
     )
     args.output_summary.write_text(json.dumps(summary, indent=2))
 
     print(f"Scored {len(scored)} candidates.")
     print(f"Qualified: {sum(1 for item in scored if item.is_qualified)}")
+    print(f"Execution profile: {args.execution_profile}")
     print(f"Wrote: {args.output_json}")
     print(f"Wrote: {args.output_md}")
     print(f"Wrote: {args.output_summary}")

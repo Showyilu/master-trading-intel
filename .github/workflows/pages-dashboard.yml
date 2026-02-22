@@ -47,10 +47,14 @@ jobs:
         run: |
           python scripts/build_live_funding_candidates.py || echo "WARN: funding build failed, continuing"
 
+      - name: Build live perp-spot basis candidates
+        run: |
+          python scripts/build_live_basis_candidates.py || echo "WARN: basis build failed, continuing"
+
       - name: Merge candidate pools
         run: |
           python scripts/merge_candidate_files.py \
-            --inputs data/opportunity_candidates.live.json data/opportunity_candidates.cex_dex.live.json data/opportunity_candidates.funding.live.json \
+            --inputs data/opportunity_candidates.live.json data/opportunity_candidates.cex_dex.live.json data/opportunity_candidates.funding.live.json data/opportunity_candidates.basis.live.json \
             --output data/opportunity_candidates.combined.live.json
 
       - name: Fallback to sample if merged pool empty

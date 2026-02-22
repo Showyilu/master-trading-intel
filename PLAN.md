@@ -13,7 +13,9 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 7. ✅ Added rejection-reason aggregation + dominant-friction breakdown in scanner outputs (`opportunities/rejection-summary-latest.json`).
 8. ✅ Added size-aware orderbook/depth slippage model (1k/5k/10k USD tiers) for Binance/Bybit (`data/cex_depth_slippage_latest.json`).
 9. ✅ Added funding live adapter (Binance/Bybit perp) + carry candidate builder (`scripts/build_live_funding_candidates.py`).
-10. ⏭ Next: add perp-spot basis spread adapter + execution inventory constraints (pre-positioned capital / borrow availability).
+10. ✅ Added perp-spot basis live adapter (Binance/Bybit) + candidate builder (`scripts/build_live_basis_candidates.py`).
+11. ✅ Added execution profile scenarios in scanner (`taker_default` / `maker_inventory` / `maker_inventory_vip`) and profile playbook (`playbooks/execution-profiles.md`).
+12. ⏭ Next: add borrow-rate + inventory/position-limit inputs (per venue/asset) so basis/funding candidates can be rejected by hard capacity constraints before scoring.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

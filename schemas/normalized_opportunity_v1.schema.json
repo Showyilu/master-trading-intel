@@ -20,7 +20,14 @@
     "detected_at": { "type": "string", "format": "date-time" },
     "strategy_type": {
       "type": "string",
-      "enum": ["cex_cex", "cex_dex", "cross_chain", "funding_basis"]
+      "enum": [
+        "cex_cex",
+        "cex_dex",
+        "cross_chain",
+        "funding_basis",
+        "funding_carry_cex_cex",
+        "perp_spot_basis"
+      ]
     },
     "symbol": { "type": "string" },
     "buy_venue": { "type": "string" },

@@ -182,20 +182,6 @@
     "notes": "reverse_carry; venue=binance; basis_mark=-5.979bps; funding=-0.788bps; basis_capture_ratio=0.22; basis_capture=1.315bps; funding_component=0.788bps; minutes_to_funding=354.69; inventory_mode=prepositioned"
   },
   {
-    "detected_at": "2026-02-22T10:05:09.630534+00:00",
-    "strategy_type": "cex_cex",
-    "symbol": "BNB/USDT",
-    "buy_venue": "binance",
-    "sell_venue": "bybit",
-    "gross_edge_bps": 1.762002,
-    "fees_bps": 17.5,
-    "slippage_bps": 2.864078,
-    "latency_risk_bps": 1.4238,
-    "transfer_delay_min": 5.0,
-    "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=624.29000000, sell_bid=624.40000000, buy_spread=0.160bps, sell_spread=1.601bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.788bps sell_depth=1.276bps"
-  },
-  {
     "detected_at": "2026-02-22T10:05:18.729672+00:00",
     "strategy_type": "perp_spot_basis",
     "symbol": "AVAX/USDT",
@@ -208,34 +194,6 @@
     "transfer_delay_min": 0.25,
     "size_usd": 10000,
     "notes": "reverse_carry; venue=bybit; basis_mark=-6.641bps; funding=-0.217bps; basis_capture_ratio=0.22; basis_capture=1.461bps; funding_component=0.217bps; minutes_to_funding=354.69; inventory_mode=prepositioned"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:15.272340+00:00",
-    "strategy_type": "cex_dex",
-    "symbol": "SOL/USDT",
-    "buy_venue": "jupiter",
-    "sell_venue": "binance",
-    "gross_edge_bps": 1.666206,
-    "fees_bps": 11.5,
-    "slippage_bps": 2.44342,
-    "latency_risk_bps": 3.066704,
-    "transfer_delay_min": 12.0,
-    "size_usd": 5000.0,
-    "notes": "buy_dex_sell_cex dex_ask=85.11581795 cex_bid=85.13000000 dex_spread=0.00bps dex_impact=1.99bps"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:16.892922+00:00",
-    "strategy_type": "funding_carry_cex_cex",
-    "symbol": "AVAX/USDT",
-    "buy_venue": "long_binance_perp",
-    "sell_venue": "short_bybit_perp",
-    "gross_edge_bps": 1.3029,
-    "fees_bps": 21.0,
-    "slippage_bps": 6.4,
-    "latency_risk_bps": 2.81902,
-    "transfer_delay_min": 1.0,
-    "size_usd": 10000,
-    "notes": "funding_diff_bps=(short bybit -0.217 - long binance -1.520); hold_min=354.69; skew_min=0.00; mark_long=9.030000; mark_short=9.029000"
   },
   {
     "detected_at": "2026-02-22T10:05:18.729672+00:00",
@@ -266,20 +224,6 @@
     "notes": "reverse_carry; venue=bybit; basis_mark=-4.832bps; funding=-0.082bps; basis_capture_ratio=0.22; basis_capture=1.063bps; funding_component=0.082bps; minutes_to_funding=354.69; inventory_mode=prepositioned"
   },
   {
-    "detected_at": "2026-02-22T10:05:16.892922+00:00",
-    "strategy_type": "funding_carry_cex_cex",
-    "symbol": "BNB/USDT",
-    "buy_venue": "long_binance_perp",
-    "sell_venue": "short_bybit_perp",
-    "gross_edge_bps": 0.9271,
-    "fees_bps": 21.0,
-    "slippage_bps": 6.4,
-    "latency_risk_bps": 2.81902,
-    "transfer_delay_min": 1.0,
-    "size_usd": 10000,
-    "notes": "funding_diff_bps=(short bybit 0.927 - long binance 0.000); hold_min=354.69; skew_min=0.00; mark_long=624.547558; mark_short=624.000000"
-  },
-  {
     "detected_at": "2026-02-22T10:05:18.729672+00:00",
     "strategy_type": "perp_spot_basis",
     "symbol": "BNB/USDT",
@@ -292,20 +236,6 @@
     "transfer_delay_min": 0.25,
     "size_usd": 10000,
     "notes": "cash_and_carry; venue=binance; basis_mark=4.206bps; funding=0.000bps; basis_capture_ratio=0.22; basis_capture=0.925bps; funding_component=0.000bps; minutes_to_funding=354.69; inventory_mode=prepositioned"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:09.630534+00:00",
-    "strategy_type": "cex_cex",
-    "symbol": "ETH/USDT",
-    "buy_venue": "binance",
-    "sell_venue": "bybit",
-    "gross_edge_bps": 0.758979,
-    "fees_bps": 17.5,
-    "slippage_bps": 1.320495,
-    "latency_risk_bps": 1.524102,
-    "transfer_delay_min": 5.0,
-    "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=1976.34000000, sell_bid=1976.49000000, buy_spread=0.051bps, sell_spread=0.051bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.495bps sell_depth=0.025bps"
   },
   {
     "detected_at": "2026-02-22T10:05:18.729672+00:00",
@@ -348,89 +278,5 @@
     "transfer_delay_min": 0.25,
     "size_usd": 10000,
     "notes": "reverse_carry; venue=binance; basis_mark=-3.579bps; funding=0.193bps; basis_capture_ratio=0.22; basis_capture=0.787bps; funding_component=-0.193bps; minutes_to_funding=354.69; inventory_mode=prepositioned"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:16.892922+00:00",
-    "strategy_type": "funding_carry_cex_cex",
-    "symbol": "SOL/USDT",
-    "buy_venue": "long_bybit_perp",
-    "sell_venue": "short_binance_perp",
-    "gross_edge_bps": 0.5801,
-    "fees_bps": 21.0,
-    "slippage_bps": 6.4,
-    "latency_risk_bps": 2.81902,
-    "transfer_delay_min": 1.0,
-    "size_usd": 10000,
-    "notes": "funding_diff_bps=(short binance -0.981 - long bybit -1.561); hold_min=354.69; skew_min=0.00; mark_long=85.070000; mark_short=85.090000"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:16.892922+00:00",
-    "strategy_type": "funding_carry_cex_cex",
-    "symbol": "DOGE/USDT",
-    "buy_venue": "long_binance_perp",
-    "sell_venue": "short_bybit_perp",
-    "gross_edge_bps": 0.5234,
-    "fees_bps": 21.0,
-    "slippage_bps": 6.4,
-    "latency_risk_bps": 2.81902,
-    "transfer_delay_min": 1.0,
-    "size_usd": 10000,
-    "notes": "funding_diff_bps=(short bybit -0.782 - long binance -1.306); hold_min=354.69; skew_min=0.00; mark_long=0.097314; mark_short=0.097300"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:15.272340+00:00",
-    "strategy_type": "cex_dex",
-    "symbol": "SOL/USDT",
-    "buy_venue": "jupiter",
-    "sell_venue": "bybit",
-    "gross_edge_bps": 0.491336,
-    "fees_bps": 14.0,
-    "slippage_bps": 2.443496,
-    "latency_risk_bps": 3.160693,
-    "transfer_delay_min": 12.0,
-    "size_usd": 5000.0,
-    "notes": "buy_dex_sell_cex dex_ask=85.11581795 cex_bid=85.12000000 dex_spread=0.00bps dex_impact=1.99bps"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:16.892922+00:00",
-    "strategy_type": "funding_carry_cex_cex",
-    "symbol": "BTC/USDT",
-    "buy_venue": "long_bybit_perp",
-    "sell_venue": "short_binance_perp",
-    "gross_edge_bps": 0.4552,
-    "fees_bps": 21.0,
-    "slippage_bps": 6.4,
-    "latency_risk_bps": 2.81902,
-    "transfer_delay_min": 1.0,
-    "size_usd": 10000,
-    "notes": "funding_diff_bps=(short binance 0.193 - long bybit -0.262); hold_min=354.69; skew_min=0.00; mark_long=67996.600000; mark_short=67999.300000"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:16.892922+00:00",
-    "strategy_type": "funding_carry_cex_cex",
-    "symbol": "LINK/USDT",
-    "buy_venue": "long_bybit_perp",
-    "sell_venue": "short_binance_perp",
-    "gross_edge_bps": 0.4517,
-    "fees_bps": 21.0,
-    "slippage_bps": 6.4,
-    "latency_risk_bps": 2.81902,
-    "transfer_delay_min": 1.0,
-    "size_usd": 10000,
-    "notes": "funding_diff_bps=(short binance -0.958 - long bybit -1.410); hold_min=354.69; skew_min=0.00; mark_long=8.818000; mark_short=8.817000"
-  },
-  {
-    "detected_at": "2026-02-22T10:05:09.630534+00:00",
-    "strategy_type": "cex_cex",
-    "symbol": "BTC/USDT",
-    "buy_venue": "binance",
-    "sell_venue": "bybit",
-    "gross_edge_bps": 0.418972,
-    "fees_bps": 17.5,
-    "slippage_bps": 0.808085,
-    "latency_risk_bps": 1.558103,
-    "transfer_delay_min": 5.0,
-    "size_usd": 10000,
-    "notes": "live_top_of_book buy_ask=68023.65000000, sell_bid=68026.50000000, buy_spread=0.001bps, sell_spread=0.015bps; slippage=depth_model tiers buy=10000 sell=10000, buy_depth=0.001bps sell_depth=0.007bps"
   }
 ]

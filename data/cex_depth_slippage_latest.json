@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-22T08:03:42.847400+00:00",
+  "generated_at": "2026-02-22T10:05:09.630534+00:00",
   "size_tiers_usd": [
     1000.0,
     5000.0,
@@ -8,7 +8,7 @@
   "symbols": {
     "ADAUSDT": {
       "binance": {
-        "mid_price": 0.27595,
+        "mid_price": 0.27665,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -16,37 +16,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 1.811922,
-            "sell_slippage_bps": 1.811922
+            "buy_slippage_bps": 1.807338,
+            "sell_slippage_bps": 1.807338
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 3.449982,
-            "sell_slippage_bps": 1.811922
+            "buy_slippage_bps": 1.807338,
+            "sell_slippage_bps": 1.988353
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 4.442776,
-            "sell_slippage_bps": 1.811922
+            "buy_slippage_bps": 2.523002,
+            "sell_slippage_bps": 3.705183
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 1.811922,
-            "sell_slippage_bps": 1.811922
+            "buy_slippage_bps": 1.807338,
+            "sell_slippage_bps": 1.807338
           },
           "5000": {
-            "buy_slippage_bps": 3.449982,
-            "sell_slippage_bps": 1.811922
+            "buy_slippage_bps": 1.807338,
+            "sell_slippage_bps": 1.988353
           },
           "10000": {
-            "buy_slippage_bps": 4.442776,
-            "sell_slippage_bps": 1.811922
+            "buy_slippage_bps": 2.523002,
+            "sell_slippage_bps": 3.705183
           }
         }
       },
       "bybit": {
-        "mid_price": 0.27605,
+        "mid_price": 0.27665,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -54,39 +54,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 1.811266,
-            "sell_slippage_bps": 4.264258
+            "buy_slippage_bps": 2.014437,
+            "sell_slippage_bps": 3.800533
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 1.811266,
-            "sell_slippage_bps": 6.491806
+            "buy_slippage_bps": 4.740312,
+            "sell_slippage_bps": 5.728369
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 1.811266,
-            "sell_slippage_bps": 8.701072
+            "buy_slippage_bps": 5.978066,
+            "sell_slippage_bps": 7.436629
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 1.811266,
-            "sell_slippage_bps": 4.264258
+            "buy_slippage_bps": 2.014437,
+            "sell_slippage_bps": 3.800533
           },
           "5000": {
-            "buy_slippage_bps": 1.811266,
-            "sell_slippage_bps": 6.491806
+            "buy_slippage_bps": 4.740312,
+            "sell_slippage_bps": 5.728369
           },
           "10000": {
-            "buy_slippage_bps": 1.811266,
-            "sell_slippage_bps": 8.701072
+            "buy_slippage_bps": 5.978066,
+            "sell_slippage_bps": 7.436629
           }
         }
       }
     },
     "AVAXUSDT": {
       "binance": {
-        "mid_price": 9.015,
+        "mid_price": 9.035,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -94,37 +94,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           "5000": {
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           "10000": {
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           }
         }
       },
       "bybit": {
-        "mid_price": 9.015,
+        "mid_price": 9.035,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -132,39 +132,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 9.464344,
+            "sell_slippage_bps": 5.534034
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           "5000": {
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 5.534034,
+            "sell_slippage_bps": 5.534034
           },
           "10000": {
-            "buy_slippage_bps": 5.546312,
-            "sell_slippage_bps": 5.546312
+            "buy_slippage_bps": 9.464344,
+            "sell_slippage_bps": 5.534034
           }
         }
       }
     },
     "BNBUSDT": {
       "binance": {
-        "mid_price": 622.545,
+        "mid_price": 624.285,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -172,37 +172,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.080315,
-            "sell_slippage_bps": 0.080315
+            "buy_slippage_bps": 0.080092,
+            "sell_slippage_bps": 0.080092
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.125965,
-            "sell_slippage_bps": 0.080315
+            "buy_slippage_bps": 0.357089,
+            "sell_slippage_bps": 0.080092
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 0.318188,
-            "sell_slippage_bps": 0.080315
+            "buy_slippage_bps": 0.788224,
+            "sell_slippage_bps": 0.080092
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.080315,
-            "sell_slippage_bps": 0.080315
+            "buy_slippage_bps": 0.080092,
+            "sell_slippage_bps": 0.080092
           },
           "5000": {
-            "buy_slippage_bps": 0.125965,
-            "sell_slippage_bps": 0.080315
+            "buy_slippage_bps": 0.357089,
+            "sell_slippage_bps": 0.080092
           },
           "10000": {
-            "buy_slippage_bps": 0.318188,
-            "sell_slippage_bps": 0.080315
+            "buy_slippage_bps": 0.788224,
+            "sell_slippage_bps": 0.080092
           }
         }
       },
       "bybit": {
-        "mid_price": 622.65,
+        "mid_price": 624.45,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -210,39 +210,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 1.707438,
-            "sell_slippage_bps": 0.803019
+            "buy_slippage_bps": 0.800705,
+            "sell_slippage_bps": 0.800705
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 2.268726,
-            "sell_slippage_bps": 0.803019
+            "buy_slippage_bps": 1.006113,
+            "sell_slippage_bps": 0.800705
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 2.338892,
-            "sell_slippage_bps": 0.803019
+            "buy_slippage_bps": 1.704065,
+            "sell_slippage_bps": 1.275854
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 1.707438,
-            "sell_slippage_bps": 0.803019
+            "buy_slippage_bps": 0.800705,
+            "sell_slippage_bps": 0.800705
           },
           "5000": {
-            "buy_slippage_bps": 2.268726,
-            "sell_slippage_bps": 0.803019
+            "buy_slippage_bps": 1.006113,
+            "sell_slippage_bps": 0.800705
           },
           "10000": {
-            "buy_slippage_bps": 2.338892,
-            "sell_slippage_bps": 0.803019
+            "buy_slippage_bps": 1.704065,
+            "sell_slippage_bps": 1.275854
           }
         }
       }
     },
     "BTCUSDT": {
       "binance": {
-        "mid_price": 67999.995,
+        "mid_price": 68023.645,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -280,7 +280,7 @@
         }
       },
       "bybit": {
-        "mid_price": 68003.25,
+        "mid_price": 68026.55,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -288,39 +288,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.007353,
-            "sell_slippage_bps": 0.007353
+            "buy_slippage_bps": 0.00735,
+            "sell_slippage_bps": 0.00735
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.007353,
-            "sell_slippage_bps": 0.007353
+            "buy_slippage_bps": 0.00735,
+            "sell_slippage_bps": 0.00735
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 0.007353,
-            "sell_slippage_bps": 0.007353
+            "buy_slippage_bps": 0.00735,
+            "sell_slippage_bps": 0.00735
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.007353,
-            "sell_slippage_bps": 0.007353
+            "buy_slippage_bps": 0.00735,
+            "sell_slippage_bps": 0.00735
           },
           "5000": {
-            "buy_slippage_bps": 0.007353,
-            "sell_slippage_bps": 0.007353
+            "buy_slippage_bps": 0.00735,
+            "sell_slippage_bps": 0.00735
           },
           "10000": {
-            "buy_slippage_bps": 0.007353,
-            "sell_slippage_bps": 0.007353
+            "buy_slippage_bps": 0.00735,
+            "sell_slippage_bps": 0.00735
           }
         }
       }
     },
     "DOGEUSDT": {
       "binance": {
-        "mid_price": 0.097255,
+        "mid_price": 0.097375,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -328,37 +328,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.514112,
-            "sell_slippage_bps": 0.514112
+            "buy_slippage_bps": 0.513479,
+            "sell_slippage_bps": 0.513479
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 1.255817,
-            "sell_slippage_bps": 0.514112
+            "buy_slippage_bps": 0.768577,
+            "sell_slippage_bps": 0.513479
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 1.913146,
-            "sell_slippage_bps": 0.894377
+            "buy_slippage_bps": 1.154492,
+            "sell_slippage_bps": 0.513479
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.514112,
-            "sell_slippage_bps": 0.514112
+            "buy_slippage_bps": 0.513479,
+            "sell_slippage_bps": 0.513479
           },
           "5000": {
-            "buy_slippage_bps": 1.255817,
-            "sell_slippage_bps": 0.514112
+            "buy_slippage_bps": 0.768577,
+            "sell_slippage_bps": 0.513479
           },
           "10000": {
-            "buy_slippage_bps": 1.913146,
-            "sell_slippage_bps": 0.894377
+            "buy_slippage_bps": 1.154492,
+            "sell_slippage_bps": 0.513479
           }
         }
       },
       "bybit": {
-        "mid_price": 0.097285,
+        "mid_price": 0.097365,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -366,39 +366,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 1.832784,
-            "sell_slippage_bps": 0.934792
+            "buy_slippage_bps": 2.527081,
+            "sell_slippage_bps": 0.513532
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 2.981965,
-            "sell_slippage_bps": 2.003455
+            "buy_slippage_bps": 4.655525,
+            "sell_slippage_bps": 1.589512
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 3.89073,
-            "sell_slippage_bps": 2.501718
+            "buy_slippage_bps": 5.81454,
+            "sell_slippage_bps": 2.563164
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 1.832784,
-            "sell_slippage_bps": 0.934792
+            "buy_slippage_bps": 2.527081,
+            "sell_slippage_bps": 0.513532
           },
           "5000": {
-            "buy_slippage_bps": 2.981965,
-            "sell_slippage_bps": 2.003455
+            "buy_slippage_bps": 4.655525,
+            "sell_slippage_bps": 1.589512
           },
           "10000": {
-            "buy_slippage_bps": 3.89073,
-            "sell_slippage_bps": 2.501718
+            "buy_slippage_bps": 5.81454,
+            "sell_slippage_bps": 2.563164
           }
         }
       }
     },
     "ETHUSDT": {
       "binance": {
-        "mid_price": 1976.115,
+        "mid_price": 1976.335,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -406,37 +406,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.025302,
-            "sell_slippage_bps": 0.025302
+            "buy_slippage_bps": 0.177095,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.025302,
-            "sell_slippage_bps": 0.025302
+            "buy_slippage_bps": 0.215997,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 0.294029,
-            "sell_slippage_bps": 0.025302
+            "buy_slippage_bps": 0.495198,
+            "sell_slippage_bps": 0.0
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.025302,
-            "sell_slippage_bps": 0.025302
+            "buy_slippage_bps": 0.177095,
+            "sell_slippage_bps": 0.0
           },
           "5000": {
-            "buy_slippage_bps": 0.025302,
-            "sell_slippage_bps": 0.025302
+            "buy_slippage_bps": 0.215997,
+            "sell_slippage_bps": 0.0
           },
           "10000": {
-            "buy_slippage_bps": 0.294029,
-            "sell_slippage_bps": 0.025302
+            "buy_slippage_bps": 0.495198,
+            "sell_slippage_bps": 0.0
           }
         }
       },
       "bybit": {
-        "mid_price": 1976.305,
+        "mid_price": 1976.495,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -444,39 +444,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.0253,
-            "sell_slippage_bps": 0.0253
+            "buy_slippage_bps": 0.025297,
+            "sell_slippage_bps": 0.025297
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.0253,
-            "sell_slippage_bps": 0.0253
+            "buy_slippage_bps": 0.025297,
+            "sell_slippage_bps": 0.025297
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 0.0253,
-            "sell_slippage_bps": 0.0253
+            "buy_slippage_bps": 0.038102,
+            "sell_slippage_bps": 0.025297
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.0253,
-            "sell_slippage_bps": 0.0253
+            "buy_slippage_bps": 0.025297,
+            "sell_slippage_bps": 0.025297
           },
           "5000": {
-            "buy_slippage_bps": 0.0253,
-            "sell_slippage_bps": 0.0253
+            "buy_slippage_bps": 0.025297,
+            "sell_slippage_bps": 0.025297
           },
           "10000": {
-            "buy_slippage_bps": 0.0253,
-            "sell_slippage_bps": 0.0253
+            "buy_slippage_bps": 0.038102,
+            "sell_slippage_bps": 0.025297
           }
         }
       }
     },
     "LINKUSDT": {
       "binance": {
-        "mid_price": 8.855,
+        "mid_price": 8.825,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -484,37 +484,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           "5000": {
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           "10000": {
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           }
         }
       },
       "bybit": {
-        "mid_price": 8.855,
+        "mid_price": 8.825,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -522,39 +522,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 11.186624,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           "5000": {
-            "buy_slippage_bps": 5.646527,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           },
           "10000": {
-            "buy_slippage_bps": 11.186624,
-            "sell_slippage_bps": 5.646527
+            "buy_slippage_bps": 5.665722,
+            "sell_slippage_bps": 5.665722
           }
         }
       }
     },
     "LTCUSDT": {
       "binance": {
-        "mid_price": 54.685,
+        "mid_price": 54.755,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -562,37 +562,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.914328,
-            "sell_slippage_bps": 0.914328
+            "buy_slippage_bps": 2.739476,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 1.976251,
-            "sell_slippage_bps": 0.914328
+            "buy_slippage_bps": 3.22038,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 2.762458,
-            "sell_slippage_bps": 1.698293
+            "buy_slippage_bps": 3.893041,
+            "sell_slippage_bps": 0.346646
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.914328,
-            "sell_slippage_bps": 0.914328
+            "buy_slippage_bps": 2.739476,
+            "sell_slippage_bps": 0.0
           },
           "5000": {
-            "buy_slippage_bps": 1.976251,
-            "sell_slippage_bps": 0.914328
+            "buy_slippage_bps": 3.22038,
+            "sell_slippage_bps": 0.0
           },
           "10000": {
-            "buy_slippage_bps": 2.762458,
-            "sell_slippage_bps": 1.698293
+            "buy_slippage_bps": 3.893041,
+            "sell_slippage_bps": 0.346646
           }
         }
       },
       "bybit": {
-        "mid_price": 54.685,
+        "mid_price": 54.755,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -600,39 +600,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.914328,
-            "sell_slippage_bps": 0.967206
+            "buy_slippage_bps": 2.689259,
+            "sell_slippage_bps": 0.913159
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 2.26052,
-            "sell_slippage_bps": 3.05439
+            "buy_slippage_bps": 4.233105,
+            "sell_slippage_bps": 1.773731
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 4.23151,
-            "sell_slippage_bps": 4.394594
+            "buy_slippage_bps": 5.577398,
+            "sell_slippage_bps": 3.619847
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.914328,
-            "sell_slippage_bps": 0.967206
+            "buy_slippage_bps": 2.689259,
+            "sell_slippage_bps": 0.913159
           },
           "5000": {
-            "buy_slippage_bps": 2.26052,
-            "sell_slippage_bps": 3.05439
+            "buy_slippage_bps": 4.233105,
+            "sell_slippage_bps": 1.773731
           },
           "10000": {
-            "buy_slippage_bps": 4.23151,
-            "sell_slippage_bps": 4.394594
+            "buy_slippage_bps": 5.577398,
+            "sell_slippage_bps": 3.619847
           }
         }
       }
     },
     "SOLUSDT": {
       "binance": {
-        "mid_price": 85.235,
+        "mid_price": 85.125,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -640,37 +640,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.586613,
-            "sell_slippage_bps": 0.586613
+            "buy_slippage_bps": 1.762115,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.586613,
-            "sell_slippage_bps": 0.586613
+            "buy_slippage_bps": 2.113344,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 0.586613,
-            "sell_slippage_bps": 0.586613
+            "buy_slippage_bps": 3.070271,
+            "sell_slippage_bps": 0.0
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.586613,
-            "sell_slippage_bps": 0.586613
+            "buy_slippage_bps": 1.762115,
+            "sell_slippage_bps": 0.0
           },
           "5000": {
-            "buy_slippage_bps": 0.586613,
-            "sell_slippage_bps": 0.586613
+            "buy_slippage_bps": 2.113344,
+            "sell_slippage_bps": 0.0
           },
           "10000": {
-            "buy_slippage_bps": 0.586613,
-            "sell_slippage_bps": 0.586613
+            "buy_slippage_bps": 3.070271,
+            "sell_slippage_bps": 0.0
           }
         }
       },
       "bybit": {
-        "mid_price": 85.225,
+        "mid_price": 85.115,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -678,39 +678,39 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.586682,
-            "sell_slippage_bps": 0.586682
+            "buy_slippage_bps": 1.762322,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.586682,
-            "sell_slippage_bps": 0.586682
+            "buy_slippage_bps": 1.762322,
+            "sell_slippage_bps": 0.0
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 0.586682,
-            "sell_slippage_bps": 0.698515
+            "buy_slippage_bps": 1.920484,
+            "sell_slippage_bps": 0.0
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.586682,
-            "sell_slippage_bps": 0.586682
+            "buy_slippage_bps": 1.762322,
+            "sell_slippage_bps": 0.0
           },
           "5000": {
-            "buy_slippage_bps": 0.586682,
-            "sell_slippage_bps": 0.586682
+            "buy_slippage_bps": 1.762322,
+            "sell_slippage_bps": 0.0
           },
           "10000": {
-            "buy_slippage_bps": 0.586682,
-            "sell_slippage_bps": 0.698515
+            "buy_slippage_bps": 1.920484,
+            "sell_slippage_bps": 0.0
           }
         }
       }
     },
     "XRPUSDT": {
       "binance": {
-        "mid_price": 1.42125,
+        "mid_price": 1.42155,
         "book_levels": {
           "bids": 100,
           "asks": 100
@@ -718,37 +718,37 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.351803,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 0.351729,
+            "sell_slippage_bps": 0.351729
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.767747,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 0.888506,
+            "sell_slippage_bps": 0.351729
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 0.911576,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 1.460595,
+            "sell_slippage_bps": 0.351729
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.351803,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 0.351729,
+            "sell_slippage_bps": 0.351729
           },
           "5000": {
-            "buy_slippage_bps": 0.767747,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 0.888506,
+            "sell_slippage_bps": 0.351729
           },
           "10000": {
-            "buy_slippage_bps": 0.911576,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 1.460595,
+            "sell_slippage_bps": 0.351729
           }
         }
       },
       "bybit": {
-        "mid_price": 1.42125,
+        "mid_price": 1.42155,
         "book_levels": {
           "bids": 200,
           "asks": 200
@@ -756,32 +756,32 @@
         "slippage_bps_by_tier": [
           {
             "size_usd": 1000.0,
-            "buy_slippage_bps": 0.351803,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 1.720617,
+            "sell_slippage_bps": 0.351729
           },
           {
             "size_usd": 5000.0,
-            "buy_slippage_bps": 0.948599,
-            "sell_slippage_bps": 1.061953
+            "buy_slippage_bps": 1.751038,
+            "sell_slippage_bps": 0.351729
           },
           {
             "size_usd": 10000.0,
-            "buy_slippage_bps": 2.16054,
-            "sell_slippage_bps": 1.469623
+            "buy_slippage_bps": 2.785626,
+            "sell_slippage_bps": 0.351729
           }
         ],
         "slippage_lookup": {
           "1000": {
-            "buy_slippage_bps": 0.351803,
-            "sell_slippage_bps": 0.351803
+            "buy_slippage_bps": 1.720617,
+            "sell_slippage_bps": 0.351729
           },
           "5000": {
-            "buy_slippage_bps": 0.948599,
-            "sell_slippage_bps": 1.061953
+            "buy_slippage_bps": 1.751038,
+            "sell_slippage_bps": 0.351729
           },
           "10000": {
-            "buy_slippage_bps": 2.16054,
-            "sell_slippage_bps": 1.469623
+            "buy_slippage_bps": 2.785626,
+            "sell_slippage_bps": 0.351729
           }
         }
       }

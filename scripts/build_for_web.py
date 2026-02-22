@@ -21,6 +21,7 @@ def main() -> None:
     run(["python3", "scripts/build_live_cex_candidates.py"], allow_fail=True)
     run(["python3", "scripts/build_live_cex_dex_candidates.py"], allow_fail=True)
     run(["python3", "scripts/build_live_funding_candidates.py"], allow_fail=True)
+    run(["python3", "scripts/build_live_basis_candidates.py"], allow_fail=True)
 
     run(
         [
@@ -30,6 +31,7 @@ def main() -> None:
             "data/opportunity_candidates.live.json",
             "data/opportunity_candidates.cex_dex.live.json",
             "data/opportunity_candidates.funding.live.json",
+            "data/opportunity_candidates.basis.live.json",
             "--output",
             "data/opportunity_candidates.combined.live.json",
         ]
@@ -55,6 +57,8 @@ def main() -> None:
             "scripts/scan_opportunities.py",
             "--input",
             "data/opportunity_candidates.combined.live.json",
+            "--execution-profile",
+            "taker_default",
             "--output-json",
             "opportunities/shortlist-latest.json",
             "--output-md",
