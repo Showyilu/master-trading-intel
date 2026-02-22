@@ -7,7 +7,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 1. ✅ Build source inventory + normalization schema (`sources/inventory.yaml`, `schemas/normalized_opportunity_v1.schema.json`).
 2. ✅ Build opportunity scoring template and hard risk gates (`playbooks/opportunity-scoring-template.md`).
 3. ✅ Build first scanner + dashboard output (`scripts/scan_opportunities.py`, `opportunities/dashboard-latest.md`).
-4. ⏭ Next: replace sample input with live pullers (Binance/Bybit + one DEX quote source).
+4. ✅ Replaced sample-first flow with live CEX pullers (Binance/Bybit) -> normalized quotes -> live candidate file.
+5. ⏭ Next: add DEX quote source + size-aware orderbook/depth slippage model (avoid top-of-book illusion).
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

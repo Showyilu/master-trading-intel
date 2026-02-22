@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "normalized_quote_v1.schema.json",
+  "title": "NormalizedQuoteV1",
+  "type": "object",
+  "required": [
+    "detected_at",
+    "venue",
+    "market",
+    "symbol",
+    "base",
+    "quote",
+    "bid_price",
+    "ask_price",
+    "mid_price",
+    "spread_bps"
+  ],
+  "properties": {
+    "detected_at": { "type": "string", "format": "date-time" },
+    "venue": { "type": "string" },
+    "market": { "type": "string" },
+    "symbol": { "type": "string" },
+    "base": { "type": "string" },
+    "quote": { "type": "string" },
+    "bid_price": { "type": "number", "exclusiveMinimum": 0 },
+    "ask_price": { "type": "number", "exclusiveMinimum": 0 },
+    "mid_price": { "type": "number", "exclusiveMinimum": 0 },
+    "spread_bps": { "type": "number", "minimum": 0 }
+  },
+  "additionalProperties": true
+}

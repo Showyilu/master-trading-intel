@@ -10,11 +10,7 @@
     "slippage_bps": 2.169501,
     "latency_risk_bps": 1.375591,
     "transfer_delay_min": 5.0,
-    "transfer_risk_bps": 2.25,
-    "net_edge_bps": -21.051,
-    "risk_score": 0.4125,
     "size_usd": 10000,
-    "is_qualified": false,
     "notes": "live_top_of_book buy_ask=623.86000000, sell_bid=624.00000000, buy_spread=0.160bps, sell_spread=1.602bps"
   },
   {
@@ -28,11 +24,7 @@
     "slippage_bps": 1.255759,
     "latency_risk_bps": 1.544239,
     "transfer_delay_min": 5.0,
-    "transfer_risk_bps": 2.25,
-    "net_edge_bps": -21.9924,
-    "risk_score": 0.4039,
     "size_usd": 10000,
-    "is_qualified": false,
     "notes": "live_top_of_book buy_ask=1972.72000000, sell_bid=1972.83000000, buy_spread=0.051bps, sell_spread=0.051bps"
   },
   {
@@ -46,11 +38,7 @@
     "slippage_bps": 1.2089,
     "latency_risk_bps": 1.55219,
     "transfer_delay_min": 5.0,
-    "transfer_risk_bps": 2.25,
-    "net_edge_bps": -22.033,
-    "risk_score": 0.4035,
     "size_usd": 10000,
-    "is_qualified": false,
     "notes": "live_top_of_book buy_ask=67978.05000000, sell_bid=67981.30000000, buy_spread=0.001bps, sell_spread=0.015bps"
   }
 ]

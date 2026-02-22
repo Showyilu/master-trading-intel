@@ -21,11 +21,24 @@ Build a compounding research engine: detect signals fast, validate rigorously, e
 - `data/` — local sample inputs / fixtures
 
 ## Quickstart
+
+### 1) Sample pipeline
 ```bash
 python3 scripts/scan_opportunities.py
 ```
 
+### 2) Live CEX snapshot pipeline (Binance + Bybit)
+```bash
+python3 scripts/build_live_cex_candidates.py
+python3 scripts/scan_opportunities.py \
+  --input data/opportunity_candidates.live.json \
+  --output-json opportunities/shortlist-latest.json \
+  --output-md opportunities/dashboard-latest.md
+```
+
 Outputs:
+- `data/normalized_quotes_cex_latest.json`
+- `data/opportunity_candidates.live.json`
 - `opportunities/shortlist-latest.json`
 - `opportunities/dashboard-latest.md`
 
