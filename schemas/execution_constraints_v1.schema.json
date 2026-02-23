@@ -9,6 +9,7 @@
     "version",
     "defaults",
     "strategy_hold_hours",
+    "strategy_leverage_notional_multiplier",
     "rules"
   ],
   "properties": {
@@ -53,6 +54,13 @@
       "additionalProperties": false
     },
     "strategy_hold_hours": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "strategy_leverage_notional_multiplier": {
       "type": "object",
       "additionalProperties": {
         "type": "number",

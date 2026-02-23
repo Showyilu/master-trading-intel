@@ -22,7 +22,9 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 16. ✅ Added authenticated inventory-constraint overlay (`scripts/build_authenticated_constraints.py`) to replace template `available_inventory_usd` with Binance/Bybit account balances (USD-valued) and conservatively clip `max_position_usd` by inventory+borrow headroom.
 17. ✅ Extended authenticated constraints beyond inventory for Binance margin: overlay now updates `max_borrow_usd` + `borrow_rate_bps_per_hour` from signed borrow/interest endpoints (`scripts/build_authenticated_constraints.py`).
 18. ✅ Added leverage-cap risk control into constraints and scanner hard gates (`max_leverage` in `execution_constraints` + `leverage_limit_exceeded` rejection path + leverage visibility in dashboard/summary).
-19. ⏭ Next: extend borrow/leverage authenticated overlays for Bybit using signed margin endpoints, then replace Bybit template borrow assumptions with account-realized caps/rates.
+19. ✅ Added strategy-specific leverage-notional model in scanner/constraints (`strategy_leverage_notional_multiplier`) so required leverage is explicit by strategy type (funding carry default 2.0x notional, basis 1.25x).
+20. ✅ Extended scanner outputs and rejection summary with leverage-notional audit fields (`leverage_notional_multiplier`, `leverage_notional_usd`) and updated scoring playbook formula.
+21. ⏭ Next: extend borrow/leverage authenticated overlays for Bybit using signed margin endpoints, then replace Bybit template borrow assumptions with account-realized caps/rates.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

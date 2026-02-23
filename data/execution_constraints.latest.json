@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-23T00:03:14.724916+00:00",
+  "generated_at": "2026-02-23T02:04:18.182500+00:00",
   "version": "execution_constraints_v1",
   "defaults": {
     "max_position_usd": 12000.0,
@@ -13,6 +13,12 @@
     "cex_dex": 0.3,
     "funding_carry_cex_cex": 8.0,
     "perp_spot_basis": 8.0
+  },
+  "strategy_leverage_notional_multiplier": {
+    "cex_cex": 1.0,
+    "cex_dex": 1.0,
+    "funding_carry_cex_cex": 2.0,
+    "perp_spot_basis": 1.25
   },
   "rules": [
     {

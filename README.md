@@ -103,6 +103,7 @@ Scanner now also enforces hard execution constraints when `--constraints` is pro
 - sell-side `available_inventory_usd`
 - `max_borrow_usd` + borrow carry cost (`borrow_rate_bps_per_hour × hold_hours`)
 - leverage hard gate via `max_leverage` (`leverage_limit_exceeded` will reject candidate)
+- strategy-level leverage notional multipliers (`strategy_leverage_notional_multiplier`) so required leverage is explicit per strategy (e.g. funding carry default 2.0x notional)
 
 Scanner can load explicit fee assumptions with `--fee-table`:
 - per-venue + per-instrument `taker_bps` / `maker_bps` / `maker_vip_bps`

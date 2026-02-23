@@ -7,6 +7,10 @@ The output captures per (venue, asset) limits used by scan_opportunities.py:
 - max_borrow_usd
 - borrow_rate_bps_per_hour
 - max_leverage
+
+And strategy-level controls:
+- strategy_hold_hours
+- strategy_leverage_notional_multiplier
 """
 
 from __future__ import annotations
@@ -28,6 +32,13 @@ DEFAULT_STRATEGY_HOLD_HOURS = {
     "cex_dex": 0.30,
     "funding_carry_cex_cex": 8.0,
     "perp_spot_basis": 8.0,
+}
+
+DEFAULT_STRATEGY_LEVERAGE_NOTIONAL_MULTIPLIER = {
+    "cex_cex": 1.0,
+    "cex_dex": 1.0,
+    "funding_carry_cex_cex": 2.0,
+    "perp_spot_basis": 1.25,
 }
 
 VENUE_STOPWORDS = {
@@ -191,11 +202,20 @@ def main() -> None:
             except (TypeError, ValueError):
                 continue
 
+    leverage_notional_multiplier = dict(DEFAULT_STRATEGY_LEVERAGE_NOTIONAL_MULTIPLIER)
+    if isinstance(existing.get("strategy_leverage_notional_multiplier"), dict):
+        for k, v in existing["strategy_leverage_notional_multiplier"].items():
+            try:
+                leverage_notional_multiplier[str(k)] = max(0.0, float(v))
+            except (TypeError, ValueError):
+                continue
+
     out = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "version": "execution_constraints_v1",
         "defaults": defaults_out,
         "strategy_hold_hours": hold_hours,
+        "strategy_leverage_notional_multiplier": leverage_notional_multiplier,
         "rules": merged_rules,
     }
 

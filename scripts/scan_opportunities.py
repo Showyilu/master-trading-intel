@@ -8,7 +8,8 @@ borrow_cost = borrow_rate_bps_per_hour * hold_hours * (borrow_used_usd / size_us
 
 Supports execution profiles (taker/maker/inventory assumptions) so the same
 candidate set can be stress-tested under different execution realities.
-Also supports leverage hard gates via execution constraints (`max_leverage`).
+Also supports leverage hard gates via execution constraints (`max_leverage`)
+with strategy-specific notional multipliers (e.g., funding carry ~= 2-leg exposure).
 """
 
 from __future__ import annotations
@@ -40,6 +41,19 @@ DEFAULT_STRATEGY_HOLD_HOURS: dict[str, float] = {
     "cex_dex": 0.30,
     "funding_carry_cex_cex": 8.0,
     "perp_spot_basis": 8.0,
+}
+
+# Strategy-specific leverage notional multipliers.
+# required_notional_usd = size_usd * multiplier
+# Rationale:
+# - cex_cex / cex_dex: one directional notional against available inventory.
+# - funding_carry_cex_cex: two perp legs (long + short) consume margin on both sides.
+# - perp_spot_basis: spot + hedge leg typically requires >1x capital intensity.
+DEFAULT_STRATEGY_LEVERAGE_NOTIONAL_MULTIPLIER: dict[str, float] = {
+    "cex_cex": 1.0,
+    "cex_dex": 1.0,
+    "funding_carry_cex_cex": 2.0,
+    "perp_spot_basis": 1.25,
 }
 
 INVENTORY_REQUIRED_STRATEGIES = {
@@ -122,6 +136,8 @@ class ScoredOpportunity:
     borrow_capacity_usd: float
     borrow_rate_bps_per_hour: float
     max_leverage: float
+    leverage_notional_multiplier: float
+    leverage_notional_usd: float
     leverage_used: float
     borrow_cost_bps: float
     net_edge_bps: float
@@ -148,6 +164,21 @@ class ConstraintBook:
             for k, v in custom_hold_hours.items():
                 try:
                     self.strategy_hold_hours[str(k)] = max(0.0, float(v))
+                except (TypeError, ValueError):
+                    continue
+
+        self.strategy_leverage_notional_multiplier = dict(
+            DEFAULT_STRATEGY_LEVERAGE_NOTIONAL_MULTIPLIER
+        )
+        custom_leverage_multiplier = (
+            payload.get("strategy_leverage_notional_multiplier", {})
+            if isinstance(payload, dict)
+            else {}
+        )
+        if isinstance(custom_leverage_multiplier, dict):
+            for k, v in custom_leverage_multiplier.items():
+                try:
+                    self.strategy_leverage_notional_multiplier[str(k)] = max(0.0, float(v))
                 except (TypeError, ValueError):
                     continue
 
@@ -186,6 +217,12 @@ class ConstraintBook:
 
     def hold_hours(self, strategy_type: str) -> float:
         return self._as_non_negative(self.strategy_hold_hours.get(strategy_type), 1.0)
+
+    def leverage_notional_multiplier(self, strategy_type: str) -> float:
+        return self._as_non_negative(
+            self.strategy_leverage_notional_multiplier.get(strategy_type),
+            1.0,
+        )
 
     @staticmethod
     def asset_from_symbol(symbol: str) -> str:
@@ -533,7 +570,11 @@ def score_item(
 
     transfer_risk_bps = round(transfer_delay_min * transfer_penalty_bps_per_min, 4)
 
-    hold_hours = constraint_book.hold_hours(str(item.get("strategy_type", "")))
+    strategy_type = str(item.get("strategy_type", "")).strip()
+    hold_hours = constraint_book.hold_hours(strategy_type)
+    leverage_notional_multiplier = constraint_book.leverage_notional_multiplier(strategy_type)
+    leverage_notional_usd = round(size_usd * leverage_notional_multiplier, 6)
+
     inventory_available_usd = 0.0
     max_position_usd = 0.0
     borrow_required_usd = 0.0
@@ -569,7 +610,7 @@ def score_item(
         max_leverage = min(leverage_caps) if leverage_caps else 0.0
 
         inventory_required_usd = (
-            size_usd if item.get("strategy_type") in INVENTORY_REQUIRED_STRATEGIES else 0.0
+            size_usd if strategy_type in INVENTORY_REQUIRED_STRATEGIES else 0.0
         )
         borrow_required_usd = max(0.0, inventory_required_usd - inventory_available_usd)
         inventory_unavailable = (
@@ -579,12 +620,13 @@ def score_item(
         )
         borrow_limit_exceeded = borrow_required_usd > borrow_capacity_usd + 1e-9
 
-        if inventory_required_usd > 0 and inventory_available_usd > 0:
-            leverage_used = round(size_usd / inventory_available_usd, 6)
+        equity_base_usd = max(0.0, inventory_available_usd)
+        if leverage_notional_usd > 0 and equity_base_usd > 0:
+            leverage_used = round(leverage_notional_usd / equity_base_usd, 6)
 
-        if max_leverage > 0 and inventory_required_usd > 0:
+        if max_leverage > 0 and leverage_notional_usd > 0:
             leverage_limit_exceeded = (
-                inventory_available_usd <= 0.0
+                equity_base_usd <= 0.0
                 or leverage_used > max_leverage + 1e-9
             )
 
@@ -672,6 +714,8 @@ def score_item(
         borrow_capacity_usd=round(borrow_capacity_usd, 4),
         borrow_rate_bps_per_hour=round(borrow_rate_bps_per_hour, 6),
         max_leverage=round(max_leverage, 6),
+        leverage_notional_multiplier=round(leverage_notional_multiplier, 6),
+        leverage_notional_usd=round(leverage_notional_usd, 6),
         leverage_used=round(leverage_used, 6),
         borrow_cost_bps=borrow_cost_bps,
         net_edge_bps=net_edge_bps,
@@ -734,6 +778,8 @@ def _build_summary(
                 "dominant_drag": s.dominant_drag,
                 "borrow_cost_bps": s.borrow_cost_bps,
                 "max_leverage": s.max_leverage,
+                "leverage_notional_multiplier": s.leverage_notional_multiplier,
+                "leverage_notional_usd": s.leverage_notional_usd,
                 "leverage_used": s.leverage_used,
                 "rejection_reasons": s.rejection_reasons,
             }
@@ -817,8 +863,8 @@ def render_markdown(
             "",
             "## Ranked Candidates",
             "",
-            "| Rank | Pair | Path | Gross bps | Net bps | Borrow bps | Lev (used/cap) | Risk | Drag | Qualified | Rejection Reasons |",
-            "|---:|---|---|---:|---:|---:|---|---:|---|:---:|---|",
+            "| Rank | Pair | Path | Gross bps | Net bps | Borrow bps | Lev Notional USD | Lev (used/cap) | Risk | Drag | Qualified | Rejection Reasons |",
+            "|---:|---|---|---:|---:|---:|---:|---|---:|---|:---:|---|",
         ]
     )
 
@@ -833,7 +879,7 @@ def render_markdown(
             leverage_cell = f"{item.leverage_used:.2f}/{item.max_leverage:.2f}"
 
         lines.append(
-            f"| {i} | {item.symbol} | {item.buy_venue} -> {item.sell_venue} | {item.gross_edge_bps:.2f} | {item.net_edge_bps:.2f} | {item.borrow_cost_bps:.2f} | {leverage_cell} | {item.risk_score:.2f} | {item.dominant_drag} | {'✅' if item.is_qualified else '❌'} | {reasons} |"
+            f"| {i} | {item.symbol} | {item.buy_venue} -> {item.sell_venue} | {item.gross_edge_bps:.2f} | {item.net_edge_bps:.2f} | {item.borrow_cost_bps:.2f} | {item.leverage_notional_usd:.2f} | {leverage_cell} | {item.risk_score:.2f} | {item.dominant_drag} | {'✅' if item.is_qualified else '❌'} | {reasons} |"
         )
 
     lines.extend(["", "## Notes", "- This dashboard is for screening only, not execution advice."])
