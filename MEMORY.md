@@ -24,6 +24,8 @@ Long-term distilled memory for trading/arbitrage work.
 - Constraints now include `max_leverage`; scanner enforces `leverage_limit_exceeded` as a hard reject so high-notional/low-equity setups are blocked even when spread math looks acceptable.
 - Leverage gate is now strategy-aware via `strategy_leverage_notional_multiplier` (e.g., funding carry defaults to 2-leg notional), preventing underestimation of margin usage in multi-leg setups.
 - Scanner output now includes leverage audit fields (`leverage_notional_multiplier`, `leverage_notional_usd`, `leverage_used`) so every reject/pass can be traced back to explicit leverage math.
+- Scanner now supports runtime strategy-level leverage stress testing via `--strategy-leverage-override STRATEGY=MULTIPLIER`, and writes the applied overrides into rejection summary/dashboard metadata for reproducible scenario comparison.
+- On current 30-candidate universe (`maker_inventory`), reducing funding/basis leverage multipliers from `2.0/1.25` to `1.5/1.0` lowered `leverage_limit_exceeded` rejects from 26 -> 21, but qualified count stayed 0 because `fee_dominated` remains universal.
 
 ## What We Believe (Needs Validation)
 - Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
@@ -56,3 +58,4 @@ Long-term distilled memory for trading/arbitrage work.
 - Borrow assumptions should be treated like fees: if borrow cap/rate stays template-only, basis/funding executability is easily overstated; authenticated borrow overlays must be first-class and fail-soft.
 - Position-cap checks alone are insufficient: leverage-cap checks catch overextended setups that still pass `max_position_usd` and borrow-cap limits.
 - Leverage should be modeled by strategy notional shape (single-leg vs dual-leg); using a flat leverage formula understates risk on funding carry/perp hedges.
+- Leverage assumptions must be stress-testable at runtime; hardcoding only in constraints slows scenario analysis and makes rejection-shift attribution ambiguous.

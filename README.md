@@ -104,6 +104,21 @@ Scanner now also enforces hard execution constraints when `--constraints` is pro
 - `max_borrow_usd` + borrow carry cost (`borrow_rate_bps_per_hour × hold_hours`)
 - leverage hard gate via `max_leverage` (`leverage_limit_exceeded` will reject candidate)
 - strategy-level leverage notional multipliers (`strategy_leverage_notional_multiplier`) so required leverage is explicit per strategy (e.g. funding carry default 2.0x notional)
+- runtime leverage stress-test overrides via repeated `--strategy-leverage-override STRATEGY=MULTIPLIER` (e.g. `funding_carry_cex_cex=2.5`)
+
+Example stress-test run:
+```bash
+python3 scripts/scan_opportunities.py \
+  --input data/opportunity_candidates.combined.live.json \
+  --constraints data/execution_constraints.latest.json \
+  --fee-table data/execution_fee_table.latest.json \
+  --execution-profile maker_inventory \
+  --strategy-leverage-override funding_carry_cex_cex=2.5 \
+  --strategy-leverage-override perp_spot_basis=1.5 \
+  --output-json opportunities/shortlist-leverage-stress-latest.json \
+  --output-md opportunities/dashboard-leverage-stress-latest.md \
+  --output-summary opportunities/rejection-summary-leverage-stress-latest.json
+```
 
 Scanner can load explicit fee assumptions with `--fee-table`:
 - per-venue + per-instrument `taker_bps` / `maker_bps` / `maker_vip_bps`

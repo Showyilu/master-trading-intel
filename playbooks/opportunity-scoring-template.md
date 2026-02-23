@@ -30,6 +30,7 @@ Default transfer penalty: `0.45 bps/min` (profile-adjustable).
   - `required_notional_usd = size_usd * strategy_leverage_notional_multiplier`
   - `leverage_used = required_notional_usd / available_inventory_usd`
   - Require `leverage_used <= max_leverage`
+  - Stress-test knob: runtime override with `--strategy-leverage-override STRATEGY=MULTIPLIER` to compare rejection shifts under alternative leverage assumptions.
 - If any gate fails: **not executable**.
 
 ## 4) Risk Score Components (0-1)

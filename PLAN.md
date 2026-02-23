@@ -24,7 +24,8 @@ Use structured knowledge + fast iteration to consistently surface high-quality t
 18. ✅ Added leverage-cap risk control into constraints and scanner hard gates (`max_leverage` in `execution_constraints` + `leverage_limit_exceeded` rejection path + leverage visibility in dashboard/summary).
 19. ✅ Added strategy-specific leverage-notional model in scanner/constraints (`strategy_leverage_notional_multiplier`) so required leverage is explicit by strategy type (funding carry default 2.0x notional, basis 1.25x).
 20. ✅ Extended scanner outputs and rejection summary with leverage-notional audit fields (`leverage_notional_multiplier`, `leverage_notional_usd`) and updated scoring playbook formula.
-21. ⏭ Next: extend borrow/leverage authenticated overlays for Bybit using signed margin endpoints, then replace Bybit template borrow assumptions with account-realized caps/rates.
+21. ✅ Added scanner runtime stress-test switch for strategy leverage assumptions via `--strategy-leverage-override STRATEGY=MULTIPLIER`, with override visibility in summary/dashboard outputs.
+22. ⏭ Next: extend borrow/leverage authenticated overlays for Bybit using signed margin endpoints, then replace Bybit template borrow assumptions with account-realized caps/rates.
 
 ## Phase 1 — Foundation (Week 1)
 1. Define market coverage: CEX spot/perp, DEX spot/perp, funding, basis, cross-chain.

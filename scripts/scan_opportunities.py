@@ -224,6 +224,13 @@ class ConstraintBook:
             1.0,
         )
 
+    def apply_leverage_overrides(self, overrides: dict[str, float]) -> None:
+        for strategy, multiplier in overrides.items():
+            self.strategy_leverage_notional_multiplier[str(strategy)] = self._as_non_negative(
+                multiplier,
+                1.0,
+            )
+
     @staticmethod
     def asset_from_symbol(symbol: str) -> str:
         raw = str(symbol).strip().upper()
@@ -741,6 +748,7 @@ def _build_summary(
     transfer_penalty_bps_per_min: float,
     min_net_edge_bps: float,
     max_risk_score: float,
+    strategy_leverage_overrides: dict[str, float],
 ) -> dict[str, Any]:
     rejected = [s for s in scored if not s.is_qualified]
     reason_counter = Counter(reason for s in rejected for reason in s.rejection_reasons)
@@ -760,6 +768,7 @@ def _build_summary(
             "transfer_penalty_bps_per_min": transfer_penalty_bps_per_min,
             "min_net_edge_bps": min_net_edge_bps,
             "max_risk_score": max_risk_score,
+            "strategy_leverage_overrides": dict(sorted(strategy_leverage_overrides.items())),
         },
         "counts": {
             "candidates": len(scored),
@@ -801,6 +810,7 @@ def render_markdown(
     transfer_penalty_bps_per_min: float,
     min_net_edge_bps: float,
     max_risk_score: float,
+    strategy_leverage_overrides: dict[str, float],
 ) -> str:
     run_at = datetime.now(tz=timezone.utc).isoformat()
     qualified = [s for s in scored if s.is_qualified]
@@ -836,6 +846,15 @@ def render_markdown(
             f"latency×{latency_multiplier}, transfer_delay×{transfer_delay_multiplier}"
         ),
         f"- Qualified if `net_edge_bps >= {min_net_edge_bps}` and `risk_score <= {max_risk_score}`",
+    ]
+
+    if strategy_leverage_overrides:
+        overrides_text = ", ".join(
+            f"{k}={v:.4f}" for k, v in sorted(strategy_leverage_overrides.items())
+        )
+        lines.append(f"- Runtime leverage overrides: `{overrides_text}`")
+
+    lines.extend([
         "",
         (
             f"## Summary\n- Candidates: **{len(scored)}**\n- Qualified: **{len(qualified)}**\n"
@@ -844,7 +863,7 @@ def render_markdown(
         ),
         "",
         "## Rejection Breakdown",
-    ]
+    ])
 
     if not rejected:
         lines.append("- No rejected candidates this run.")
@@ -922,7 +941,48 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--min-net-edge-bps", type=float, default=None)
     p.add_argument("--max-risk-score", type=float, default=None)
 
+    p.add_argument(
+        "--strategy-leverage-override",
+        action="append",
+        default=[],
+        help=(
+            "Runtime leverage-notional override in STRATEGY=MULTIPLIER form; "
+            "repeat flag for multiple strategies (e.g. funding_carry_cex_cex=2.5)."
+        ),
+    )
+
     return p.parse_args()
+
+
+def _parse_strategy_overrides(raw_overrides: list[str]) -> dict[str, float]:
+    parsed: dict[str, float] = {}
+    bad: list[str] = []
+
+    for raw in raw_overrides:
+        text = str(raw).strip()
+        if not text or "=" not in text:
+            bad.append(text or "<empty>")
+            continue
+
+        strategy, value = text.split("=", 1)
+        strategy = strategy.strip()
+        if not strategy:
+            bad.append(text)
+            continue
+
+        try:
+            parsed[strategy] = max(0.0, float(value))
+        except ValueError:
+            bad.append(text)
+
+    if bad:
+        sample = ", ".join(bad[:5])
+        raise SystemExit(
+            "Invalid --strategy-leverage-override value(s): "
+            f"{sample}. Expected STRATEGY=MULTIPLIER (e.g. funding_carry_cex_cex=2.5)."
+        )
+
+    return parsed
 
 
 def main() -> None:
@@ -970,6 +1030,10 @@ def main() -> None:
     )
 
     constraint_book = ConstraintBook.from_path(args.constraints)
+    strategy_leverage_overrides = _parse_strategy_overrides(args.strategy_leverage_override)
+    if strategy_leverage_overrides:
+        constraint_book.apply_leverage_overrides(strategy_leverage_overrides)
+
     constraints_path = args.constraints if constraint_book.enabled else None
     fee_table_path = args.fee_table if fee_table.enabled else None
 
@@ -1004,6 +1068,7 @@ def main() -> None:
         transfer_penalty_bps_per_min=transfer_penalty_bps_per_min,
         min_net_edge_bps=min_net_edge_bps,
         max_risk_score=max_risk_score,
+        strategy_leverage_overrides=strategy_leverage_overrides,
     )
 
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
@@ -1025,6 +1090,7 @@ def main() -> None:
             transfer_penalty_bps_per_min=transfer_penalty_bps_per_min,
             min_net_edge_bps=min_net_edge_bps,
             max_risk_score=max_risk_score,
+            strategy_leverage_overrides=strategy_leverage_overrides,
         )
     )
     args.output_summary.write_text(json.dumps(summary, indent=2))
@@ -1038,6 +1104,11 @@ def main() -> None:
     print(f"Fee table enabled: {fee_table.enabled}")
     if fee_table.enabled:
         print(f"Fee table path: {args.fee_table}")
+    if strategy_leverage_overrides:
+        print(
+            "Strategy leverage overrides:",
+            ", ".join(f"{k}={v}" for k, v in sorted(strategy_leverage_overrides.items())),
+        )
     print(f"Wrote: {args.output_json}")
     print(f"Wrote: {args.output_md}")
     print(f"Wrote: {args.output_summary}")

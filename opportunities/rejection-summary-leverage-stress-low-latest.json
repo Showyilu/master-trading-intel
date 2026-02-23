@@ -1,0 +1,223 @@
+{
+  "generated_at": "2026-02-23T04:03:01.581900+00:00",
+  "input": "data/opportunity_candidates.combined.live.json",
+  "constraints": "data/execution_constraints.latest.json",
+  "fee_table": "data/execution_fee_table.latest.json",
+  "execution_profile": "maker_inventory",
+  "rules": {
+    "fee_multiplier": 1.0,
+    "slippage_multiplier": 0.72,
+    "latency_multiplier": 0.95,
+    "transfer_delay_multiplier": 0.3,
+    "transfer_penalty_bps_per_min": 0.24,
+    "min_net_edge_bps": 4.5,
+    "max_risk_score": 0.62,
+    "strategy_leverage_overrides": {
+      "funding_carry_cex_cex": 1.5,
+      "perp_spot_basis": 1.0
+    }
+  },
+  "counts": {
+    "candidates": 30,
+    "qualified": 0,
+    "rejected": 30,
+    "fee_model_applied": 30
+  },
+  "rejection_reason_counts": {
+    "borrow_dominated": 18,
+    "fee_dominated": 30,
+    "latency_transfer_dominated": 17,
+    "leverage_limit_exceeded": 21,
+    "net_edge_below_threshold": 30,
+    "slippage_dominated": 24
+  },
+  "dominant_drag_counts": {
+    "fees": 30
+  },
+  "top_rejected": [
+    {
+      "symbol": "ADA/USDT",
+      "path": "long_bybit_perp->short_binance_perp",
+      "net_edge_bps": -11.5735,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "SOL/USDT",
+      "path": "long_bybit_perp->short_binance_perp",
+      "net_edge_bps": -13.6144,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 3.0,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "BTC/USDT",
+      "path": "long_bybit_perp->short_binance_perp",
+      "net_edge_bps": -13.8006,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 3.0,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "XRP/USDT",
+      "path": "long_binance_perp->short_bybit_perp",
+      "net_edge_bps": -13.8501,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "DOGE/USDT",
+      "path": "long_binance_perp->short_bybit_perp",
+      "net_edge_bps": -13.9247,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "AVAX/USDT",
+      "path": "long_binance_perp->short_bybit_perp",
+      "net_edge_bps": -13.9473,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "BNB/USDT",
+      "path": "long_bybit_perp->short_binance_perp",
+      "net_edge_bps": -14.1126,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "LINK/USDT",
+      "path": "long_binance_perp->short_bybit_perp",
+      "net_edge_bps": -14.1309,
+      "risk_score": 0.2907,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_notional_multiplier": 1.5,
+      "leverage_notional_usd": 15000.0,
+      "leverage_used": 4.285714,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "slippage_dominated",
+        "latency_transfer_dominated",
+        "leverage_limit_exceeded"
+      ]
+    },
+    {
+      "symbol": "SOL/USDT",
+      "path": "jupiter->binance",
+      "net_edge_bps": -15.0926,
+      "risk_score": 0.3274,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0585,
+      "max_leverage": 3.0,
+      "leverage_notional_multiplier": 1.0,
+      "leverage_notional_usd": 5000.0,
+      "leverage_used": 1.428571,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated"
+      ]
+    },
+    {
+      "symbol": "SOL/USDT",
+      "path": "jupiter->bybit",
+      "net_edge_bps": -16.3849,
+      "risk_score": 0.3286,
+      "dominant_drag": "fees",
+      "borrow_cost_bps": 0.0585,
+      "max_leverage": 3.0,
+      "leverage_notional_multiplier": 1.0,
+      "leverage_notional_usd": 5000.0,
+      "leverage_used": 1.428571,
+      "rejection_reasons": [
+        "net_edge_below_threshold",
+        "fee_dominated",
+        "latency_transfer_dominated"
+      ]
+    }
+  ]
+}
