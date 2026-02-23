@@ -21,6 +21,7 @@ Long-term distilled memory for trading/arbitrage work.
 - Fee table pipeline now supports authenticated overlay (`scripts/build_authenticated_fee_table.py`): Binance/Bybit signed endpoints can replace template fee assumptions with account-realized rates while preserving deterministic fallback when auth is missing.
 - Constraint pipeline now supports authenticated inventory overlay (`scripts/build_authenticated_constraints.py`): template `available_inventory_usd` can be replaced by account-realized balances (USD-valued via live quote map) and `max_position_usd` is clipped conservatively to inventory+borrow headroom.
 - Binance margin borrow overlay is now wired into constraints: signed endpoints can replace template `max_borrow_usd` and `borrow_rate_bps_per_hour` with account-realized borrow capacity + next-hour interest assumptions (still fail-soft when auth/endpoint unavailable).
+- Constraints now include `max_leverage`; scanner enforces `leverage_limit_exceeded` as a hard reject so high-notional/low-equity setups are blocked even when spread math looks acceptable.
 
 ## What We Believe (Needs Validation)
 - Funding/basis setups may survive risk gates more often than cross-chain spot dislocations in congested periods.
@@ -34,6 +35,7 @@ Long-term distilled memory for trading/arbitrage work.
 - When constraints file is enabled, candidates must also pass position/inventory/borrow capacity gates before qualification.
 - Reject cross-venue quotes when DEX mid deviates too far from trusted CEX reference (depeg/wrapped-token hazard).
 - Every scanner run must expose rejection-reason counts so strategy work is guided by the biggest friction bucket, not intuition.
+- Leverage is a first-class hard gate: if required leverage exceeds configured cap, candidate is non-executable regardless of gross edge.
 
 ## Lessons
 - Gross edge without execution friction data is noise.
@@ -50,3 +52,4 @@ Long-term distilled memory for trading/arbitrage work.
 - Authenticated adapters should be fail-soft and schema-compatible: if keys are absent, keep template assumptions and continue scoring instead of breaking the pipeline.
 - Inventory constraints are first-order risk controls: using template inventory can materially overstate executable size; prefer authenticated balances even before borrow-book integration is complete.
 - Borrow assumptions should be treated like fees: if borrow cap/rate stays template-only, basis/funding executability is easily overstated; authenticated borrow overlays must be first-class and fail-soft.
+- Position-cap checks alone are insufficient: leverage-cap checks catch overextended setups that still pass `max_position_usd` and borrow-cap limits.

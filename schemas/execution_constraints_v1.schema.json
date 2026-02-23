@@ -25,7 +25,8 @@
         "max_position_usd",
         "available_inventory_usd",
         "max_borrow_usd",
-        "borrow_rate_bps_per_hour"
+        "borrow_rate_bps_per_hour",
+        "max_leverage"
       ],
       "properties": {
         "max_position_usd": {
@@ -41,6 +42,10 @@
           "minimum": 0
         },
         "borrow_rate_bps_per_hour": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_leverage": {
           "type": "number",
           "minimum": 0
         }
@@ -64,7 +69,8 @@
           "max_position_usd",
           "available_inventory_usd",
           "max_borrow_usd",
-          "borrow_rate_bps_per_hour"
+          "borrow_rate_bps_per_hour",
+          "max_leverage"
         ],
         "properties": {
           "venue": {
@@ -88,6 +94,10 @@
             "minimum": 0
           },
           "borrow_rate_bps_per_hour": {
+            "type": "number",
+            "minimum": 0
+          },
+          "max_leverage": {
             "type": "number",
             "minimum": 0
           }

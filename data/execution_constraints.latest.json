@@ -1,11 +1,12 @@
 {
-  "generated_at": "2026-02-22T22:02:39.034521+00:00",
+  "generated_at": "2026-02-23T00:03:14.724916+00:00",
   "version": "execution_constraints_v1",
   "defaults": {
     "max_position_usd": 12000.0,
     "available_inventory_usd": 0.0,
     "max_borrow_usd": 0.0,
-    "borrow_rate_bps_per_hour": 1.0
+    "borrow_rate_bps_per_hour": 1.0,
+    "max_leverage": 2.0
   },
   "strategy_hold_hours": {
     "cex_cex": 0.2,
@@ -20,7 +21,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "binance",
@@ -28,7 +30,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "binance",
@@ -36,7 +39,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "binance",
@@ -44,7 +48,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 0.65
+      "borrow_rate_bps_per_hour": 0.65,
+      "max_leverage": 3.0
     },
     {
       "venue": "binance",
@@ -52,7 +57,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "binance",
@@ -60,7 +66,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 0.65
+      "borrow_rate_bps_per_hour": 0.65,
+      "max_leverage": 3.0
     },
     {
       "venue": "binance",
@@ -68,7 +75,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "binance",
@@ -76,7 +84,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "binance",
@@ -84,7 +93,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 0.65
+      "borrow_rate_bps_per_hour": 0.65,
+      "max_leverage": 3.0
     },
     {
       "venue": "binance",
@@ -92,7 +102,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "bybit",
@@ -100,7 +111,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "bybit",
@@ -108,7 +120,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "bybit",
@@ -116,7 +129,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "bybit",
@@ -124,7 +138,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 0.65
+      "borrow_rate_bps_per_hour": 0.65,
+      "max_leverage": 3.0
     },
     {
       "venue": "bybit",
@@ -132,7 +147,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "bybit",
@@ -140,7 +156,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 0.65
+      "borrow_rate_bps_per_hour": 0.65,
+      "max_leverage": 3.0
     },
     {
       "venue": "bybit",
@@ -148,7 +165,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "bybit",
@@ -156,7 +174,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "bybit",
@@ -164,7 +183,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 0.65
+      "borrow_rate_bps_per_hour": 0.65,
+      "max_leverage": 3.0
     },
     {
       "venue": "bybit",
@@ -172,7 +192,8 @@
       "max_position_usd": 14000.0,
       "available_inventory_usd": 3500.0,
       "max_borrow_usd": 7500.0,
-      "borrow_rate_bps_per_hour": 1.15
+      "borrow_rate_bps_per_hour": 1.15,
+      "max_leverage": 2.5
     },
     {
       "venue": "jupiter",
@@ -180,7 +201,8 @@
       "max_position_usd": 7000.0,
       "available_inventory_usd": 1750.0,
       "max_borrow_usd": 3750.0,
-      "borrow_rate_bps_per_hour": 0.65
+      "borrow_rate_bps_per_hour": 0.65,
+      "max_leverage": 3.0
     }
   ]
 }

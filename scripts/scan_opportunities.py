@@ -8,6 +8,7 @@ borrow_cost = borrow_rate_bps_per_hour * hold_hours * (borrow_used_usd / size_us
 
 Supports execution profiles (taker/maker/inventory assumptions) so the same
 candidate set can be stress-tested under different execution realities.
+Also supports leverage hard gates via execution constraints (`max_leverage`).
 """
 
 from __future__ import annotations
@@ -120,6 +121,8 @@ class ScoredOpportunity:
     borrow_required_usd: float
     borrow_capacity_usd: float
     borrow_rate_bps_per_hour: float
+    max_leverage: float
+    leverage_used: float
     borrow_cost_bps: float
     net_edge_bps: float
     risk_score: float
@@ -236,6 +239,7 @@ class ConstraintBook:
         inventory = self._read_limit(row, "available_inventory_usd", default_unbounded=False)
         borrow_cap = self._read_limit(row, "max_borrow_usd", default_unbounded=False)
         borrow_rate = self._read_value(row, "borrow_rate_bps_per_hour", fallback=0.0)
+        max_leverage = self._read_value(row, "max_leverage", fallback=0.0)
 
         return {
             "venue_key": venue_key,
@@ -244,6 +248,7 @@ class ConstraintBook:
             "available_inventory_usd": inventory,
             "max_borrow_usd": borrow_cap,
             "borrow_rate_bps_per_hour": borrow_rate,
+            "max_leverage": max_leverage,
         }
 
 
@@ -456,6 +461,7 @@ def _rejection_reasons(
     position_limit_exceeded: bool,
     inventory_unavailable: bool,
     borrow_limit_exceeded: bool,
+    leverage_limit_exceeded: bool,
 ) -> list[str]:
     reasons: list[str] = []
 
@@ -481,6 +487,8 @@ def _rejection_reasons(
             reasons.append("inventory_unavailable")
         if borrow_limit_exceeded:
             reasons.append("borrow_limit_exceeded")
+        if leverage_limit_exceeded:
+            reasons.append("leverage_limit_exceeded")
 
     return reasons
 
@@ -531,10 +539,13 @@ def score_item(
     borrow_required_usd = 0.0
     borrow_capacity_usd = 0.0
     borrow_rate_bps_per_hour = 0.0
+    max_leverage = 0.0
+    leverage_used = 0.0
     borrow_cost_bps = 0.0
     position_limit_exceeded = False
     inventory_unavailable = False
     borrow_limit_exceeded = False
+    leverage_limit_exceeded = False
 
     if constraint_book.enabled:
         asset = constraint_book.asset_from_symbol(item.get("symbol", ""))
@@ -552,6 +563,11 @@ def score_item(
         borrow_capacity_usd = float(sell_constraints["max_borrow_usd"])
         borrow_rate_bps_per_hour = float(sell_constraints["borrow_rate_bps_per_hour"])
 
+        buy_max_leverage = float(buy_constraints.get("max_leverage", 0.0))
+        sell_max_leverage = float(sell_constraints.get("max_leverage", 0.0))
+        leverage_caps = [v for v in [buy_max_leverage, sell_max_leverage] if v > 0]
+        max_leverage = min(leverage_caps) if leverage_caps else 0.0
+
         inventory_required_usd = (
             size_usd if item.get("strategy_type") in INVENTORY_REQUIRED_STRATEGIES else 0.0
         )
@@ -562,6 +578,15 @@ def score_item(
             and borrow_capacity_usd <= 0.0
         )
         borrow_limit_exceeded = borrow_required_usd > borrow_capacity_usd + 1e-9
+
+        if inventory_required_usd > 0 and inventory_available_usd > 0:
+            leverage_used = round(size_usd / inventory_available_usd, 6)
+
+        if max_leverage > 0 and inventory_required_usd > 0:
+            leverage_limit_exceeded = (
+                inventory_available_usd <= 0.0
+                or leverage_used > max_leverage + 1e-9
+            )
 
         borrow_used_usd = min(borrow_required_usd, borrow_capacity_usd)
         if size_usd > 0 and borrow_used_usd > 0:
@@ -590,7 +615,12 @@ def score_item(
 
     risk_score = _risk_score(scoring_view, net_edge_bps, transfer_risk_bps)
 
-    constraint_blocked = position_limit_exceeded or borrow_limit_exceeded or inventory_unavailable
+    constraint_blocked = (
+        position_limit_exceeded
+        or borrow_limit_exceeded
+        or inventory_unavailable
+        or leverage_limit_exceeded
+    )
     is_qualified = (
         net_edge_bps >= min_net_edge_bps
         and risk_score <= max_risk_score
@@ -611,6 +641,7 @@ def score_item(
             position_limit_exceeded=position_limit_exceeded,
             inventory_unavailable=inventory_unavailable,
             borrow_limit_exceeded=borrow_limit_exceeded,
+            leverage_limit_exceeded=leverage_limit_exceeded,
         )
 
     return ScoredOpportunity(
@@ -640,6 +671,8 @@ def score_item(
         borrow_required_usd=round(borrow_required_usd, 4),
         borrow_capacity_usd=round(borrow_capacity_usd, 4),
         borrow_rate_bps_per_hour=round(borrow_rate_bps_per_hour, 6),
+        max_leverage=round(max_leverage, 6),
+        leverage_used=round(leverage_used, 6),
         borrow_cost_bps=borrow_cost_bps,
         net_edge_bps=net_edge_bps,
         risk_score=risk_score,
@@ -700,6 +733,8 @@ def _build_summary(
                 "risk_score": s.risk_score,
                 "dominant_drag": s.dominant_drag,
                 "borrow_cost_bps": s.borrow_cost_bps,
+                "max_leverage": s.max_leverage,
+                "leverage_used": s.leverage_used,
                 "rejection_reasons": s.rejection_reasons,
             }
             for s in sorted(rejected, key=lambda x: x.net_edge_bps, reverse=True)[:10]
@@ -782,16 +817,23 @@ def render_markdown(
             "",
             "## Ranked Candidates",
             "",
-            "| Rank | Pair | Path | Gross bps | Net bps | Borrow bps | Risk | Drag | Qualified | Rejection Reasons |",
-            "|---:|---|---|---:|---:|---:|---:|---|:---:|---|",
+            "| Rank | Pair | Path | Gross bps | Net bps | Borrow bps | Lev (used/cap) | Risk | Drag | Qualified | Rejection Reasons |",
+            "|---:|---|---|---:|---:|---:|---|---:|---|:---:|---|",
         ]
     )
 
     ranked = sorted(scored, key=lambda x: (x.is_qualified, x.net_edge_bps), reverse=True)
     for i, item in enumerate(ranked, start=1):
         reasons = ", ".join(item.rejection_reasons) if item.rejection_reasons else "-"
+        leverage_cell = "-"
+        if item.max_leverage > 0 and (
+            item.leverage_used > 0
+            or "leverage_limit_exceeded" in item.rejection_reasons
+        ):
+            leverage_cell = f"{item.leverage_used:.2f}/{item.max_leverage:.2f}"
+
         lines.append(
-            f"| {i} | {item.symbol} | {item.buy_venue} -> {item.sell_venue} | {item.gross_edge_bps:.2f} | {item.net_edge_bps:.2f} | {item.borrow_cost_bps:.2f} | {item.risk_score:.2f} | {item.dominant_drag} | {'✅' if item.is_qualified else '❌'} | {reasons} |"
+            f"| {i} | {item.symbol} | {item.buy_venue} -> {item.sell_venue} | {item.gross_edge_bps:.2f} | {item.net_edge_bps:.2f} | {item.borrow_cost_bps:.2f} | {leverage_cell} | {item.risk_score:.2f} | {item.dominant_drag} | {'✅' if item.is_qualified else '❌'} | {reasons} |"
         )
 
     lines.extend(["", "## Notes", "- This dashboard is for screening only, not execution advice."])

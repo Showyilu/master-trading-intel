@@ -9,7 +9,8 @@ Goal:
   - `max_borrow_usd` from `/sapi/v1/margin/maxBorrowable`
   - `borrow_rate_bps_per_hour` from `/sapi/v1/margin/next-hourly-interest-rate`
 - Update `max_position_usd` conservatively as:
-    min(existing_max_position_usd, available_inventory_usd + max_borrow_usd)
+    min(existing_max_position_usd, available_inventory_usd + max_borrow_usd, available_inventory_usd * max_leverage)
+  (the leverage clip is applied when `max_leverage` is present and > 0)
 - Fail soft: if auth is missing or an API call fails, keep template constraints.
 
 Environment variables:
@@ -445,6 +446,12 @@ def main() -> None:
         max_borrow_usd = max(0.0, _to_float(row.get("max_borrow_usd", 0.0), 0.0))
 
         conservative_cap = inv_usd_for_cap + max_borrow_usd
+
+        max_leverage = max(0.0, _to_float(row.get("max_leverage", 0.0), 0.0))
+        if max_leverage > 0:
+            leverage_cap = inv_usd_for_cap * max_leverage
+            conservative_cap = min(conservative_cap, leverage_cap)
+
         new_cap = min(existing_cap, conservative_cap) if existing_cap > 0 else conservative_cap
         row["max_position_usd"] = round(max(0.0, new_cap), 6)
 

@@ -6,6 +6,7 @@ The output captures per (venue, asset) limits used by scan_opportunities.py:
 - available_inventory_usd
 - max_borrow_usd
 - borrow_rate_bps_per_hour
+- max_leverage
 """
 
 from __future__ import annotations
@@ -85,14 +86,17 @@ def suggest_limits(max_size_usd: float, asset: str) -> dict[str, float]:
 
     if asset in CORE_ASSETS:
         borrow_rate = 0.65
+        max_leverage = 3.0
     else:
         borrow_rate = 1.15
+        max_leverage = 2.5
 
     return {
         "max_position_usd": max_position,
         "available_inventory_usd": available_inventory,
         "max_borrow_usd": max_borrow,
         "borrow_rate_bps_per_hour": borrow_rate,
+        "max_leverage": max_leverage,
     }
 
 
@@ -162,12 +166,21 @@ def main() -> None:
         if key not in sizes_by_key:
             merged_rules.append(row)
 
+    # Backfill newly introduced fields for legacy rows.
+    for row in merged_rules:
+        if not isinstance(row, dict):
+            continue
+        asset = str(row.get("asset", "")).strip().upper()
+        suggested = suggest_limits(max_size_usd=1000.0, asset=asset)
+        row.setdefault("max_leverage", float(suggested["max_leverage"]))
+
     defaults = existing.get("defaults", {}) if isinstance(existing.get("defaults"), dict) else {}
     defaults_out = {
         "max_position_usd": float(defaults.get("max_position_usd", 12000.0)),
         "available_inventory_usd": float(defaults.get("available_inventory_usd", 0.0)),
         "max_borrow_usd": float(defaults.get("max_borrow_usd", 0.0)),
         "borrow_rate_bps_per_hour": float(defaults.get("borrow_rate_bps_per_hour", 1.0)),
+        "max_leverage": float(defaults.get("max_leverage", 2.0)),
     }
 
     hold_hours = dict(DEFAULT_STRATEGY_HOLD_HOURS)

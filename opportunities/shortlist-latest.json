@@ -26,6 +26,8 @@
     "borrow_required_usd": 1500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 1.428571,
     "borrow_cost_bps": 0.0585,
     "net_edge_bps": -22.2135,
     "risk_score": 0.4127,
@@ -66,6 +68,8 @@
     "borrow_required_usd": 1500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 1.428571,
     "borrow_cost_bps": 0.0585,
     "net_edge_bps": -23.5106,
     "risk_score": 0.4139,
@@ -106,6 +110,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 0.0845,
     "net_edge_bps": -23.9255,
     "risk_score": 0.3805,
@@ -147,6 +153,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 0.0845,
     "net_edge_bps": -24.2768,
     "risk_score": 0.3811,
@@ -188,6 +196,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -26.8501,
     "risk_score": 0.4248,
@@ -228,6 +238,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -28.891,
     "risk_score": 0.4248,
@@ -269,6 +281,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -29.0772,
     "risk_score": 0.4248,
@@ -310,6 +324,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -29.1267,
     "risk_score": 0.4248,
@@ -351,6 +367,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -29.2013,
     "risk_score": 0.4248,
@@ -392,6 +410,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -29.2239,
     "risk_score": 0.4248,
@@ -433,6 +453,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -29.3892,
     "risk_score": 0.4248,
@@ -474,6 +496,8 @@
     "borrow_required_usd": 0.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 0.0,
     "borrow_cost_bps": 0.0,
     "net_edge_bps": -29.4075,
     "risk_score": 0.4248,
@@ -515,6 +539,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -37.0206,
     "risk_score": 0.4654,
@@ -524,7 +550,8 @@
     "rejection_reasons": [
       "net_edge_below_threshold",
       "fee_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=binance; basis_mark=-7.529bps; funding=-3.819bps; basis_capture_ratio=0.22; basis_capture=1.656bps; funding_component=3.819bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -555,6 +582,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 3.38,
     "net_edge_bps": -37.5296,
     "risk_score": 0.4352,
@@ -596,6 +625,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 3.38,
     "net_edge_bps": -38.4699,
     "risk_score": 0.4346,
@@ -638,6 +669,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -38.9129,
     "risk_score": 0.4652,
@@ -648,7 +681,8 @@
       "net_edge_below_threshold",
       "fee_dominated",
       "slippage_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=binance; basis_mark=-6.131bps; funding=-2.213bps; basis_capture_ratio=0.22; basis_capture=1.349bps; funding_component=2.213bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -679,6 +713,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 3.38,
     "net_edge_bps": -39.0781,
     "risk_score": 0.4503,
@@ -720,6 +756,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -39.8313,
     "risk_score": 0.4804,
@@ -730,7 +768,8 @@
       "net_edge_below_threshold",
       "fee_dominated",
       "slippage_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=bybit; basis_mark=-5.563bps; funding=-3.811bps; basis_capture_ratio=0.22; basis_capture=1.224bps; funding_component=3.811bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -761,6 +800,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -40.5205,
     "risk_score": 0.4651,
@@ -771,7 +812,8 @@
       "net_edge_below_threshold",
       "fee_dominated",
       "slippage_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=binance; basis_mark=-5.786bps; funding=-0.676bps; basis_capture_ratio=0.22; basis_capture=1.273bps; funding_component=0.676bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -802,6 +844,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -40.5644,
     "risk_score": 0.465,
@@ -812,7 +856,8 @@
       "net_edge_below_threshold",
       "fee_dominated",
       "slippage_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=binance; basis_mark=-5.561bps; funding=-0.678bps; basis_capture_ratio=0.22; basis_capture=1.223bps; funding_component=0.678bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -843,6 +888,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 3.38,
     "net_edge_bps": -40.6095,
     "risk_score": 0.4501,
@@ -885,6 +932,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -40.8876,
     "risk_score": 0.4655,
@@ -896,7 +945,8 @@
       "fee_dominated",
       "slippage_dominated",
       "latency_transfer_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=binance; basis_mark=-8.052bps; funding=0.156bps; basis_capture_ratio=0.22; basis_capture=1.772bps; funding_component=-0.156bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -927,6 +977,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -41.1855,
     "risk_score": 0.4642,
@@ -938,7 +990,8 @@
       "fee_dominated",
       "slippage_dominated",
       "latency_transfer_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=binance; basis_mark=-1.173bps; funding=-0.957bps; basis_capture_ratio=0.22; basis_capture=0.258bps; funding_component=0.957bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -969,6 +1022,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 0.65,
+    "max_leverage": 3.0,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 3.38,
     "net_edge_bps": -41.3334,
     "risk_score": 0.4499,
@@ -1011,6 +1066,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -41.7633,
     "risk_score": 0.4645,
@@ -1022,7 +1079,8 @@
       "fee_dominated",
       "slippage_dominated",
       "latency_transfer_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "cash_and_carry; venue=binance; basis_mark=3.021bps; funding=0.000bps; basis_capture_ratio=0.22; basis_capture=0.665bps; funding_component=0.000bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -1053,6 +1111,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -42.169,
     "risk_score": 0.4806,
@@ -1063,7 +1123,8 @@
       "net_edge_below_threshold",
       "fee_dominated",
       "slippage_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=bybit; basis_mark=-6.130bps; funding=-1.357bps; basis_capture_ratio=0.22; basis_capture=1.349bps; funding_component=1.357bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -1094,6 +1155,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -42.5152,
     "risk_score": 0.481,
@@ -1104,7 +1167,8 @@
       "net_edge_below_threshold",
       "fee_dominated",
       "slippage_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=bybit; basis_mark=-8.165bps; funding=-0.594bps; basis_capture_ratio=0.22; basis_capture=1.796bps; funding_component=0.594bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -1135,6 +1199,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -43.4864,
     "risk_score": 0.4807,
@@ -1146,7 +1212,8 @@
       "fee_dominated",
       "slippage_dominated",
       "latency_transfer_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=bybit; basis_mark=-6.837bps; funding=0.105bps; basis_capture_ratio=0.22; basis_capture=1.504bps; funding_component=-0.105bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -1177,6 +1244,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -43.6427,
     "risk_score": 0.4807,
@@ -1188,7 +1257,8 @@
       "fee_dominated",
       "slippage_dominated",
       "latency_transfer_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=bybit; basis_mark=-6.578bps; funding=0.209bps; basis_capture_ratio=0.22; basis_capture=1.447bps; funding_component=-0.209bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   },
@@ -1219,6 +1289,8 @@
     "borrow_required_usd": 6500.0,
     "borrow_capacity_usd": 7500.0,
     "borrow_rate_bps_per_hour": 1.15,
+    "max_leverage": 2.5,
+    "leverage_used": 2.857143,
     "borrow_cost_bps": 5.98,
     "net_edge_bps": -44.164,
     "risk_score": 0.4796,
@@ -1230,7 +1302,8 @@
       "fee_dominated",
       "slippage_dominated",
       "latency_transfer_dominated",
-      "borrow_dominated"
+      "borrow_dominated",
+      "leverage_limit_exceeded"
     ],
     "notes": "reverse_carry; venue=bybit; basis_mark=-1.158bps; funding=-0.381bps; basis_capture_ratio=0.22; basis_capture=0.255bps; funding_component=0.381bps; minutes_to_funding=237.05; inventory_mode=prepositioned"
   }

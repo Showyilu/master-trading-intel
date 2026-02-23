@@ -87,7 +87,7 @@ Outputs:
 - `data/opportunity_candidates.funding.live.json`
 - `data/opportunity_candidates.basis.live.json`
 - `data/opportunity_candidates.combined.live.json`
-- `data/execution_constraints.latest.json` (venue/asset inventory, borrow and position-cap template)
+- `data/execution_constraints.latest.json` (venue/asset inventory, borrow, leverage and position-cap template)
 - `data/execution_fee_table.latest.json` (venue/instrument taker-maker-vip fee table; template first, then authenticated overlay when API keys exist)
 - `opportunities/shortlist-latest.json`
 - `opportunities/dashboard-latest.md`
@@ -102,6 +102,7 @@ Scanner now also enforces hard execution constraints when `--constraints` is pro
 - venue/asset `max_position_usd`
 - sell-side `available_inventory_usd`
 - `max_borrow_usd` + borrow carry cost (`borrow_rate_bps_per_hour × hold_hours`)
+- leverage hard gate via `max_leverage` (`leverage_limit_exceeded` will reject candidate)
 
 Scanner can load explicit fee assumptions with `--fee-table`:
 - per-venue + per-instrument `taker_bps` / `maker_bps` / `maker_vip_bps`
@@ -113,7 +114,7 @@ Scanner can load explicit fee assumptions with `--fee-table`:
 - Binance margin overlay also updates:
   - `max_borrow_usd` from signed `maxBorrowable`
   - `borrow_rate_bps_per_hour` from signed next-hour interest endpoint
-- `max_position_usd` is clipped conservatively to `min(existing_cap, inventory + max_borrow)`
+- `max_position_usd` is clipped conservatively to `min(existing_cap, inventory + max_borrow, inventory × max_leverage)` when leverage cap is configured
 - credentials: `BINANCE_API_KEY` / `BINANCE_API_SECRET` / `BYBIT_API_KEY` / `BYBIT_API_SECRET`
 
 If auth is unavailable (or endpoint calls fail), it fails soft and keeps template constraints.

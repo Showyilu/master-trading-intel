@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-02-22T20:02:59.579660+00:00",
-  "input": "data/opportunity_candidates.combined.live.json",
-  "constraints": "data/execution_constraints.latest.json",
-  "fee_table": "data/execution_fee_table.latest.json",
+  "generated_at": "2026-02-23T00:04:53.911866+00:00",
+  "input": "/home/node/.openclaw/workspace/projects/master-trading-intel/data/opportunity_candidates.combined.live.json",
+  "constraints": "/home/node/.openclaw/workspace/projects/master-trading-intel/data/execution_constraints.latest.json",
+  "fee_table": "/home/node/.openclaw/workspace/projects/master-trading-intel/data/execution_fee_table.latest.json",
   "execution_profile": "taker_default",
   "rules": {
     "fee_multiplier": 1.0,
@@ -23,6 +23,7 @@
     "borrow_dominated": 18,
     "fee_dominated": 30,
     "latency_transfer_dominated": 20,
+    "leverage_limit_exceeded": 13,
     "net_edge_below_threshold": 30,
     "slippage_dominated": 27
   },
@@ -37,6 +38,8 @@
       "risk_score": 0.4127,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0585,
+      "max_leverage": 3.0,
+      "leverage_used": 1.428571,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -50,6 +53,8 @@
       "risk_score": 0.4139,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0585,
+      "max_leverage": 3.0,
+      "leverage_used": 1.428571,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -63,6 +68,8 @@
       "risk_score": 0.3805,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0845,
+      "max_leverage": 3.0,
+      "leverage_used": 2.857143,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -77,6 +84,8 @@
       "risk_score": 0.3811,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0845,
+      "max_leverage": 3.0,
+      "leverage_used": 2.857143,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -91,6 +100,8 @@
       "risk_score": 0.4248,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_used": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -104,6 +115,8 @@
       "risk_score": 0.4248,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0,
+      "max_leverage": 3.0,
+      "leverage_used": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -118,6 +131,8 @@
       "risk_score": 0.4248,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0,
+      "max_leverage": 3.0,
+      "leverage_used": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -132,6 +147,8 @@
       "risk_score": 0.4248,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_used": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -146,6 +163,8 @@
       "risk_score": 0.4248,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_used": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
@@ -160,6 +179,8 @@
       "risk_score": 0.4248,
       "dominant_drag": "fees",
       "borrow_cost_bps": 0.0,
+      "max_leverage": 2.5,
+      "leverage_used": 0.0,
       "rejection_reasons": [
         "net_edge_below_threshold",
         "fee_dominated",
